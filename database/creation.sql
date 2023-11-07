@@ -21,6 +21,8 @@ DROP TABLE IF EXISTS tag;
 DROP TABLE IF EXISTS admin;
 DROP TABLE IF EXISTS users;
 
+DROP TYPE IF EXISTS NotificationOrigin;
+
 -----------------------------------------
 -- Types
 -----------------------------------------
@@ -60,15 +62,15 @@ CREATE TABLE question (
     description TEXT,
     timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     score INT NOT NULL DEFAULT 0,
-    FOREIGN KEY (author_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT fk_author FOREIGN KEY (author_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE question_tags (
     question_id INT,
     tag_id INT,
     PRIMARY KEY (question_id, tag_id),
-    FOREIGN KEY (question_id) REFERENCES question(question_id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (tag_id) REFERENCES tag(tag_id) ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT fk_question FOREIGN KEY (question_id) REFERENCES question(question_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_tag FOREIGN KEY (tag_id) REFERENCES tag(tag_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE answer (
@@ -78,8 +80,8 @@ CREATE TABLE answer (
     description TEXT NOT NULL,
     timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     score INT NOT NULL DEFAULT 0,
-    FOREIGN KEY (author_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (question_id) REFERENCES question(question_id) ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT fk_author FOREIGN KEY (author_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_question FOREIGN KEY (question_id) REFERENCES question(question_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE comment_question (
@@ -89,8 +91,8 @@ CREATE TABLE comment_question (
     content TEXT NOT NULL,
     timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     score INT NOT NULL DEFAULT 0,
-    FOREIGN KEY (author_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (question_id) REFERENCES question(question_id) ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT fk_author FOREIGN KEY (author_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_question FOREIGN KEY (question_id) REFERENCES question(question_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE comment_answer (
@@ -100,32 +102,32 @@ CREATE TABLE comment_answer (
     content TEXT NOT NULL,
     timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     score INT NOT NULL DEFAULT 0,
-    FOREIGN KEY (author_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (answer_id) REFERENCES answer(answer_id) ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT fk_author FOREIGN KEY (author_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_answer FOREIGN KEY (answer_id) REFERENCES answer(answer_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE follow_question (
     user_id INT,
     question_id INT,
     PRIMARY KEY (user_id, question_id),
-    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (question_id) REFERENCES question(question_id) ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_question FOREIGN KEY (question_id) REFERENCES question(question_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE follow_tag (
     user_id INT,
     tag_id INT,
     PRIMARY KEY (user_id, tag_id),
-    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (tag_id) REFERENCES tag(tag_id) ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_tag FOREIGN KEY (tag_id) REFERENCES tag(tag_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE follow_user (
     follower_id INT,
     following_id INT,
     PRIMARY KEY (follower_id, following_id),
-    FOREIGN KEY (follower_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (following_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT fk_follower FOREIGN KEY (follower_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_following FOREIGN KEY (following_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE badge (
@@ -138,8 +140,8 @@ CREATE TABLE user_badges (
     user_id INT,
     badge_id INT,
     PRIMARY KEY (user_id, badge_id),
-    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (badge_id) REFERENCES badge(badge_id) ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_badge FOREIGN KEY (badge_id) REFERENCES badge(badge_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE report_question (
@@ -148,8 +150,8 @@ CREATE TABLE report_question (
     reporter_id INT NOT NULL,
     reason TEXT,
     timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (question_id) REFERENCES question(question_id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (reporter_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT fk_question FOREIGN KEY (question_id) REFERENCES question(question_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_reporter FOREIGN KEY (reporter_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE report_answer (
@@ -158,8 +160,8 @@ CREATE TABLE report_answer (
     reporter_id INT NOT NULL,
     reason TEXT,
     timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (answer_id) REFERENCES answer(answer_id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (reporter_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT fk_answer FOREIGN KEY (answer_id) REFERENCES answer(answer_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_reporter FOREIGN KEY (reporter_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE report_comment_question (
@@ -168,8 +170,8 @@ CREATE TABLE report_comment_question (
     reporter_id INT NOT NULL,
     reason TEXT,
     timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (comment_id) REFERENCES comment_question(comment_id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (reporter_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT fk_comment FOREIGN KEY (comment_id) REFERENCES comment_question(comment_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_reporter FOREIGN KEY (reporter_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE report_comment_answer (
@@ -178,8 +180,8 @@ CREATE TABLE report_comment_answer (
     reporter_id INT NOT NULL,
     reason TEXT,
     timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (comment_id) REFERENCES comment_answer(comment_id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (reporter_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT fk_comment FOREIGN KEY (comment_id) REFERENCES comment_answer(comment_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_reporter FOREIGN KEY (reporter_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE user_vote_question (
@@ -187,8 +189,8 @@ CREATE TABLE user_vote_question (
     question_id INT NOT NULL,
     vote INT NOT NULL CHECK (vote=1 OR vote=-1),
     PRIMARY KEY (user_id, question_id),
-    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (question_id) REFERENCES question(question_id) ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_question FOREIGN KEY (question_id) REFERENCES question(question_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE user_vote_answer (
@@ -196,8 +198,8 @@ CREATE TABLE user_vote_answer (
     answer_id INT NOT NULL,
     vote INT NOT NULL CHECK (vote=1 OR vote=-1),
     PRIMARY KEY (user_id, answer_id),
-    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (answer_id) REFERENCES answer(answer_id) ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_answer FOREIGN KEY (answer_id) REFERENCES answer(answer_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE user_vote_comment_question (
@@ -205,8 +207,8 @@ CREATE TABLE user_vote_comment_question (
     comment_id INT NOT NULL,
     vote INT NOT NULL CHECK (vote=1 OR vote=-1),
     PRIMARY KEY (user_id, comment_id),
-    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (comment_id) REFERENCES comment_question(comment_id) ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_comment FOREIGN KEY (comment_id) REFERENCES comment_question(comment_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE user_vote_comment_answer (
@@ -214,8 +216,8 @@ CREATE TABLE user_vote_comment_answer (
     comment_id INT NOT NULL,
     vote INT NOT NULL CHECK (vote=1 OR vote=-1),
     PRIMARY KEY (user_id, comment_id),
-    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (comment_id) REFERENCES comment_answer(comment_id) ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_comment FOREIGN KEY (comment_id) REFERENCES comment_answer(comment_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE notification (
@@ -224,5 +226,5 @@ CREATE TABLE notification (
     date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     TYPE NotificationOrigin NOT NULL,
     user_id INT NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE
 );

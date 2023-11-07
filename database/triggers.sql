@@ -74,48 +74,65 @@ BEFORE INSERT ON follow_user
 FOR EACH ROW
 EXECUTE FUNCTION check_own_follow_user();
 
+
+--v2
 -- A post’s rating is equal to the number of upvotes minus the number of downvotes, as stated in BR03
 CREATE FUNCTION update_post_rating() RETURNS TRIGGER AS $$
-DECLARE
-    upvote_count INT;
-    downvote_count INT;
-    rating INT;
 BEGIN
-    DECLARE
-        table_name TEXT;
-    BEGIN
-        IF TG_RELNAME = 'user_vote_question' THEN
-            table_name := 'question';
-        ELSIF TG_RELNAME = 'user_vote_answer' THEN
-            table_name := 'answer';
+    IF TG_TABLE_NAME = 'user_vote_question' THEN
+        IF TG_OP = 'INSERT' THEN
+            UPDATE question
+            SET score = score + NEW.vote
+            WHERE question_id = NEW.question_id;
         END IF;
+    ELSIF TG_TABLE_NAME = 'user_vote_answer' THEN
+        IF TG_OP = 'INSERT' THEN
+            UPDATE answer
+            SET score = score + NEW.vote
+            WHERE answer_id = NEW.answer_id;
+            RETURN NEW;
+        END IF;
+    ELSIF TG_TABLE_NAME = 'user_vote_comment_question' THEN
+        IF TG_OP = 'INSERT' THEN
+            UPDATE comment_question
+            SET score = score + NEW.vote
+            WHERE comment_id = NEW.comment_id;
+            RETURN NEW;
+        END IF;
+    ELSIF TG_TABLE_NAME = 'user_vote_comment_answer' THEN
+        IF TG_OP = 'INSERT' THEN
+            UPDATE comment_answer
+            SET score = score + NEW.vote
+            WHERE comment_id = NEW.comment_id;
+            RETURN NEW;
+        END IF;
+    END IF;
 
-        SELECT COUNT(*) INTO upvote_count
-        FROM table_name
-        WHERE NEW.question_id = table_name.question_id AND NEW.vote = 1;
+    RETURN NEW;
 
-        SELECT COUNT(*) INTO downvote_count
-        FROM table_name
-        WHERE NEW.question_id = table_name.question_id AND NEW.vote = -1;
-
-        -- rating
-        rating := upvote_count - downvote_count;
-
-        -- update the post's rating
-        UPDATE table_name
-        SET score = rating
-        WHERE NEW.question_id = table_name.question_id;
-
-        RETURN NEW;
-    END;
-END;
+END
 $$ LANGUAGE plpgsql;
-
 
 CREATE TRIGGER TRIGGER05
 AFTER INSERT ON user_vote_question
 FOR EACH ROW
 EXECUTE FUNCTION update_post_rating();
+
+CREATE TRIGGER TRIGGER17
+AFTER INSERT ON user_vote_answer
+FOR EACH ROW
+EXECUTE FUNCTION update_post_rating();
+
+CREATE TRIGGER TRIGGER18
+AFTER INSERT ON user_vote_comment_question
+FOR EACH ROW
+EXECUTE FUNCTION update_post_rating();
+
+CREATE TRIGGER TRIGGER19
+AFTER INSERT ON user_vote_comment_answer
+FOR EACH ROW
+EXECUTE FUNCTION update_post_rating();
+
 
 -- By default, the user will have his own question upvoted, as stated in BR04
 CREATE FUNCTION upvote_own_question() RETURNS TRIGGER AS $$

@@ -1,7 +1,7 @@
 -- Performance Indices
-CREATE INDEX author_questions ON question btree(author_id);
-CREATE INDEX notification_user ON notification btree(user_id);
-CREATE INDEX tag_question ON questions_tag btree(tag_id);
+CREATE INDEX author_questions ON question USING btree(author_id);
+CREATE INDEX notification_user ON notification USING btree(user_id);
+CREATE INDEX tag_question ON question_tags USING btree(tag_id);
 
 -- Full-text Search Indices
 ALTER TABLE question
