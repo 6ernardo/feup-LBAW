@@ -1,0 +1,665 @@
+openapi: 3.0.0
+
+info:
+  version: '1.0'
+  title: 'LBAW UPConnect Web API'
+  description: 'Web Resources Specification (A7) for UPConnect'
+
+servers:
+- url: http://lbaw.fe.up.pt
+  description: Production server
+
+externalDocs:
+  description: Find more info here.
+  url: 
+
+tags:
+- name: 'M01: Authentication'
+- name: 'M02: Individual Profile'
+- name: 'M03: Posts (Questions, Answers and Comments)'
+- name: 'M04: Tags'
+- name: 'M05: Search'
+- name: 'M06: Administration and Static Pages' 
+- name: 'M07: Moderator Pages'
+
+paths:
+
+  ############# Authentication #############
+
+  /login:
+    get:
+      operationId: R101
+      summary: 'R101: Login form'
+      description: 'Provide login form. Access: PUB'
+      tags:
+        - 'M01: Authentication'
+      responses:
+      '200': 
+        description: 'Ok. Show login form (UI02)'
+        
+    post:
+      operationId: R102
+      summary: 'R102: Login Action'
+      description: 'Processes the login form submission. Access: PUB'
+      tags:
+        - 'M01: Authentication'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+                format: email
+              password:
+                type: string
+                format: password
+              required:
+                - email
+                - password
+      responses:
+      '302':
+        description: 'Redirect after processing the login credentials.'
+        headers:
+          Location:
+            schema:
+              type: string
+            examples:
+              302Success:
+                description: 'Successful authentication. Redirect to user profile.'
+                value: '/users/{id}'
+              302Error:
+                description: 'Failed authentication. Redirect to login form'
+                value: '/login'
+                
+  /logout:
+    post:
+      operationId: R103
+      summary: 'R103: Logout Action'
+      description: 'Logout the current authenticated user. Access: USR, ADM'
+        tags:
+          - 'M01: Authentication'
+        responses:
+          '302':
+            description: 'Redirect after processing logout.'
+            
+            headers:
+              Location:
+                schema:
+                  type: string
+                examples:
+                  302Success:
+                    description: 'Sucessful logout: Redirect to login form.'
+                    value: '/login'
+                    
+  /register:
+    get:
+      operationId: R104
+      summary: 'R104: Register Form'
+      description: 'Provide new user registration form. Access: PUB'
+        tags:
+          - 'M01: Authentication'
+      responses:
+        '200':
+          description: 'Ok. Show Sign-Up form (UI03)'
+          
+    post:
+      operationId: R105
+      summary: 'R105: Register Action'
+      description: 'Processes the new user registration form submission. Access: PUB'
+      tags:
+        - 'M01: Authentication'
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+                picture:
+                  type: string
+                  format: binary
+                required:
+                  - name
+                  - email
+                  - password
+
+      responses:
+        '302':
+          description: 'Redirect after processing the new user information.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful authentication. Redirect to user profile.'
+                  value: '/users/{id}'
+                302Failure:
+                  description: 'Failed authentication. Redirect to register form.'
+                  value: '/register'
+                  
+  ############# Individual Profile #############                
+                  
+  /users/{id}:
+    get:
+      operationId: R201
+      summary: 'R106: View user profile'
+      description: 'Show the individual user profile. Access: PUB'
+      tags:
+        - 'M02: Individual Profile'
+        
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+    
+     responses:
+       '200':
+         description: 'Ok. Show User Profile (UI04)'
+       '302':
+         description: 'User does not exist'
+         headers:
+           Location:
+             schema:
+               type: string
+             example:
+               302Failure:
+                 description: 'Failed. No user of given ID found.'
+                 value: '/error'
+         
+  /users/edit:
+    get:
+      operationId: R202
+      summary: 'R202: Edit user profile'
+      description: 'Show the edit user profile page. Access: AUT'
+      tags:
+        - 'M02: Individual Profile'
+      responses:
+        '200':
+          description: 'Ok. Show Edit Profile form (UI)'
+    put:
+      operationId: R202
+      summary: 'R202: Edit user profile'
+      description: 'Submits the edited user profile. Access: USR'
+      tags:
+        - 'M02: Individual Profile'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                  format: password
+                password:
+                  type: string
+                  format: password
+                picture:
+                  type: string
+                  format: binary
+              
+              required:
+                - name
+                - email
+                - password
+                - picture
+                
+      responses:
+        '302':
+          description:
+          headers: 
+            Location:
+              schema:
+                type: string
+              example:
+                302Success:
+                  description: 'Success updating details. Redirect to user personal profile page'
+                  value: '/users/{id}'
+                302Failure:
+                  description: 'Failed updating details. Redirect back to edit user profile page'
+    
+  /users/deleteaccount:
+  
+    post:
+      operationId: R203
+      summary: 'R205: Deletes a user.'
+      description: 'Deletes a user account. Access: AUT, ADM'
+      tags:
+        - 'M02: Individual Profile'
+        
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                required:
+                  - id
+    
+    responses:
+      '302':
+        description: 'Redirect after deletion of account'
+        headers:
+          Location:
+            schema:
+              type: string
+            example:
+              302Success:
+                description: 'Success deleting account. Redirect to login page.'
+                value: '/login'
+                
+                
+  ############# Posts #############
+  
+  /question/{id}:
+    
+    get:
+      operationId: R301
+      summary: 'R301: View Question Page'
+      description: 'Display the question page. Access: PUB'
+      tags:
+        - 'M03: Posts (Questions, Answers and Comments)'
+        
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+        
+      responses:
+        '200':
+          description: 'Ok. Show Question Page'
+        '302':
+          description: 'Question does not exist'
+          headers:
+           Location:
+             schema:
+               type: string
+             example:
+               302Failure:
+                 description: 'Failed. No question of given ID found.'
+  
+  
+  /question/create:
+  
+    get:
+      operationId: R302
+      summary: 'R302: Show Question creation form'
+      description: 'Shows the form that will be used to create a new question. Access: USR'
+      tags:
+        - 'M03: Posts (Questions, Answers and Comments)'
+      responses:
+        '200': 
+          description: 'Ok. Show Question creation form'
+        '401':
+          description: 'Unauthorized. You do not have permission to perform this action.'
+      
+    post:
+      operationId: R303
+      summary: 'R303: Create a New Question'
+      description: 'Processes the Question creation form . Access: USR'
+      tags:
+        - 'M03: Posts (Questions, Answers and Comments)'
+        
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                body:
+                  type: string
+                tags:
+                  type: array
+                  items:
+                    type: string
+              required:
+                - title
+                - body
+                
+      responses:
+        '302':
+        description: 'Redirect after creating new question.'
+        headers:
+          Location:
+            schema:
+              type: string
+            examples:
+              302Success:
+                description: 'New question successfully created.'
+                value: 'question/{id}'
+              302Error:
+                description: 'Error creating question. Redirect to question creation form.'
+                value: 'question/create'
+                
+          
+  /question/{id}/edit:
+    
+    get:
+      operationId: R304
+      summary: 'R304: Retrieve question edition form.'
+      description: 'Shows the form that will be used by the author to edit a previously created question. Access: AUT'
+      tags:
+        - 'M03: Posts (Questions, Answers and Comments)'
+      responses:
+       '200': 
+         description: 'Ok. Show edit question form' 
+       '401':
+          description: 'Unauthorized. You do not have permission to perform this action.'
+        
+    put:
+      operationId: R305
+      summary: 'R305: Edit a Question'
+      description: 'Allows the author to edit a question. Access: AUT'
+      tags:
+        - 'M03: Posts (Questions, Answers and Comments)'
+      parameters:
+        - in: path
+          name: questionId
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                body:
+                  type: string
+                tags:
+                  type: array
+                  items:
+                    type: string
+              required:
+                - title
+                - body
+                - tags
+      responses:
+        '200':
+          description: 'OK. Question successfully edited.'
+          
+  questions/{id}/vote:
+  
+    post:
+      operationId: R306
+      summary: 'R306: Vote on question'
+      description: 'Submit vote for a question. Access: USR'
+      tags:
+        - 'M03: Posts (Questions, Answers and Comments)'
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: 'Unique identifier of the question being voted on'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                vote:
+                  type: integer
+              required:
+                - vote
+      responses:
+        '200' :
+          description: 'Success. The vote was submited successefully'   
+        '401' : 
+          description: 'Unauthorized. The user must be authenticated to vote'
+  
+
+  ############# Search #############
+  
+  /feed:
+
+    get:
+      operationId: R501
+      summary: 'R501: View Questions Feed'
+      description: 'Retrieve a feed of questions. Access: PUB'
+      tags:
+        - 'M05: Search'
+      responses:
+        '200':
+          description: 'Ok. Returns a feed of questions (UI14).'
+         
+  /search:
+  
+    get:
+      operationId: R502
+      summary: 'R502: View search page'
+      description: 'Show search page. Access: PUB'
+      tags:
+        - 'M05: Search'
+      
+      responses:
+        '200':
+          description: 'Ok. Show Search Page UI (UI13)'
+          
+  /api/search:
+    
+    get:
+      operationId: R503
+      summary: 'R503: Search platform'
+      description: 'Searches the platform for users or posts that match the inserted query and filters. Access: PUB'
+      tags:
+        - 'M05: Search'
+        
+      parameters:
+        - in: query
+          name: search
+          description: 'Search content'
+          schema:
+            type: string
+          required: true
+        
+      responses:
+        '200':
+          description: 'Success. Display list of users/content that match the query.'
+        
+      
+         
+  ############# Administration and Static Pages #############
+  
+  /mainfeatures:
+    
+    get:
+      operationId: R601
+      summary: 'R601: Main Features'
+      description: 'Display the Main Features page. Access: PUB'
+      tags: 
+        - 'M06: Administration and Static Pages'
+      
+      responses:
+        '200':
+          description: 'OK. Show Main Features Page'
+          
+  /aboutus:
+    
+    get:
+      operationId: R602
+      summary: 'R602: About Us'
+      description: 'Display the About Us page. Access: PUB'
+      tags: 
+        - 'M06: Administration and Static Pages'
+      
+      responses:
+        '200':
+          description: 'OK. Show About Us Page'
+        
+  /contacts:
+    
+    get:
+      operationId: R603
+      summary: 'R603: Contacts'
+      description: 'Display the Contacts page. Access: PUB'
+      tags: 
+        - 'M06: Administration and Static Pages'
+      
+      responses:
+        '200':
+          description: 'OK. Show Contacts Page'
+          
+          
+  /analytics:
+      
+    get:
+      operationId: R604
+      summary: 'R604: Analytics'
+      description: 'Display the Analytics page. Access: ADM'
+      tags: 
+        - 'M06: Administration and Static Pages'
+        
+      responses:
+        '200':
+          description: 'OK. Show Analytics Page'
+        '403':
+          description: 'Forbidden. You do not have permission to access this page.'
+            
+  /manageusers:
+      
+    get:
+      operationId: R605
+      summary: 'R605: Manage Users Page'
+      description: 'Display the Manage Users Page. Access: ADM'
+      tags:
+        - 'M06: Administration and Static Pages'
+          
+      responses:
+        '200':
+          description: 'OK. Show Manage Users Page'
+        '403':
+          description: 'Forbidden. You do not have permission to access this page.'
+        
+  /manageusers/block:
+     
+    post:
+      operationId: R606
+      summary: 'R606: Block User'
+      description: 'Blocks a User. Access: ADM'
+      tags:
+        - 'M06: Administration and Static Pages'
+         
+         
+         
+      responses:
+        '200':
+          description: 'Ok. User has been blocked'
+        '401':
+          description: 'Unauthorized. You do not have permission to perform this action.'
+   
+  /manageusers/unblock:
+   
+    post:
+      operationId: R607
+      summary: 'R607: Unblock User'
+      description: 'Unblocks a User. Access: ADM'
+      tags:
+        - 'M06: Administration and Static Pages'
+         
+         
+         
+      responses:
+        '200':
+          description: 'Ok. User has been unblocked'
+        '401':
+          description: 'Unauthorized. You do not have permission to perform this action.'   
+   
+  /manageusers/ban:
+  
+    post:
+      operationId: R608
+      summary: 'R608: Ban User'
+      description: 'Bans a User. Access: ADM'
+      tags:
+        - 'M06: Administration and Static Pages'
+         
+         
+         
+      responses:
+        '200':
+          description: 'Ok. User has been banned'
+        '401':
+          description: 'Unauthorized. You do not have permission to perform this action.'
+   
+  /manageusers/unban:
+  
+    post:
+      operationId: R609
+      summary: 'R609: Unban User'
+      description: 'Unban a User. Access: ADM'
+      tags:
+        - 'M06: Administration and Static Pages'
+         
+         
+         
+      responses:
+        '200':
+          description: 'Ok. User has been unbanned'
+        '401':
+          description: 'Unauthorized. You do not have permission to perform this action.'
+   
+  /manageusers/promote:
+  
+    post:
+      operationId: R610
+      summary: 'R610: Promote User'
+      description: 'Promotes a User to Moderator. Access: ADM'
+      tags:
+        - 'M06: Administration and Static Pages'
+         
+         
+         
+      responses:
+        '200':
+          description: 'Ok. User has been promoted to Moderator'
+        '401':
+          description: 'Unauthorized. You do not have permission to perform this action.'
+   
+  /manageusers/demote:
+   
+    post:
+      operationId: R611
+      summary: 'R611: Demote Moderator'
+      description: 'Demotes a Moderator to regular User. Access: ADM'
+      tags:
+        - 'M06: Administration and Static Pages'
+         
+         
+         
+      responses:
+        '200':
+          description: 'Ok. Moderator has been demoted to User'
+        '401':
+          description: 'Unauthorized. You do not have permission to perform this action.'
