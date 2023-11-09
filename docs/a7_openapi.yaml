@@ -11,7 +11,7 @@ servers:
 
 externalDocs:
   description: Find more info here.
-  url: 
+  url: https://git.fe.up.pt/lbaw/lbaw2324/lbaw2381/-/wikis/home
 
 tags:
 - name: 'M01: Authentication'
@@ -27,15 +27,17 @@ paths:
   ############# Authentication #############
 
   /login:
+  
     get:
       operationId: R101
       summary: 'R101: Login form'
       description: 'Provide login form. Access: PUB'
       tags:
         - 'M01: Authentication'
+        
       responses:
-      '200': 
-        description: 'Ok. Show login form (UI02)'
+        '200': 
+          description: 'Ok. Show login form (UI02)'
         
     post:
       operationId: R102
@@ -43,63 +45,64 @@ paths:
       description: 'Processes the login form submission. Access: PUB'
       tags:
         - 'M01: Authentication'
+        
       requestBody:
         required: true
         content:
           application/x-www-form-urlencoded:
-          schema:
-            type: object
-            properties:
-              email:
-                type: string
-                format: email
-              password:
-                type: string
-                format: password
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
               required:
                 - email
                 - password
+                
       responses:
-      '302':
-        description: 'Redirect after processing the login credentials.'
-        headers:
-          Location:
-            schema:
-              type: string
-            examples:
-              302Success:
-                description: 'Successful authentication. Redirect to user profile.'
-                value: '/users/{id}'
-              302Error:
-                description: 'Failed authentication. Redirect to login form'
-                value: '/login'
+        '302':
+          description: 'Redirect after processing the login credentials.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful authentication. Redirect to user profile.'
+                  value: '/users/{id}'
+                302Error:
+                  description: 'Failed authentication. Redirect to login form'
+                  value: '/login'
                 
   /logout:
     post:
       operationId: R103
       summary: 'R103: Logout Action'
       description: 'Logout the current authenticated user. Access: USR, ADM'
-        tags:
+      tags:
           - 'M01: Authentication'
-        responses:
-          '302':
-            description: 'Redirect after processing logout.'
-            
-            headers:
-              Location:
-                schema:
-                  type: string
-                examples:
-                  302Success:
-                    description: 'Sucessful logout: Redirect to login form.'
-                    value: '/login'
+      responses:
+        '302':
+          description: 'Redirect after processing logout.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Sucessful logout: Redirect to login form.'
+                  value: '/login'
                     
   /register:
     get:
       operationId: R104
       summary: 'R104: Register Form'
       description: 'Provide new user registration form. Access: PUB'
-        tags:
+      tags:
           - 'M01: Authentication'
       responses:
         '200':
@@ -130,10 +133,10 @@ paths:
                 picture:
                   type: string
                   format: binary
-                required:
-                  - name
-                  - email
-                  - password
+              required:
+                - name
+                - email
+                - password
 
       responses:
         '302':
@@ -166,8 +169,8 @@ paths:
           schema:
             type: integer
           required: true
-    
-     responses:
+
+      responses:
        '200':
          description: 'Ok. Show User Profile (UI04)'
        '302':
@@ -182,6 +185,7 @@ paths:
                  value: '/error'
          
   /users/edit:
+  
     get:
       operationId: R202
       summary: 'R202: Edit user profile'
@@ -191,12 +195,14 @@ paths:
       responses:
         '200':
           description: 'Ok. Show Edit Profile form (UI)'
+          
     put:
-      operationId: R202
-      summary: 'R202: Edit user profile'
+      operationId: R203
+      summary: 'R203: Edit user profile'
       description: 'Submits the edited user profile. Access: USR'
       tags:
         - 'M02: Individual Profile'
+        
       requestBody:
         required: true
         content:
@@ -224,12 +230,12 @@ paths:
                 
       responses:
         '302':
-          description:
+          description: 'Redirect after processing inserted user information'
           headers: 
             Location:
               schema:
                 type: string
-              example:
+              examples:
                 302Success:
                   description: 'Success updating details. Redirect to user personal profile page'
                   value: '/users/{id}'
@@ -239,8 +245,8 @@ paths:
   /users/deleteaccount:
   
     post:
-      operationId: R203
-      summary: 'R205: Deletes a user.'
+      operationId: R204
+      summary: 'R204: Deletes a user.'
       description: 'Deletes a user account. Access: AUT, ADM'
       tags:
         - 'M02: Individual Profile'
@@ -254,20 +260,20 @@ paths:
               properties:
                 id:
                   type: integer
-                required:
-                  - id
+              required:
+                - id
     
-    responses:
-      '302':
-        description: 'Redirect after deletion of account'
-        headers:
-          Location:
-            schema:
-              type: string
-            example:
-              302Success:
-                description: 'Success deleting account. Redirect to login page.'
-                value: '/login'
+      responses:
+        '302':
+          description: 'Redirect after deletion of account'
+          headers:
+            Location:
+              schema:
+                type: string
+              example:
+                302Success:
+                  description: 'Success deleting account. Redirect to login page.'
+                  value: '/login'
                 
                 
   ############# Posts #############
@@ -344,18 +350,18 @@ paths:
                 
       responses:
         '302':
-        description: 'Redirect after creating new question.'
-        headers:
-          Location:
-            schema:
-              type: string
-            examples:
-              302Success:
-                description: 'New question successfully created.'
-                value: 'question/{id}'
-              302Error:
-                description: 'Error creating question. Redirect to question creation form.'
-                value: 'question/create'
+          description: 'Redirect after creating new question.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'New question successfully created.'
+                  value: 'question/{id}'
+                302Error:
+                  description: 'Error creating question. Redirect to question creation form.'
+                  value: 'question/create'
                 
           
   /question/{id}/edit:
@@ -366,6 +372,14 @@ paths:
       description: 'Shows the form that will be used by the author to edit a previously created question. Access: AUT'
       tags:
         - 'M03: Posts (Questions, Answers and Comments)'
+        
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+        
       responses:
        '200': 
          description: 'Ok. Show edit question form' 
@@ -378,12 +392,14 @@ paths:
       description: 'Allows the author to edit a question. Access: AUT'
       tags:
         - 'M03: Posts (Questions, Answers and Comments)'
+        
       parameters:
         - in: path
-          name: questionId
+          name: id
           schema:
             type: integer
           required: true
+          
       requestBody:
         required: true
         content:
@@ -407,7 +423,7 @@ paths:
         '200':
           description: 'OK. Question successfully edited.'
           
-  questions/{id}/vote:
+  /questions/{id}/vote:
   
     post:
       operationId: R306
