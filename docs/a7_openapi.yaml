@@ -72,19 +72,21 @@ paths:
                 type: string
               examples:
                 302Success:
-                  description: 'Successful authentication. Redirect to user profile.'
-                  value: '/users/{id}'
+                  description: 'Successful authentication. Redirect to Main Feed.'
+                  value: '/feed'
                 302Error:
                   description: 'Failed authentication. Redirect to login form'
                   value: '/login'
                 
   /logout:
+  
     post:
       operationId: R103
       summary: 'R103: Logout Action'
       description: 'Logout the current authenticated user. Access: USR, ADM'
       tags:
           - 'M01: Authentication'
+          
       responses:
         '302':
           description: 'Redirect after processing logout.'
@@ -98,12 +100,14 @@ paths:
                   value: '/login'
                     
   /register:
+  
     get:
       operationId: R104
       summary: 'R104: Register Form'
       description: 'Provide new user registration form. Access: PUB'
       tags:
           - 'M01: Authentication'
+          
       responses:
         '200':
           description: 'Ok. Show Sign-Up form (UI03)'
@@ -150,15 +154,16 @@ paths:
                   description: 'Successful authentication. Redirect to user profile.'
                   value: '/users/{id}'
                 302Failure:
-                  description: 'Failed authentication. Redirect to register form.'
+                  description: 'Failed authentication. Redirect back to register form.'
                   value: '/register'
                   
   ############# Individual Profile #############                
                   
   /users/{id}:
+  
     get:
       operationId: R201
-      summary: 'R106: View user profile'
+      summary: 'R201: View user profile'
       description: 'Show the individual user profile. Access: PUB'
       tags:
         - 'M02: Individual Profile'
@@ -182,19 +187,30 @@ paths:
              example:
                302Failure:
                  description: 'Failed. No user of given ID found.'
-                 value: '/error'
+                 value: '/feed'
          
   /users/edit:
   
     get:
       operationId: R202
       summary: 'R202: Edit user profile'
-      description: 'Show the edit user profile page. Access: AUT'
+      description: 'Show the edit user profile page. Access: AUT, MOD, ADM'
       tags:
         - 'M02: Individual Profile'
+        
       responses:
         '200':
-          description: 'Ok. Show Edit Profile form (UI)'
+          description: 'Ok. Show Edit Profile form'
+        '401':
+          description: 'Unauthorized. You cannot edit this user profile'
+          headers:
+            Location:
+              schema:
+               type: string
+              examples:
+                401Success:
+                  description: 'Redirect back to feed.'
+                  value: '/feed'
           
     put:
       operationId: R203
@@ -241,6 +257,7 @@ paths:
                   value: '/users/{id}'
                 302Failure:
                   description: 'Failed updating details. Redirect back to edit user profile page'
+                  value: '/users/edit'
     
   /users/deleteaccount:
   
@@ -275,6 +292,48 @@ paths:
                   description: 'Success deleting account. Redirect to login page.'
                   value: '/login'
                 
+  
+  /users/{id}/follow:
+    
+    post:
+      operationId: R205
+      summary: 'R205: Follows a user. Access: USR'
+      tags:
+        - 'M02: Individual Profile'
+        
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      
+      responses:
+        '200':
+          description: 'Ok. Followed the user'
+        '401':
+          description: 'Unauthorized. The user must be authenticated to perform this action.'
+          
+  /users/{id}/unfollow:
+    
+    post:
+      operationId: R206
+      summary: 'R206: Unfollows a user. Access: USR'
+      tags:
+        - 'M02: Individual Profile'
+        
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      
+      responses:
+        '200':
+          description: 'Ok. Unfollowed the user'
+        '401':
+          description: 'Unauthorized. The user must be authenticated to perform this action.'
                 
   ############# Posts #############
   
@@ -313,9 +372,10 @@ paths:
     get:
       operationId: R302
       summary: 'R302: Show Question creation form'
-      description: 'Shows the form that will be used to create a new question. Access: USR'
+      description: 'Shows the question creation form. Access: USR'
       tags:
         - 'M03: Posts (Questions, Answers and Comments)'
+        
       responses:
         '200': 
           description: 'Ok. Show Question creation form'
@@ -350,7 +410,7 @@ paths:
                 
       responses:
         '302':
-          description: 'Redirect after creating new question.'
+          description: 'Redirect after processing question creation form.'
           headers:
             Location:
               schema:
@@ -368,8 +428,8 @@ paths:
     
     get:
       operationId: R304
-      summary: 'R304: Retrieve question edition form.'
-      description: 'Shows the form that will be used by the author to edit a previously created question. Access: AUT'
+      summary: 'R304: Retrieve question editing form.'
+      description: 'Shows the question editing form. Access: AUT'
       tags:
         - 'M03: Posts (Questions, Answers and Comments)'
         
@@ -419,11 +479,23 @@ paths:
                 - title
                 - body
                 - tags
-      responses:
-        '200':
-          description: 'OK. Question successfully edited.'
           
-  /questions/{id}/vote:
+      responses:
+        '302':
+          description: 'Redirect after processing question editing form'
+          headers: 
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Success editing question. Redirect to question'
+                  value: '/question/{id}'
+                302Failure:
+                  description: 'Failed updating details. Redirect back to edit user profile page'
+                  value: '/question/{id}/edit'    
+          
+  /question/{id}/vote:
   
     post:
       operationId: R306
@@ -431,13 +503,257 @@ paths:
       description: 'Submit vote for a question. Access: USR'
       tags:
         - 'M03: Posts (Questions, Answers and Comments)'
+        
+      parameters:
+        - in: path
+          name: id
+          description: 'Unique identifier of the question being voted on'
+          schema:
+            type: integer
+          required: true
+          
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                vote:
+                  type: integer
+              required:
+                - vote
+                
+      responses:
+        '200' :
+          description: 'Success. The vote was submited successfully'   
+        '401' : 
+          description: 'Unauthorized. The user must be authenticated to vote'
+          
+  /question/{id}/delete:
+    
+    post:
+      operationId: R307
+      summary: 'R307: Delete a Question'
+      description: 'Allows the deletion of a question. Access: AUT, MOD, ADM'
+      tags:
+        - 'M03: Posts (Questions, Answers and Comments)'
+        
       parameters:
         - in: path
           name: id
           required: true
           schema:
             type: integer
-          description: 'Unique identifier of the question being voted on'
+          
+      responses:
+        '200':
+          description: 'The question has been successfully deleted.'
+        '403':
+          description: 'Forbidden. The user does not have permission to delete this question.'
+          
+  /question/{id}/follow:
+    
+    post:
+      operationId: R308
+      summary: 'R308: Follows a question. Access: USR'
+      description: 'Allows the following of a question. Access: USR'
+      tags:
+        - 'M03: Posts (Questions, Answers and Comments)'
+        
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      
+      responses:
+        '200':
+          description: 'Ok. Followed the question'
+        '401':
+          description: 'Unauthorized. The user must be authenticated to perform this action.'
+        
+  /question/{id}/unfollow:
+    
+    post:
+      operationId: R309
+      summary: 'R309: Unfollows a question. Access: USR'
+      description: 'Allows the unfollowing of a question. Access: USR'
+      tags:
+        - 'M03: Posts (Questions, Answers and Comments)'
+        
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      
+      responses:
+        '200':
+          description: 'Ok. Unfollowed the question'
+        '401':
+          description: 'Unauthorized. The user must be authenticated to perform this action.'
+          
+  /question/{id}/reports:
+  
+    get:
+      operationId: R310
+      summary: 'R310: Shows Question Reports'
+      description: 'Displays the Report Logs for a question. Access: MOD, ADM'
+      tags:
+        - 'M03: Posts (Questions, Answers and Comments)'
+        
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      
+      responses:
+        '200':
+          description: 'OK. Show Report Logs'
+        '403':
+          description: 'Forbidden. You do not have permission to access this page.'
+
+  /question/{id}/answers/create:
+  
+    get:
+      operationId: R311
+      summary: 'R311: Show answer creation form'
+      description: 'Shows the form that will be used to create a new answer. Access: USR'
+      tags:
+        - 'M03: Posts (Questions, Answers and Comments)'
+        
+      parameters:
+        - in: path
+          name: id
+          description: 'Question ID'
+          schema:
+            type: integer
+          required: true
+        
+      responses:
+        '200': 
+          description: 'Ok. Show answer creation form'
+        '401':
+          description: 'Unauthorized. You do not have permission to perform this action.'
+          
+    post:
+      operationId: R312
+      summary: 'R312: Post an Answer'
+      description: 'Processes answer creation form. Access: USR'
+      tags:
+        - 'M03: Posts (Questions, Answers and Comments)'
+        
+      parameters:
+        - in: path
+          name: id
+          description: 'Question ID'
+          schema:
+            type: integer
+          required: true
+          
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+              required:
+                - content
+          
+      responses:
+        '302':
+          description: 'Redirect after processing answer submission form.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'New answer successfully posted. Redirect back to question.'
+                  value: 'question/{id}'
+                302Error:
+                  description: 'Error posting answer. Redirect to answer creation form.'
+                  value: '/question/{id}/answers/create'
+          
+  
+  /answers/{id}/edit:
+  
+    get:
+      operationId: R313
+      summary: 'R313: Show answer edition form.'
+      description: 'Shows the form that will be used to edit an answer. Access: AUT'
+      tags:
+        - 'M03: Posts (Questions, Answers and Comments)'
+        
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          
+      responses:
+       '200': 
+         description: 'Ok. Show edit answer form' 
+       '401':
+          description: 'Unauthorized. You do not have permission to perform this action.'
+        
+    put:
+      operationId: R314
+      summary: 'R314: Edit an Answer'
+      description: 'Allows a user to edit their own answer. Access: AUT'
+      tags:
+        - 'M03: Posts (Questions, Answers and Comments)'
+        
+      parameters:
+        - in: path
+          name: id
+          description: 'Unique identifier of the answer to be edited.'
+          schema:
+            type: integer
+          required: true
+          
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+              required:
+                - content
+                
+      responses:
+        '200':
+          description: 'OK. Answer successfully updated.'
+          
+  /answers/{id}/vote:
+  
+    post:
+      operationId: R315
+      summary: 'R315: Vote on answer'
+      description: 'Submit vote for a answer. Access: USR'
+      tags:
+        - 'M03: Posts (Questions, Answers and Comments)'
+        
+      parameters:
+        - in: path
+          name: id
+          description: 'Answer ID'
+          schema:
+            type: integer
+          required: true
+          
       requestBody:
         required: true
         content:
@@ -449,12 +765,497 @@ paths:
                   type: integer
               required:
                 - vote
+                
+      responses:
+        '200' :
+          description: 'Success. The vote was submitted successfully'   
+        '401' : 
+          description: 'Unauthorized. The user must be authenticated to vote'          
+          
+  /answers/{id}/delete:
+    
+    post:
+      operationId: R316
+      summary: 'R316: Delete an Answer'
+      description: 'Allows the deletion of an answer. Access: USR, MOD, ADM'
+      tags:
+        - 'M03: Posts (Questions, Answers and Comments)'
+        
+      parameters:
+        - in: path
+          name: id
+          description: 'Answer ID'
+          schema:
+            type: integer
+          required: true
+          
+      responses:
+        '200':
+          description: 'The answer has been successfully deleted.'
+        '403':
+          description: 'Forbidden. The user does not have permission to delete this answer.'
+          
+  /answers/{id}/reports:
+  
+    get:
+      operationId: R317
+      summary: 'R317: Shows Answer Reports'
+      description: 'Displays the Report Logs for an answer. Access: MOD, ADM'
+      tags:
+        - 'M03: Posts (Questions, Answers and Comments)'
+        
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      
+      responses:
+        '200':
+          description: 'OK. Show Report Logs'
+        '403':
+          description: 'Forbidden. You do not have permission to access this page.'
+          
+  
+  /questions/{id}/comment/create:
+  
+    get:
+      operationId: R318
+      summary: 'R318: Show comment creation form'
+      description: 'Shows the form that will be used to create a new comment. Access: USR'
+      tags:
+        - 'M03: Posts (Questions, Answers and Comments)'
+        
+      parameters:
+        - in: path
+          name: id
+          description: 'Question ID'
+          schema:
+            type: integer
+          required: true
+        
+      responses:
+        '200': 
+          description: 'Ok. Show comment creation form'
+        '401':
+          description: 'Unauthorized. You do not have permission to perform this action.'
+          
+    post:
+      operationId: R319
+      summary: 'R319: Post a Comment under Question'
+      description: 'Allows an a user to post an comment under a specific question. Access: USR'
+      tags:
+        - 'M03: Posts (Questions, Answers and Comments)'
+        
+      parameters:
+        - in: path
+          name: id
+          description: 'Question ID'
+          schema:
+            type: integer
+          required: true
+          
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+              required:
+                - content
+                
+      responses:
+        '302':
+          description: 'Redirect after posting new comment.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'New comment successfully posted. Redirect back to question'
+                  value: 'question/{id}'
+                302Error:
+                  description: 'Error posting comment. Redirect to comment creation form.'
+                  value: '/questions/{id}/comment/create'
+  
+          
+  /questions/{id}/answers/{answerId}/comment/create:
+  
+    get:
+      operationId: R320
+      summary: 'R320: Show comment creation form'
+      description: 'Shows the form that will be used to create a new comment. Access: USR'
+      tags:
+        - 'M03: Posts (Questions, Answers and Comments)'
+        
+      parameters:
+        - in: path
+          name: id
+          description: 'Question ID'
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: answerId
+          description: 'Answer ID'
+          schema:
+            type: integer
+          required: true
+          
+      responses:
+        '200': 
+          description: 'Ok. Show comment creation form'
+        '401':
+          description: 'Unauthorized. You do not have permission to perform this action.'
+          
+    post:
+      operationId: R321
+      summary: 'R321: Post a Comment under Answer'
+      description: 'Allows an a user to post an comment under a specific answer. Access: USR'
+      tags:
+        - 'M03: Posts (Questions, Answers and Comments)'
+        
+      parameters:
+        - in: path
+          name: id
+          description: 'Question ID'
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: answerId
+          description: 'Answer ID'
+          schema:
+            type: integer
+          required: true
+          
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+              required:
+                - content
+                
+      responses:
+        '302':
+          description: 'Redirect after posting new comment.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'New comment successfully posted. Redirect back to question'
+                  value: 'question/{id}'
+                302Error:
+                  description: 'Error posting comment. Redirect to comment creation form.'
+                  value: '/questions/{id}/answers/{answerId}/comment/create'
+
+  /comments/{id}/edit:
+  
+    get:
+      operationId: R322
+      summary: 'R322: Retrieve comment edition form.'
+      description: 'Shows the form that will be used to edit a comment. Access: AUT'
+      tags:
+        - 'M03: Posts (Questions, Answers and Comments)'
+        
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          
+      responses:
+       '200': 
+         description: 'Ok. Show edit comment form' 
+       '401':
+          description: 'Unauthorized. You do not have permission to perform this action.'
+        
+    put:
+      operationId: R323
+      summary: 'R323: Edit a comment'
+      description: 'Allows the editing of a comment. Access: AUT'
+      tags:
+        - 'M03: Posts (Questions, Answers and Comments)'
+        
+      parameters:
+        - in: path
+          name: id
+          description: 'Comment ID'
+          schema:
+            type: integer
+          required: true
+          
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+              required:
+                - content
+                
+      responses:
+        '200':
+          description: 'OK. Comment successfully updated.'
+          
+  /comments/{id}/vote:
+  
+    post:
+      operationId: R324
+      summary: 'R324: Vote on comment'
+      description: 'Submit vote for a comment. Access: USR'
+      tags:
+        - 'M03: Posts (Questions, Answers and Comments)'
+        
+      parameters:
+        - in: path
+          name: id
+          description: 'Comment ID'
+          schema:
+            type: integer
+          required: true
+          
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                vote:
+                  type: integer
+              required:
+                - vote
+                
       responses:
         '200' :
           description: 'Success. The vote was submited successefully'   
         '401' : 
           description: 'Unauthorized. The user must be authenticated to vote'
+
+  /comments/{id}/delete:
+    
+    post:
+      operationId: R325
+      summary: 'R325: Delete a Comment'
+      description: 'Allows the deletion of a comment. Access: AUT, MOD, ADM'
+      tags:
+        - 'M03: Posts (Questions, Answers and Comments)'
+        
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: 'Unique identifier of the comment to be deleted.'
+          
+      responses:
+        '200':
+          description: 'The comment has been successfully deleted.'
+        '403':
+          description: 'Forbidden. The user does not have permission to delete this comment.'
+          
+  /comment/{id}/reports:
   
+    get:
+      operationId: R326
+      summary: 'R326: Shows Comment Reports'
+      description: 'Displays the Report Logs for a comment. Access: MOD, ADM'
+      tags:
+        - 'M03: Posts (Questions, Answers and Comments)'
+        
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      
+      responses:
+        '200':
+          description: 'OK. Show Report Logs'
+        '403':
+          description: 'Forbidden. You do not have permission to access this page.'
+ 
+          
+  ############# Tags #############        
+      
+  /tag/{name}:
+  
+    get:
+      operationId: R401
+      summary: 'R401: View Tag Feed'
+      description: 'Retrieves a feed of questions with a specific tag. Access: PUB'
+      tags:
+        - 'M04: Tags'
+        
+      parameters:
+        - in: path
+          name: name
+          description: 'Tag name'
+          schema:
+            type: string
+          required: true
+      
+      responses:
+        '200':
+          description: 'Ok. Show Tag Feed Page'
+        '302':
+          description: 'Tag does not exist'
+          headers:
+           Location:
+             schema:
+               type: string
+             example:
+               302Failure:
+                 description: 'Failed. No Tag of given name found.'
+                 
+  /tag/{name}/follow:
+    
+    post:
+      operationId: R402
+      summary: 'R402: Follow Tag'
+      description: 'Allows following a specific Tag. Access: USR'
+      tags:
+        - 'M04: Tags'
+    
+      parameters:
+        - in: path
+          name: name
+          description: 'Tag name'
+          schema:
+            type: string
+          required: true
+      
+      responses:
+        '200':
+          description: 'Ok. Followed a Tag.'
+        '403':
+          description: 'Forbidden.'
+          
+  /tag/{name}/unfollow:
+    
+    post:
+      operationId: R403
+      summary: 'R403: Unfollow Tag'
+      description: 'Allows unfollowing a specific Tag. Access: USR'
+      tags:
+        - 'M04: Tags'
+    
+      parameters:
+        - in: path
+          name: name
+          description: 'Tag name'
+          schema:
+            type: string
+          required: true
+      
+      responses:
+        '200':
+          description: 'Ok. Unfollowed a Tag.'
+        '403':
+          description: 'Forbidden.'
+        
+  /tag/create:
+    
+    get:
+      operationId: R404
+      summary: 'R404: Tag Creation Form'
+      description: 'Provide Tag Creation Form. Access: ADM'
+      tags:
+        - 'M04: Tags'
+        
+      responses:
+        '200': 
+          description: 'Ok. Show Tag Creation Form.'
+        '401':
+          description: 'Unauthorized. You cannot access this page'
+          
+    post:
+      operationId: R405
+      summary: 'R405: Tag Creation Action'
+      description: 'Processes the Tag Creation submission. Access: ADM'
+      tags:
+        - 'M04: Tags'
+        
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+              required:
+                - email
+      
+      responses:
+        '302':
+          description: 'Redirect after processing the Tag Creation form submission.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful creation. Redirect to Tag Feed.'
+                  value: '/tag/{name}'
+                302Error:
+                  description: 'Failed creation. Redirect back to Tag Creation form.'
+                  value: '/tag/create'
+      
+  /tag/delete:
+  
+    post:
+      operationId: R406
+      summary: 'R406: Deletes a Tag.'
+      description: 'Deletes a Tag. Access: ADM'
+      tags:
+        - 'M04: Tags'
+        
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+              required:
+                - id
+    
+      responses:
+        '302':
+          description: 'Redirect after deletion of Tag'
+          headers:
+            Location:
+              schema:
+                type: string
+              example:
+                302Success:
+                  description: 'Success deleting Tag. Redirect to Main Feed.'
+                  value: '/feed'
 
   ############# Search #############
   
@@ -587,7 +1388,17 @@ paths:
       tags:
         - 'M06: Administration and Static Pages'
          
-         
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+              required:
+                - user_id   
          
       responses:
         '200':
@@ -604,7 +1415,17 @@ paths:
       tags:
         - 'M06: Administration and Static Pages'
          
-         
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+              required:
+                - user_id   
          
       responses:
         '200':
@@ -621,7 +1442,17 @@ paths:
       tags:
         - 'M06: Administration and Static Pages'
          
-         
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+              required:
+                - user_id   
          
       responses:
         '200':
@@ -638,7 +1469,17 @@ paths:
       tags:
         - 'M06: Administration and Static Pages'
          
-         
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+              required:
+                - user_id   
          
       responses:
         '200':
@@ -655,7 +1496,17 @@ paths:
       tags:
         - 'M06: Administration and Static Pages'
          
-         
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+              required:
+                - user_id   
          
       responses:
         '200':
@@ -672,10 +1523,55 @@ paths:
       tags:
         - 'M06: Administration and Static Pages'
          
-         
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+              required:
+                - user_id   
          
       responses:
         '200':
           description: 'Ok. Moderator has been demoted to User'
         '401':
           description: 'Unauthorized. You do not have permission to perform this action.'
+          
+  ############# Moderator Pages #############        
+  
+  /users/{id}/activity:
+  
+    get:
+      operationId: R701
+      summary: 'R701: User Activity Log'
+      description: 'Display a user activity log. Access: MOD, ADM'
+      tags: 
+        - 'M07: Moderator Pages'
+        
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          
+      responses:
+        '200':
+          description: 'OK. Show User Activity Log'
+        '302':
+         description: 'User does not exist'
+         headers:
+           Location:
+             schema:
+               type: string
+             example:
+               302Failure:
+                 description: 'Failed. No user of given ID found. Redirect back to user profile'
+                 value: '/users/{id}'
+        '403':
+          description: 'Forbidden. You do not have permission to access this page.'
+  
