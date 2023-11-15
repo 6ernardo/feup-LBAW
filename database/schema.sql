@@ -1,3 +1,11 @@
+--
+-- Use a specific schema and set it as default
+--
+DROP SCHEMA IF EXISTS lbawtest CASCADE;
+CREATE SCHEMA IF NOT EXISTS lbawtest;
+SET search_path TO lbawtest;
+
+
 DROP TABLE IF EXISTS user_vote_comment_answer;
 DROP TABLE IF EXISTS user_vote_comment_question;
 DROP TABLE IF EXISTS user_vote_answer;
@@ -602,3 +610,7 @@ CREATE TRIGGER TRIGGER16
 BEFORE INSERT ON report_comment_answer
 FOR EACH ROW
 EXECUTE FUNCTION comment_unique_report();
+
+
+-- Populate
+insert into users (name, email, password, profilePicture, score, moderator) values ('test', 'test@test.com', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', 'http://dummyimage.com/228x100.png/dddddd/000000', 2080, false);

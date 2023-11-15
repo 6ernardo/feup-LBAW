@@ -2,8 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\CardController;
-use App\Http\Controllers\ItemController;
+use App\Http\Controllers\FeedController;
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -21,6 +20,11 @@ use App\Http\Controllers\Auth\RegisterController;
 
 // Home
 Route::redirect('/', '/login');
+
+//Feed
+Route::controller(FeedController::class)->group(function () {
+    Route::get('/feed', 'index')->name('feed');
+});
 
 // Cards
 Route::controller(CardController::class)->group(function () {
