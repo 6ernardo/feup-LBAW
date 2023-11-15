@@ -134,6 +134,9 @@ paths:
                 password:
                   type: string
                   format: password
+                confirm_password:
+                    type: string
+                    format: password
                 picture:
                   type: string
                   format: binary
@@ -141,6 +144,7 @@ paths:
                 - name
                 - email
                 - password
+                - confirm_password
 
       responses:
         '302':
