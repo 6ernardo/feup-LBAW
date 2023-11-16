@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\FeedController;
+use App\Http\Controllers\UserController;
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -26,12 +27,10 @@ Route::controller(FeedController::class)->group(function () {
     Route::get('/feed', 'index')->name('feed');
 });
 
-// Cards
-Route::controller(CardController::class)->group(function () {
-    Route::get('/cards', 'list')->name('cards');
-    Route::get('/cards/{id}', 'show');
+// User
+Route::controller(UserController::class)->group(function () {
+    Route::get('/user/{id}', 'show');
 });
-
 
 // API
 Route::controller(CardController::class)->group(function () {

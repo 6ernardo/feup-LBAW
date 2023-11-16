@@ -2,7 +2,7 @@
 
 @section('content')
 
-<section id="cards">
+<section id="feed">
     <p>Hello World!</p>
 </section>
 
