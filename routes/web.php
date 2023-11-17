@@ -30,20 +30,8 @@ Route::controller(FeedController::class)->group(function () {
 // User
 Route::controller(UserController::class)->group(function () {
     Route::get('/user/{id}', 'show');
+    Route::get('/user/{id}/edit', 'showEditForm');
 });
-
-// API
-Route::controller(CardController::class)->group(function () {
-    Route::put('/api/cards', 'create');
-    Route::delete('/api/cards/{card_id}', 'delete');
-});
-
-Route::controller(ItemController::class)->group(function () {
-    Route::put('/api/cards/{card_id}', 'create');
-    Route::post('/api/item/{id}', 'update');
-    Route::delete('/api/item/{id}', 'delete');
-});
-
 
 // Authentication
 Route::controller(LoginController::class)->group(function () {
