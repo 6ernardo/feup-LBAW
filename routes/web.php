@@ -31,7 +31,9 @@ Route::controller(FeedController::class)->group(function () {
 Route::controller(UserController::class)->group(function () {
     Route::get('/user/{id}', 'show');
     Route::get('/user/{id}/edit', 'showEditForm');
+    Route::put('/user/{id}/edit', 'editProfile');
 });
+
 
 // Authentication
 Route::controller(LoginController::class)->group(function () {

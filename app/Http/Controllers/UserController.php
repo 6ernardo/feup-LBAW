@@ -19,8 +19,37 @@ class UserController extends Controller
         $user = User::find($id);
 
         $this->authorize('edit_profile', $user, Auth::user());
-        return view('pages.editUser', ['user' => $user,
-                                        'old' => ['name' => $user->name,
-                                                    'email' => $user->email]]);
+        return view('pages.editUser', ['user' => $user]);
+    }
+
+    public function editProfile(int $id, Request $request){
+        $user = User::find($id);
+
+        $this->authorize('edit_profile', $user, Auth::user());
+
+        if($request->name){
+            $request->validate([
+                'name' => 'string|max:255',
+            ]);
+            $user->name = $request->input('name');
+        }
+
+        if($request->email){
+            $request->validate([
+                'email' => 'email|unique:users,email|max:255'
+            ]);
+            $user->email = $request->input('email');
+        }
+
+        if($request->password){
+            $request->validate([
+                'password' => 'min:8|max:255|confirmed'
+            ]);
+            $user->password = Hash::make($request->password);
+        }
+
+        $user->save();
+        return redirect('user/'.$id);
+        
     }
 }
