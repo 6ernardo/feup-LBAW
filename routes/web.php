@@ -6,6 +6,7 @@ use App\Http\Controllers\FeedController;
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\QuestionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -56,4 +57,9 @@ Route::controller(LoginController::class)->group(function () {
 Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'showRegistrationForm')->name('register');
     Route::post('/register', 'register');
+});
+
+Route::controller(QuestionController::class)->group(function () {
+    Route::get('/questions/create', 'create')->name('questions.create');
+    Route::post('/questions', 'store')->name('questions.store');
 });
