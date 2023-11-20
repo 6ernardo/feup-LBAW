@@ -613,4 +613,4 @@ EXECUTE FUNCTION comment_unique_report();
 
 
 -- Populate
-insert into users (name, email, password, profilePicture, score, moderator) values ('test', 'test@test.com', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', 'http://dummyimage.com/228x100.png/dddddd/000000', 2080, false);
+insert into users (name, email, password, profilePicture, score, moderator) values ('test', 'test@test.com', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', 'http://dummyimage.com/228x100.png/dddddd/000000', 2080, true);

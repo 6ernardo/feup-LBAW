@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\FeedController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AdminController;
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -23,7 +24,7 @@ use App\Http\Controllers\QuestionController;
 // Home
 Route::redirect('/', '/login');
 
-//Feed
+// Feed
 Route::controller(FeedController::class)->group(function () {
     Route::get('/feed', 'index')->name('feed');
 });
@@ -35,6 +36,13 @@ Route::controller(UserController::class)->group(function () {
     Route::put('/user/{id}/edit', 'editProfile');
 });
 
+// Admin
+Route::controller(AdminController::class)->group(function () {
+    Route::get('/manageusers', 'showManageUsers');
+    Route::get('/manageusers/create', 'showCreateUser');
+    Route::post('/manageusers/create', 'createUser');
+});
+
 //Question
 Route::controller(QuestionController::class)->group(function () {
     Route::get('/questions/create', 'create')->name('questions.create');
@@ -44,7 +52,6 @@ Route::controller(QuestionController::class)->group(function () {
     Route::put('/questions/{id}/edit', 'editQuestion');
     Route::delete('questions/{id}/delete', 'deleteQuestion');
 });
-
 
 // Authentication
 Route::controller(LoginController::class)->group(function () {
