@@ -9,6 +9,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\AnswerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,6 +52,11 @@ Route::controller(QuestionController::class)->group(function () {
     Route::get('/questions/{id}/edit', 'showEdit');
     Route::put('/questions/{id}/edit', 'editQuestion');
     Route::delete('questions/{id}/delete', 'deleteQuestion');
+});
+
+//Answer
+Route::controller(AnswerController::class)->group(function () {
+    Route::post('questions/{id}/answer/create', 'create');
 });
 
 // Authentication

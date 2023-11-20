@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Question;
 
+use Illuminate\Support\Facades\Auth;
+
 class QuestionController extends Controller{
 
     public function create(){
@@ -17,18 +19,20 @@ class QuestionController extends Controller{
             'description' => 'required|string',
         ]);
 
-        $question = Question::create([
-            'author_id' => auth()->id(),
-            'title' => $request->title,
-            'description' => $request->description,
-        ]);
+        $question = new Question();
+
+        $question->author_id = Auth::user()->user_id;
+        $question->title = $request->input('title');
+        $question->description = $request->input('description');
+
+        $question->save();
 
         return redirect('questions/'.$question->question_id);
     }
 
     public function show($id){
         $question = Question::find($id);
-
+        
         return view('pages.showQuestion', [
             'question' => $question
         ]);
