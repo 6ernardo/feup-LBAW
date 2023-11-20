@@ -17,13 +17,22 @@ public function store(Request $request){
         'description' => 'required',
     ]);
 
-    Question::create([
+    $question = Question::create([
         'author_id' => auth()->id(),
         'title' => $request->title,
         'description' => $request->description,
     ]);
 
-    return redirect('/feed')->with('success', 'Pergunta criada com sucesso!');
-
+    return $this->show($question->question_id);
     }
+
+public function show($id){
+    $question = Question::find($id);
+
+    return view('questions.show', [
+        'title' => $question->title,
+        'description' => $question->description
+    ]);
+}
+
 }

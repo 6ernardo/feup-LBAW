@@ -62,4 +62,5 @@ Route::controller(RegisterController::class)->group(function () {
 Route::controller(QuestionController::class)->group(function () {
     Route::get('/questions/create', 'create')->name('questions.create');
     Route::post('/questions', 'store')->name('questions.store');
+    Route::get('/questions/{id}','show')->name('questions.show');
 });
