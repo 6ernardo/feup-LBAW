@@ -8,6 +8,7 @@ use App\Http\Controllers\AdminController;
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\QuestionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,6 +41,16 @@ Route::controller(AdminController::class)->group(function () {
     Route::get('/manageusers', 'showManageUsers');
     Route::get('/manageusers/create', 'showCreateUser');
     Route::post('/manageusers/create', 'createUser');
+});
+
+//Question
+Route::controller(QuestionController::class)->group(function () {
+    Route::get('/questions/create', 'create')->name('questions.create');
+    Route::post('/questions', 'store')->name('questions.store');
+    Route::get('/questions/{id}','show')->name('questions.show');
+    Route::get('/questions/{id}/edit', 'showEdit');
+    Route::put('/questions/{id}/edit', 'editQuestion');
+    Route::delete('questions/{id}/delete', 'deleteQuestion');
 });
 
 // Authentication
