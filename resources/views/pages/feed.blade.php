@@ -2,7 +2,7 @@
 
 @section('content')
 <a class="button" href="{{ url('/questions/create') }}"> Post Question </a>
-<section id="cards">
+<section id="feed">
     <p>Hello World!</p>
 </section>
 
