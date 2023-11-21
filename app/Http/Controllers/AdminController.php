@@ -42,4 +42,14 @@ class AdminController extends Controller
         return redirect('user/'.$user->user_id);
         
     }
+
+    public function search(Request $request){
+        $input = $request->get('search') ? $request->get('search').':*' : "*";
+        $users = User::select('users.user_id', 'users.name', 'users.email')
+                    ->whereRaw("users.tsvectors @@ to_tsquery(?)", [$input])
+                    ->orderByRaw("ts_rank(users.tsvectors, to_tsquery(?)) ASC", [$input])
+                    ->get();
+
+        return response()->json(['users' => $users]);
+    }
 }

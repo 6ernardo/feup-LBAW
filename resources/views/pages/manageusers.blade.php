@@ -2,9 +2,14 @@
 
 @section('content')
     <section id="manageusers">
+    <h2>User Management</h2>
         <a class="button" href="/manageusers/create">Create Account</a>
+        <header>
+            <label>Search for user:
+                <input type="search" id="search" placeholder="Search by name or email...">
+            </label>
+        </header>
         <div class="users_table">
-            <h2>User Management</h2>
             <ul>
                 <li>Name</li>
                 <li>ID</li>
