@@ -36,6 +36,7 @@ Route::controller(UserController::class)->group(function () {
     Route::get('/user/{id}/edit', 'showEditForm');
     Route::put('/user/{id}/edit', 'editProfile');
     Route::get('/user/{id}/questions', 'showQuestions');
+    Route::get('/user/{id}/answers', 'showAnswers');
 });
 
 // Admin

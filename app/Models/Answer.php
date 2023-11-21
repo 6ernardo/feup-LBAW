@@ -26,7 +26,7 @@ class Answer extends Model
     protected $primaryKey = 'answer_id';
 
     public function question() : BelongsTo {
-        return $this->belongsTo(Question::class);
+        return $this->belongsTo(Question::class, 'question_id');
     }
 
     public function author() : BelongsTo {
