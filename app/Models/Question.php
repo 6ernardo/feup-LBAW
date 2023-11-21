@@ -5,6 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Models\User;
+
+// Added to define Eloquent relationships.
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+
 class Question extends Model{
     use HasFactory;
 
@@ -14,4 +21,12 @@ class Question extends Model{
 
     public $incrementing = true;
     public $timestamps = false;
+
+    public function author() : BelongsTo {
+        return $this->belongsTo(User::class, 'author_id');
+    }
+
+    public function answers() : HasMany {
+        return $this->hasMany(Answer::class, 'question_id');
+    }
 }
