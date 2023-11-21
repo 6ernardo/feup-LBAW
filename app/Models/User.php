@@ -8,8 +8,6 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-use App\Models\Question;
-
 // Added to define Eloquent relationships.
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -50,4 +48,11 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    public function questions() {
+        return $this->hasMany(Question::class, 'author_id');
+    }
+
+    public function answers() {
+        return $this->hasMany(Answer::class);
+    }
 }

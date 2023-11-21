@@ -52,4 +52,9 @@ class UserController extends Controller
         return redirect('user/'.$id);
         
     }
+
+    public function showQuestions(int $id){
+        $user = User::find($id);
+        return view('pages.userQuestion', ['userQuestions' => $user->questions]);
+    }
 }
