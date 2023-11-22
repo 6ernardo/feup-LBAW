@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\AnswerController;
+use App\Http\Controllers\SearchQuestionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -74,4 +75,9 @@ Route::controller(LoginController::class)->group(function () {
 Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'showRegistrationForm')->name('register');
     Route::post('/register', 'register');
+});
+
+// Search
+Route::controller(SearchQuestionController::class)->group(function(){
+    Route::get('/{searchQuery?}','list')->name('searchQuestion');
 });

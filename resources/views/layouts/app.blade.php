@@ -32,6 +32,7 @@
                 	<a class="button" href="{{ url('/login') }}"> Login </a>
                 	<a class="button" href="{{ url('/register') }}"> Register </a>
                 @endif
+                <a class="button" href="{{ url('/searchQuestionForm') }}"> Search </a>
             </header>
             <section id="content">
                 @yield('content')

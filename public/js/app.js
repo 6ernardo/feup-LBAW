@@ -22,8 +22,21 @@ function addEventListeners() {
     let cardCreator = document.querySelector('article.card form.new_card');
     if (cardCreator != null)
       cardCreator.addEventListener('submit', sendCreateCardRequest);
+    
   }
   
+  var searchForm = document.getElementById('searchForm');
+  searchForm.addEventListener('submit', function (event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    // Get the search query from the input field
+    var searchQuery = document.getElementById('search').value;
+
+    // ao mudar para este link, a página é recarregada com o resultado da pesquisa
+    // a api é chamada e o resultado é mostrado
+    window.location.href = '/feed' + '?search=' + searchQuery;
+  });
+
   function encodeForAjax(data) {
     if (data == null) return null;
     return Object.keys(data).map(function(k){
