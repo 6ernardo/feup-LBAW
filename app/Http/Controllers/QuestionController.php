@@ -4,22 +4,28 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Question;
+use App\Models\User;
 
 use Illuminate\Support\Facades\Auth;
 
 class QuestionController extends Controller{
 
     public function create(){
+        $this->authorize('show_create', Question::class);
+
         return view('pages.createQuestion');
     }
 
     public function store(Request $request){
+
+        $question = new Question();
+
+        $this->authorize('create', $question);
+
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
         ]);
-
-        $question = new Question();
 
         $question->author_id = Auth::user()->user_id;
         $question->title = $request->input('title');
@@ -40,16 +46,18 @@ class QuestionController extends Controller{
 
     public function showEdit(int $id){
         $question = Question::find($id);
+        $user = User::find($question->author_id);
 
-        //policy
+        $this->authorize('edit', $question);
 
         return view('pages.editQuestion', ['question' => $question]);
     }
 
     public function editQuestion(int $id, Request $request){
         $question = Question::find($id);
+        $user = User::find($question->author_id);
 
-        //policy
+        $this->authorize('edit', $question);
 
         if($request->title){
             $request->validate([
@@ -72,8 +80,9 @@ class QuestionController extends Controller{
     public function deleteQuestion(int $id){
 
         $question = Question::find($id);
+        $user = User::find($question->author_id);
 
-        //policy
+        $this->authorize('delete', $question);
 
         //delete answers and comments under question
 
