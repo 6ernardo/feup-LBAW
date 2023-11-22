@@ -8,7 +8,7 @@ if (searchQuestions) {
         event.preventDefault();
         const search_query = document.getElementById('search_query').value;
 
-        const response = await fetch('../search/?search_query=' +  search_query);
+        const response = await fetch('../search?search_query=' +  search_query);
         const questions = await response.json();
 
         const section = document.querySelector('#results');
