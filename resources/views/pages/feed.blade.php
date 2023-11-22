@@ -8,8 +8,10 @@
     @if(isset($topQuestions) && $topQuestions->count() > 0)
         @foreach ($topQuestions as $question)
             <div class="topQuestion">
-                <h2>{{$question->title}}</h2>
-                <p>{{$question->description}}</p>
+                <a href="{{ url('/questions/'.$question->question_id) }}">
+                    <h2>{{$question->title}}</h2>
+                    <p>{{$question->description}}</p>
+                </a>
                 <p>Pontuacão: {{$question->score}}</p>
             </div>
         @endforeach
@@ -21,8 +23,10 @@
     @if(isset($newQuestions) && $newQuestions->count() > 0)
         @foreach ($newQuestions as $question)
             <div class="newQuestion">
-                <h3>{{$question -> title}}</h3>
-                <p>{{$question->description}}</p>
+                <a href="{{ url('/questions/'.$question->question_id) }}">
+                    <h3>{{$question -> title}}</h3>
+                    <p>{{$question->description}}</p>
+                </a>
                 <p>Pontuacão: {{$question->score}}</p>
             </div>
         @endforeach

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Answer;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Auth;
@@ -10,12 +11,14 @@ use Illuminate\Support\Facades\Auth;
 class AnswerController extends Controller
 {
     public function create(int $id, Request $request){
+
+        $answer = new Answer();
+
+        $this->authorize('create', $answer);
         
         $request->validate([
             'description' => 'required'
         ]);
-
-        $answer = new Answer();
 
         $answer->author_id = Auth::user()->user_id;
         $answer->question_id = $id;
@@ -30,8 +33,9 @@ class AnswerController extends Controller
     public function delete(int $id){
 
         $answer = Answer::find($id);
+        $user = User::find($answer->author_id);
 
-        //policy
+        $this->authorize('delete', $answer);
 
         //delete comments under answer
 
@@ -43,17 +47,21 @@ class AnswerController extends Controller
     }
 
     public function showEdit(int $id){
-        $answer = Answer::find($id);
 
-        //policy
+        $answer = Answer::find($id);
+        $user = User::find($answer->author_id);
+
+        $this->authorize('edit', $answer);
 
         return view('pages.editAnswer', ['answer' => $answer]);
     }
 
     public function edit(int $id, Request $request){
-        $answer = Answer::find($id);
 
-        //policy
+        $answer = Answer::find($id);
+        $user = User::find($answer->author_id);
+
+        $this->authorize('edit', $answer);
 
         $request->validate([
             'description' => 'string'
