@@ -19,6 +19,7 @@ class UserController extends Controller
         $user = User::find($id);
 
         $this->authorize('edit_profile', $user, Auth::user());
+        
         return view('pages.editUser', ['user' => $user]);
     }
 
