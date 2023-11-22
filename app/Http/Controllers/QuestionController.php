@@ -89,12 +89,16 @@ class QuestionController extends Controller{
 
     public function searchList(Request $request)
     {
-        $input = $request->get('search_query') ? $request->get('search_query').':' : "";
+       /* $input = $request->get('search_query') ? $request->get('search_query').':' : "";
         $questions = Question::select('question.title', 'question.description')
             ->whereRaw("question.tsvectors @@ to_tsquery(?)", [$input])
             ->orderByRaw("ts_rank(question.tsvectors, to_tsquery(?)) ASC", [$input])
             ->get();
+            dd($questions);
+        return response()->json($questions);*/
+        $query = $request->input('search_query');
 
+        $questions = Question::where('title', 'like', '%' . $query . '%')->get();
         return response()->json($questions);
     }
 

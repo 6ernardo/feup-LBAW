@@ -2,7 +2,8 @@
 
 @section('content')
     <section id="searchQuestionForm">
-        <form>
+        <form method="GET">
+            @csrf
             <label for="search">Search:</label>
             <input type="text" id="search_query" name="search_query" placeholder="Search a question">
             <button type="submit" id="submitSearch"> Go </button> 
