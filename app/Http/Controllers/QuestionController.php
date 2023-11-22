@@ -90,16 +90,16 @@ class QuestionController extends Controller{
     public function searchList(Request $request)
     {
         $input = $request->get('search') ? $request->get('search').':' : "";
-        $question = Question::select('questions.title', 'questions.description')
-            ->whereRaw("questions.tsvectors @@ to_tsquery(?)", [$input])
-            ->orderByRaw("ts_rank(questions.tsvectors, to_tsquery(?)) ASC", [$input])
+        $questions = Question::select('question.title', 'question.description')
+            ->whereRaw("question.tsvectors @@ to_tsquery(?)", [$input])
+            ->orderByRaw("ts_rank(question.tsvectors, to_tsquery(?)) ASC", [$input])
             ->get();
 
-            return response()->json(['questions' => $questions]);
+        return response()->json($questions);
     }
 
 
-/*
+    /*
         $questionsQuery = Question::orderBy('question_id');
 
         $searchQuery = $request->input('search');

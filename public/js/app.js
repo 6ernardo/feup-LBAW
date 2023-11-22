@@ -25,6 +25,7 @@ function addEventListeners() {
     
   }
   
+  /*
   var searchForm = document.getElementById('searchForm');
   searchForm.addEventListener('submit', function (event) {
     event.preventDefault(); // Prevent the default form submission
@@ -36,7 +37,7 @@ function addEventListeners() {
     // a api é chamada e o resultado é mostrado
     window.location.href = '/search=' + searchQuery;
   });
-
+  */
   function encodeForAjax(data) {
     if (data == null) return null;
     return Object.keys(data).map(function(k){
