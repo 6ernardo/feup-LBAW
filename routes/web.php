@@ -54,6 +54,8 @@ Route::controller(QuestionController::class)->group(function () {
     Route::get('/questions/{id}/edit', 'showEdit');
     Route::put('/questions/{id}/edit', 'editQuestion');
     Route::delete('/questions/{id}/delete', 'deleteQuestion');
+    Route::get('/search','searchList')->name('searchQuestionResults');
+    Route::get('/searchQuestionForm','searchForm')->name('searchQuestionForm');
 });
 
 //Answer
