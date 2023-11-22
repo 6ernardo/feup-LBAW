@@ -24,7 +24,7 @@ class SearchQuestionController extends Controller{
 
         $questions = $questionsQuery->get();
 
-        return view('pages.feed', [
+        return view('pages.searchQuestionForm', [
             'questions' => $questions,
             'searchQuery' => $searchQuery,
         ]);
