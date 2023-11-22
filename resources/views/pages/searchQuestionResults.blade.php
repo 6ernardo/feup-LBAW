@@ -5,7 +5,7 @@
 <section id="feed">
     <h1>Questions</h1>
     @foreach($questions as $question)
-        <div class="searchQuestions">
+        <div class="searchQuestionResults">
             <h2>{{$question->title}}</h2>
             <p>{{$question->description}}</p>
             <p>Pontuacão: {{$question->score}}</p>

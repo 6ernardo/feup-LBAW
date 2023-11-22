@@ -79,6 +79,6 @@ Route::controller(RegisterController::class)->group(function () {
 
 // Search
 Route::controller(SearchQuestionController::class)->group(function(){
-    Route::get('/{searchQuery?}','list')->name('searchQuestion');
-    Route::get('/searchQuestionForm','questionForm')->name('search');
+    Route::get('/{searchQuery?}','list')->name('searchQuestionResults');
+    Route::get('/searchQuestionForm','questionForm')->name('searchQuestionForm');
 });

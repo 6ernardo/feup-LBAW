@@ -7,6 +7,10 @@ use App\Models\Question;
 
 
 class SearchQuestionController extends Controller{
+    public function questionForm()
+    {
+        return view('pages.searchQuestionForm');
+    }
     public function list(Request $request)
     {
         /*-if (!Auth::check()) {
@@ -24,10 +28,11 @@ class SearchQuestionController extends Controller{
 
         $questions = $questionsQuery->get();
 
-        return view('pages.searchQuestionForm', [
+        return view('pages.searchQuestionResults', [
             'questions' => $questions,
             'searchQuery' => $searchQuery,
         ]);
     }
+    
 
 }
