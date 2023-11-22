@@ -10,7 +10,6 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\AnswerController;
-use App\Http\Controllers\SearchQuestionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,6 +54,8 @@ Route::controller(QuestionController::class)->group(function () {
     Route::get('/questions/{id}/edit', 'showEdit');
     Route::put('/questions/{id}/edit', 'editQuestion');
     Route::delete('/questions/{id}/delete', 'deleteQuestion');
+    Route::get('/{searchQuery?}','searchForm')->name('searchQuestionResults');
+    Route::get('/searchQuestionForm','searchList')->name('searchQuestionForm');
 });
 
 //Answer
@@ -75,10 +76,4 @@ Route::controller(LoginController::class)->group(function () {
 Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'showRegistrationForm')->name('register');
     Route::post('/register', 'register');
-});
-
-// Search
-Route::controller(SearchQuestionController::class)->group(function(){
-    Route::get('/{searchQuery?}','list')->name('searchQuestionResults');
-    Route::get('/searchQuestionForm','questionForm')->name('searchQuestionForm');
 });

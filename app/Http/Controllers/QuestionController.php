@@ -82,4 +82,32 @@ class QuestionController extends Controller{
         return redirect('/feed');
     }
 
+    public function searchForm()
+    {
+        return view('pages.searchQuestionForm');
+    }
+
+    public function searchList(Request $request)
+    {
+        /*-if (!Auth::check()) {
+            // Not logged in, redirect to login.
+            return redirect('/login');
+        }-*/
+        
+        $questionsQuery = Question::orderBy('question_id');
+
+        $searchQuery = $request->input('search');
+        if ($searchQuery !== null) {
+            // If a search query is provided, filter the cards
+            $questionsQuery->where('title', 'like', "%$searchQuery%");
+        }
+
+        $questions = $questionsQuery->get();
+
+        return view('pages.searchQuestionResults', [
+            'questions' => $questions,
+            'searchQuery' => $searchQuery,
+        ]);
+    }
+
 }
