@@ -34,7 +34,7 @@ function addEventListeners() {
 
     // ao mudar para este link, a página é recarregada com o resultado da pesquisa
     // a api é chamada e o resultado é mostrado
-    window.location.href = '/feed' + '?search=' + searchQuery;
+    window.location.href = '/search=' + searchQuery;
   });
 
   function encodeForAjax(data) {

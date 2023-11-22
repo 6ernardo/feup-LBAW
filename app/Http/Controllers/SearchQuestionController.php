@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Question;
 
-class SearchQuestion extends Controller{
+
+class SearchQuestionController extends Controller{
     public function list(Request $request)
     {
         /*-if (!Auth::check()) {
