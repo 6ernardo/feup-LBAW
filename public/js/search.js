@@ -1,7 +1,3 @@
-
-
-
-
 const searchQuestions = document.querySelector('#submitSearch')
 if (searchQuestions) {
     searchQuestions.addEventListener('click', async function(event) {
@@ -14,44 +10,29 @@ if (searchQuestions) {
         const section = document.querySelector('#results');
         section.innerHTML = '';
 
+        if(questions.length === 0){
+            const msg = document.createElement('p');
+            msg.textContent = 'No results found';
 
-
-        
-        for(const question of questions){
-            const h2 = document.createElement('h2');
-            h2.textContent = question.title;
-            const pdes = document.createElement('p');
-            pdes.textContent = question.description;
-            const ppont = document.createElement('p');
-            ppont.textContent = question.score;
-
-            section.appendChild(h2);
-            section.appendChild(pdes);
-            section.appendChild(ppont);
+            section.appendChild(msg);
         }
-
-
-        /*
-        for(const question of questions){
-
-
-            const ul = document.createElement('ul');
-            const link = document.createElement('a');
-            link.href = '../pages/ticket.php?id=' + ticket.id;
-            const subject = document.createElement('li');
-            subject.textContent = ticket.subject;
-            const department = document.createElement('li');
-            department.textContent = ticket.department_id;
-            const status = document.createElement('li');
-            status.textContent = ticket.status_id;
-
-            link.appendChild(subject);
-            link.appendChild(department);
-            link.appendChild(status);
-
-            ul.appendChild(link);
-
-            section.appendChild(ul);
-        }*/
+        else {
+            for(const question of questions){
+                const link = document.createElement('a');
+                link.href = '/questions/' + question.question_id;
+                const h2 = document.createElement('h2');
+                h2.textContent = question.title;
+                const pdes = document.createElement('p');
+                pdes.textContent = question.description;
+                const ppont = document.createElement('p');
+                ppont.textContent = question.score;
+    
+                link.appendChild(h2);
+                link.appendChild(pdes);
+                link.appendChild(ppont);
+    
+                section.appendChild(link);
+            }
+        }
     } )
 }
