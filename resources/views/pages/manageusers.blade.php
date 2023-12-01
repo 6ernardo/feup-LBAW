@@ -5,9 +5,12 @@
     <h2>User Management</h2>
         <a class="button" href="/manageusers/create">Create Account</a>
         <header>
-            <label>Search for user:
-                <input type="search" id="search" placeholder="Search by name or email...">
-            </label>
+            <form>
+                <label>Search for user:
+                    <input type="search" id="user_search_query" placeholder="Search by name">
+                </label>
+                <button type="submit" id="submitUserSearch"> Go </button>
+            </form>
         </header>
         <div class="users_table">
             <ul>
@@ -17,6 +20,8 @@
                 <li>Role</li>
             </ul>
         </div>
-        @each('partials.manageuserinstance', $users, 'user')
+        <section id="user_listing">
+            @each('partials.manageuserinstance', $users, 'user')
+        </section>
     </section>
 @endsection

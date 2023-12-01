@@ -44,12 +44,13 @@ class AdminController extends Controller
     }
 
     public function search(Request $request){
-        $input = $request->get('search') ? $request->get('search').':*' : "*";
-        $users = User::select('users.user_id', 'users.name', 'users.email')
-                    ->whereRaw("users.tsvectors @@ to_tsquery(?)", [$input])
-                    ->orderByRaw("ts_rank(users.tsvectors, to_tsquery(?)) ASC", [$input])
+        //policy
+
+        $input =$request->input('user_search_query');
+        $users = User::select('users.name', 'users.user_id', 'users.email', 'users.moderator')
+                    ->where('name', 'ilike', '%' . $input . '%')
                     ->get();
 
-        return response()->json(['users' => $users]);
+        return response()->json($users);
     }
 }

@@ -48,7 +48,6 @@ DROP FUNCTION IF EXISTS answer_unique_report CASCADE;
 DROP FUNCTION IF EXISTS comment_unique_report CASCADE;
 
 DROP FUNCTION IF EXISTS question_search_update CASCADE;
-DROP FUNCTION IF EXISTS user_search_update CASCADE;
 
 -----------------------------------------
 -- Types
@@ -264,6 +263,7 @@ CREATE TABLE notification (
 CREATE INDEX author_questions ON question USING btree(author_id);
 CREATE INDEX notification_user ON notification USING btree(user_id);
 CREATE INDEX tag_question ON question_tags USING btree(tag_id);
+CREATE INDEX username ON users USING hash(name);
 
 -- Full-text Search Indices
 ALTER TABLE question
@@ -295,36 +295,6 @@ CREATE TRIGGER question_search_update
  EXECUTE PROCEDURE question_search_update();
 
 CREATE INDEX search_idx ON question USING GIN (tsvectors);
-
-ALTER TABLE users
-ADD COLUMN tsvectors TSVECTOR;
-
-CREATE FUNCTION user_search_update() RETURNS TRIGGER AS $$
-BEGIN
- IF TG_OP = 'INSERT' THEN
-        NEW.tsvectors = (
-         setweight(to_tsvector('english', NEW.name), 'A') ||
-         setweight(to_tsvector('english', NEW.email), 'B')
-        );
- END IF;
- IF TG_OP = 'UPDATE' THEN
-         IF (NEW.name <> OLD.name OR NEW.email <> OLD.email) THEN
-           NEW.tsvectors = (
-             setweight(to_tsvector('english', NEW.name), 'A') ||
-             setweight(to_tsvector('english', NEW.email), 'B')
-           );
-         END IF;
- END IF;
- RETURN NEW;
-END $$
-LANGUAGE plpgsql;
-
-CREATE TRIGGER user_search_update
- BEFORE INSERT OR UPDATE ON users
- FOR EACH ROW
- EXECUTE PROCEDURE user_search_update();
-
-CREATE INDEX user_search_idx ON users USING GIN (tsvectors);
 
 -----------------------------------------
 -- Triggers
