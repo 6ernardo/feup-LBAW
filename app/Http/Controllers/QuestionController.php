@@ -98,37 +98,16 @@ class QuestionController extends Controller{
 
     public function searchList(Request $request)
     {
-       /* $input = $request->get('search_query') ? $request->get('search_query').':' : "";
-        $questions = Question::select('question.title', 'question.description')
-            ->whereRaw("question.tsvectors @@ to_tsquery(?)", [$input])
-            ->orderByRaw("ts_rank(question.tsvectors, to_tsquery(?)) ASC", [$input])
-            ->get();
-            dd($questions);
-        return response()->json($questions);*/
-        $query = $request->input('search_query');
-
-        $questions = Question::where('title', 'like', '%' . $query . '%')->get();
+        
+        $input = $request->input('search_query');
+        $questions = Question::select('question.question_id', 'question.title', 'question.description')
+                    ->whereRaw("tsvectors @@ to_tsquery(?)", [$input])
+                    ->orderByRaw("ts_rank(tsvectors, to_tsquery(?)) ASC", [$input])
+                    ->get();
+ 
         return response()->json($questions);
+        
     }
-
-
-    /*
-        $questionsQuery = Question::orderBy('question_id');
-
-        $searchQuery = $request->input('search');
-        if ($searchQuery !== null) {
-            // If a search query is provided, filter the cards
-            $questionsQuery->where('title', 'like', "%$searchQuery%");
-        }
-
-        $questions = $questionsQuery->get();
-
-        return view('pages.searchQuestionResults', [
-            'questions' => $questions,
-            'searchQuery' => $searchQuery,
-        ]);
-    }
-    */
 
 }
 
