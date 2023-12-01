@@ -36,6 +36,7 @@ Route::controller(UserController::class)->group(function () {
     Route::get('/user/{id}/edit', 'showEditForm');
     Route::put('/user/{id}/edit', 'editProfile');
     Route::get('/user/{id}/questions', 'showQuestions');
+    Route::get('/user/{id}/answers', 'showAnswers');
 });
 
 // Admin
@@ -53,6 +54,8 @@ Route::controller(QuestionController::class)->group(function () {
     Route::get('/questions/{id}/edit', 'showEdit');
     Route::put('/questions/{id}/edit', 'editQuestion');
     Route::delete('/questions/{id}/delete', 'deleteQuestion');
+    Route::get('/search','searchList')->name('searchQuestionResults');
+    Route::get('/searchQuestionForm','searchForm')->name('searchQuestionForm');
 });
 
 //Answer

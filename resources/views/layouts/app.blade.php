@@ -19,6 +19,8 @@
         </script>
         <script type="text/javascript" src={{ url('js/app.js') }} defer>
         </script>
+        <script type="text/javascript" src={{ url('js/search.js') }} defer> 
+        </script>
     </head>
     <body>
         <main>
@@ -32,6 +34,7 @@
                 	<a class="button" href="{{ url('/login') }}"> Login </a>
                 	<a class="button" href="{{ url('/register') }}"> Register </a>
                 @endif
+                <a class="button" href="{{ url('/searchQuestionForm') }}"> Search </a>
             </header>
             <section id="content">
                 @yield('content')
