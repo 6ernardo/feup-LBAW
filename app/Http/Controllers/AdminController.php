@@ -41,5 +41,5 @@ class AdminController extends Controller
 
         return redirect('user/'.$user->user_id);
         
-    }
+    }    
 }

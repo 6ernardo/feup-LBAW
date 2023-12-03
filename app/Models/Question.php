@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 use App\Models\User;
 
+
 // Added to define Eloquent relationships.
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -28,5 +29,9 @@ class Question extends Model{
 
     public function answers() : HasMany {
         return $this->hasMany(Answer::class, 'question_id');
+    }
+
+    public function tags(){
+        return $this->belongsToMany(Tag::class, 'question_tags', 'question_id', 'tag_id');
     }
 }
