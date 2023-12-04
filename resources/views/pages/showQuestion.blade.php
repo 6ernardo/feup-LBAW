@@ -10,6 +10,16 @@
         </form>
     @endif
     <h2>{{ $question->title }}</h2>
+    @if ($question->tags->isEmpty())
+        <p>No tags available</p>
+    @else
+        <ul class="tag-list">
+        <span>Tags:</span>
+            @foreach($question->tags as $tag)
+                <li>{{ $tag->name }}</li>
+            @endforeach
+        </ul>
+    @endif
     <p>posted by {{ $question->author->name }} </p>
     <p>{{ $question->description }}</p>
 
@@ -27,4 +37,16 @@
             <button type="submit">Submit</button>
         </form>
     </section>
+    <style>
+        .tag-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .tag-list li {
+            display: inline;
+            margin-right: 5px; 
+        }
+    </style>
 @endsection

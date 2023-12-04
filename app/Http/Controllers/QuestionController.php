@@ -2,18 +2,21 @@
 
 namespace App\Http\Controllers;
 
+
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Models\Question;
 use App\Models\User;
-
+use App\Models\Tag;
 use Illuminate\Support\Facades\Auth;
 
 class QuestionController extends Controller{
 
     public function create(){
         $this->authorize('show_create', Question::class);
+        $tags = Tag::all();
 
-        return view('pages.createQuestion');
+        return view('pages.createQuestion',  ['tags' => $tags]);
     }
 
     public function store(Request $request){
@@ -30,8 +33,14 @@ class QuestionController extends Controller{
         $question->author_id = Auth::user()->user_id;
         $question->title = $request->input('title');
         $question->description = $request->input('description');
-
         $question->save();
+        
+        
+        if ($request->has('tags')) {
+            $tagIds = $request->input('tags');
+            Log::info('Tag IDs:', ['tagIds' => $tagIds]);
+            $question->tags()->sync($tagIds);
+        }
 
         return redirect('questions/'.$question->question_id);
     }
