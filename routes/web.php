@@ -44,6 +44,7 @@ Route::controller(AdminController::class)->group(function () {
     Route::get('/manageusers', 'showManageUsers');
     Route::get('/manageusers/create', 'showCreateUser');
     Route::post('/manageusers/create', 'createUser');
+    Route::get('/search/users','search');
 });
 
 //Question

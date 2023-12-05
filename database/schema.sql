@@ -263,6 +263,7 @@ CREATE TABLE notification (
 CREATE INDEX author_questions ON question USING btree(author_id);
 CREATE INDEX notification_user ON notification USING btree(user_id);
 CREATE INDEX tag_question ON question_tags USING btree(tag_id);
+CREATE INDEX username ON users USING hash(name);
 
 -- Full-text Search Indices
 ALTER TABLE question
