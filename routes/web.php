@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\AnswerController;
+use App\Http\Controllers\CommentQuestionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,6 +66,14 @@ Route::controller(AnswerController::class)->group(function () {
     Route::delete('/answers/{id}/delete', 'delete');
     Route::get('/answers/{id}/edit', 'showEdit');
     Route::put('/answers/{id}/edit', 'edit');
+});
+
+//Question Comments
+Route::controller(CommentQuestionController::class)->group(function() {
+    Route::post('questions/{id}/comment/create', 'create');
+    Route::delete('/commentquestion/{id}/delete', 'delete');
+    Route::get('/commentquestion/{id}/edit', 'showEdit');
+    Route::put('/commentquestion/{id}/edit', 'edit');
 });
 
 // Authentication
