@@ -14,9 +14,11 @@
         <h1>Top Questions</h1>
         @forelse ($topQuestions as $question)
             <div class="question">
-                <h2>{{ $question->title }}</h2>
-                <p>{{ $question->description }}</p>
-                <p>Score: {{ $question->score }}</p>
+                <a href="{{ url('/questions/'.$question->question_id) }}">
+                    <h2>{{ $question->title }}</h2>
+                    <p>{{ $question->description }}</p>
+                    <p>Score: {{ $question->score }}</p>
+                </a>
             </div>
         @empty
             <p>No Questions to show.</p>
@@ -27,9 +29,11 @@
         <h1>New Questions</h1>
         @forelse ($newQuestions as $question)
             <div class="question">
-                <h2>{{ $question->title }}</h2>
-                <p>{{ $question->description }}</p>
-                <p>Score: {{ $question->score }}</p>
+                <a href="{{ url('/questions/'.$question->question_id) }}">
+                    <h2>{{ $question->title }}</h2>
+                    <p>{{ $question->description }}</p>
+                    <p>Score: {{ $question->score }}</p>
+                </a>
             </div>
         @empty
             <p>No Questions to show.</p>
