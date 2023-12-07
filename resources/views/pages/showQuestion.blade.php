@@ -13,7 +13,18 @@
     <p>posted by {{ $question->author->name }} </p>
     <p>{{ $question->description }}</p>
 
-    
+    <section id="question_comments">
+        <h4>Question Comments</h4>
+        @each('partials.commentquestion', $question->comments, 'comment')
+    </section>
+
+    <section id="post_question_comment">
+        <form method="POST" action="{{ url('questions/'.$question->question_id.'/comment/create') }}">
+            @csrf
+            <textarea name="content" id="content" placeholder="Type your comment here..." value="{{ old('description') }}" required></textarea>
+            <button type="submit">Submit</button>
+        </form>
+    </section>
 
     <section id="answers">
         <h3>Answers</h3>

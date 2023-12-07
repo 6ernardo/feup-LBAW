@@ -9,4 +9,15 @@
         </form>
         <a class="button" href="{{ url('/answers/'.$answer->answer_id.'/edit') }}"> Edit </a>
     @endif
+    <section id="answer_comments">
+        <h3>Comments</h3>
+        @each('partials.commentanswer', $answer->comments, 'comment')
+    </section>
+    <section id="post_answer_comment">
+        <form method="POST" action="{{ url('questions/'.$answer->question_id.'/answer/'.$answer->answer_id.'/comment/create') }}">
+            @csrf
+            <textarea name="content" id="content" placeholder="Type your comment here..." value="{{ old('description') }}" required></textarea>
+            <button type="submit">Submit</button>
+        </form>
+    </section>
 </article>

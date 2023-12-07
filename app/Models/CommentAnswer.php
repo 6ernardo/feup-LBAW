@@ -7,33 +7,27 @@ use Illuminate\Database\Eloquent\Model;
 
 // Added to define Eloquent relationships.
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-
-class Answer extends Model
+class CommentAnswer extends Model
 {
     use HasFactory;
 
     public $timestamps  = false;
-    protected $table = 'answer';
+    protected $table = 'comment_answer';
 
     protected $fillable = [
         'author_id',
-        'question_id',
-        'description'
+        'answer_id',
+        'content'
     ];
 
-    protected $primaryKey = 'answer_id';
+    protected $primaryKey = 'comment_id';
 
-    public function question() : BelongsTo {
-        return $this->belongsTo(Question::class, 'question_id');
+    public function answer() : BelongsTo {
+        return $this->belongsTo(Answer::class, 'answer_id');
     }
 
     public function author() : BelongsTo {
         return $this->belongsTo(User::class, 'author_id');
-    }
-
-    public function comments() : HasMany {
-        return $this->hasMany(CommentAnswer::class, 'answer_id');
     }
 }
