@@ -9,6 +9,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\AnswerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +35,8 @@ Route::controller(UserController::class)->group(function () {
     Route::get('/user/{id}', 'show');
     Route::get('/user/{id}/edit', 'showEditForm');
     Route::put('/user/{id}/edit', 'editProfile');
+    Route::get('/user/{id}/questions', 'showQuestions');
+    Route::get('/user/{id}/answers', 'showAnswers');
 });
 
 // Admin
@@ -41,6 +44,7 @@ Route::controller(AdminController::class)->group(function () {
     Route::get('/manageusers', 'showManageUsers');
     Route::get('/manageusers/create', 'showCreateUser');
     Route::post('/manageusers/create', 'createUser');
+    Route::get('/search/users','search');
 });
 
 //Question
@@ -50,7 +54,17 @@ Route::controller(QuestionController::class)->group(function () {
     Route::get('/questions/{id}','show')->name('questions.show');
     Route::get('/questions/{id}/edit', 'showEdit');
     Route::put('/questions/{id}/edit', 'editQuestion');
-    Route::delete('questions/{id}/delete', 'deleteQuestion');
+    Route::delete('/questions/{id}/delete', 'deleteQuestion');
+    Route::get('/search','searchList')->name('searchQuestionResults');
+    Route::get('/searchQuestionForm','searchForm')->name('searchQuestionForm');
+});
+
+//Answer
+Route::controller(AnswerController::class)->group(function () {
+    Route::post('questions/{id}/answer/create', 'create');
+    Route::delete('/answers/{id}/delete', 'delete');
+    Route::get('/answers/{id}/edit', 'showEdit');
+    Route::put('/answers/{id}/edit', 'edit');
 });
 
 // Authentication

@@ -48,4 +48,11 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    public function questions() {
+        return $this->hasMany(Question::class, 'author_id');
+    }
+
+    public function answers() {
+        return $this->hasMany(Answer::class, 'author_id');
+    }
 }

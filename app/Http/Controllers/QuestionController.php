@@ -4,31 +4,41 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Question;
+use App\Models\User;
+
+use Illuminate\Support\Facades\Auth;
 
 class QuestionController extends Controller{
 
     public function create(){
+        $this->authorize('show_create', Question::class);
+
         return view('pages.createQuestion');
     }
 
     public function store(Request $request){
+
+        $question = new Question();
+
+        $this->authorize('create', $question);
+
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
         ]);
 
-        $question = Question::create([
-            'author_id' => auth()->id(),
-            'title' => $request->title,
-            'description' => $request->description,
-        ]);
+        $question->author_id = Auth::user()->user_id;
+        $question->title = $request->input('title');
+        $question->description = $request->input('description');
+
+        $question->save();
 
         return redirect('questions/'.$question->question_id);
     }
 
     public function show($id){
         $question = Question::find($id);
-
+        
         return view('pages.showQuestion', [
             'question' => $question
         ]);
@@ -36,16 +46,18 @@ class QuestionController extends Controller{
 
     public function showEdit(int $id){
         $question = Question::find($id);
+        $user = User::find($question->author_id);
 
-        //policy
+        $this->authorize('edit', $question);
 
         return view('pages.editQuestion', ['question' => $question]);
     }
 
     public function editQuestion(int $id, Request $request){
         $question = Question::find($id);
+        $user = User::find($question->author_id);
 
-        //policy
+        $this->authorize('edit', $question);
 
         if($request->title){
             $request->validate([
@@ -68,8 +80,9 @@ class QuestionController extends Controller{
     public function deleteQuestion(int $id){
 
         $question = Question::find($id);
+        $user = User::find($question->author_id);
 
-        //policy
+        $this->authorize('delete', $question);
 
         //delete answers and comments under question
 
@@ -78,4 +91,23 @@ class QuestionController extends Controller{
         return redirect('/feed');
     }
 
+    public function searchForm()
+    {
+        return view('pages.searchQuestionForm');
+    }
+
+    public function searchList(Request $request)
+    {
+        
+        $input = $request->input('search_query');
+        $questions = Question::select('question.question_id', 'question.title', 'question.description')
+                    ->whereRaw("tsvectors @@ to_tsquery(?)", [$input])
+                    ->orderByRaw("ts_rank(tsvectors, to_tsquery(?)) ASC", [$input])
+                    ->get();
+ 
+        return response()->json($questions);
+        
+    }
+
 }
+

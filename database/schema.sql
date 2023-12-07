@@ -1,10 +1,9 @@
 --
 -- Use a specific schema and set it as default
 --
-DROP SCHEMA IF EXISTS lbawtest CASCADE;
-CREATE SCHEMA IF NOT EXISTS lbawtest;
-SET search_path TO lbawtest;
-
+DROP SCHEMA IF EXISTS lbaw2381 CASCADE;
+CREATE SCHEMA IF NOT EXISTS lbaw2381;
+SET search_path TO lbaw2381;
 
 DROP TABLE IF EXISTS user_vote_comment_answer;
 DROP TABLE IF EXISTS user_vote_comment_question;
@@ -264,6 +263,7 @@ CREATE TABLE notification (
 CREATE INDEX author_questions ON question USING btree(author_id);
 CREATE INDEX notification_user ON notification USING btree(user_id);
 CREATE INDEX tag_question ON question_tags USING btree(tag_id);
+CREATE INDEX username ON users USING hash(name);
 
 -- Full-text Search Indices
 ALTER TABLE question
@@ -613,4 +613,4 @@ EXECUTE FUNCTION comment_unique_report();
 
 
 -- Populate
-insert into users (name, email, password, profilePicture, score, moderator) values ('test', 'test@test.com', '$2y$10$HfzIhGCCaxqyaIdGgjARSuOKAcm1Uy82YfLuNaajn6JrjLWy9Sj/W', 'http://dummyimage.com/228x100.png/dddddd/000000', 2080, true);
+insert into users (name, email, password, profilePicture, score, moderator) values ('client', 'client@client.com', '$2a$12$fu9IyYyjE5YGQmXpgzWPuO5jrGCEbkwSzYfIHZdAXr9FlZdILPD1C', 'http://dummyimage.com/228x100.png/dddddd/000000', 2080, true);
