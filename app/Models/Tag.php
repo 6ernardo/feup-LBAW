@@ -23,6 +23,4 @@ class Tag extends Model
     public function questions(){
         return $this->belongsToMany(Question::class, 'question_tags', 'tag_id', 'question_id');
     }
-
-
 }

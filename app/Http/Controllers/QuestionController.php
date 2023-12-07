@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 
-
-use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Models\Question;
 use App\Models\User;
-use App\Models\Tag;
+
 use Illuminate\Support\Facades\Auth;
 
 class QuestionController extends Controller{
@@ -33,9 +31,9 @@ class QuestionController extends Controller{
         $question->author_id = Auth::user()->user_id;
         $question->title = $request->input('title');
         $question->description = $request->input('description');
+
         $question->save();
-        
-        
+
         if ($request->has('tags')) {
             $tagIds = $request->input('tags');
             Log::info('Tag IDs:', ['tagIds' => $tagIds]);
@@ -56,10 +54,14 @@ class QuestionController extends Controller{
     public function showEdit(int $id){
         $question = Question::find($id);
         $user = User::find($question->author_id);
+        $tags = Tag::all();
 
         $this->authorize('edit', $question);
 
-        return view('pages.editQuestion', ['question' => $question]);
+        return view('pages.editQuestion', [
+            'question' => $question,
+            'tags' => $tags
+        ]);
     }
 
     public function editQuestion(int $id, Request $request){
@@ -83,6 +85,13 @@ class QuestionController extends Controller{
         }
 
         $question->save();
+
+        if ($request->has('tags')) {
+            $tagIds = $request->input('tags');
+            Log::info('Tag IDs:', ['tagIds' => $tagIds]);
+            $question->tags()->sync($tagIds);
+        }
+
         return redirect('questions/'.$question->question_id);
     }
 
@@ -107,33 +116,16 @@ class QuestionController extends Controller{
 
     public function searchList(Request $request)
     {
-        $input = $request->get('search') ? $request->get('search').':' : "";
-        $question = Question::select('questions.title', 'questions.description')
-            ->whereRaw("questions.tsvectors @@ to_tsquery(?)", [$input])
-            ->orderByRaw("ts_rank(questions.tsvectors, to_tsquery(?)) ASC", [$input])
-            ->get();
-
-            return response()->json(['questions' => $questions]);
+        
+        $input = $request->input('search_query');
+        $questions = Question::select('question.question_id', 'question.title', 'question.description')
+                    ->whereRaw("tsvectors @@ to_tsquery(?)", [$input])
+                    ->orderByRaw("ts_rank(tsvectors, to_tsquery(?)) ASC", [$input])
+                    ->get();
+ 
+        return response()->json($questions);
+        
     }
-
-
-/*
-        $questionsQuery = Question::orderBy('question_id');
-
-        $searchQuery = $request->input('search');
-        if ($searchQuery !== null) {
-            // If a search query is provided, filter the cards
-            $questionsQuery->where('title', 'like', "%$searchQuery%");
-        }
-
-        $questions = $questionsQuery->get();
-
-        return view('pages.searchQuestionResults', [
-            'questions' => $questions,
-            'searchQuery' => $searchQuery,
-        ]);
-    }
-    */
 
 }
 

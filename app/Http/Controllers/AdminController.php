@@ -41,5 +41,16 @@ class AdminController extends Controller
 
         return redirect('user/'.$user->user_id);
         
-    }    
+    }
+
+    public function search(Request $request){
+        //policy
+
+        $input =$request->input('user_search_query');
+        $users = User::select('users.name', 'users.user_id', 'users.email', 'users.moderator')
+                    ->where('name', 'ilike', '%' . $input . '%')
+                    ->get();
+
+        return response()->json($users);
+    }
 }

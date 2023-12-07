@@ -10,7 +10,7 @@
         <textarea name="description" id="description" required></textarea>
 
         <div class="tag-dropdown">
-                <button onclick="toggleDropdown()">Tag List</button>
+        <button type="button" onclick="toggleDropdown()">Tag List</button> 
                 <div class="dropdown-menu" style="display: none;">
                 <label for="tags">Select Tags:</label><br>
                      @foreach($tags as $tag)
@@ -21,13 +21,16 @@
                      @endforeach
                 </div>
         </div>
-    <button type="submit">Create Question</button>
+
+        <button type="submit">Submit</button>
     </form>
-@endsection
+@endsection 
 <script>
-    function toggleDropdown() {
+    function toggleDropdown(event) {
+    
     var dropdownMenu = document.querySelector('.dropdown-menu');
     dropdownMenu.style.display = (dropdownMenu.style.display === 'block') ? 'none' : 'block';
+    event.stopPropagation();
 }
 
 document.querySelectorAll('.dropdown-menu input[type="checkbox"]').forEach(function(checkbox) {

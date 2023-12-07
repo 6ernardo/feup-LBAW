@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 use App\Models\User;
 
-
 // Added to define Eloquent relationships.
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;

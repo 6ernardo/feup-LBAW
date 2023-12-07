@@ -3,35 +3,43 @@
 @section('content')
 <a class="button" href="{{ url('/questions/create') }}"> Post Question </a>
 
-<section id="feed">
-    <h1>Top Questions</h1>
-    @if(isset($topQuestions) && $topQuestions->count() > 0)
-        @foreach ($topQuestions as $question)
-            <div class="topQuestion">
-                <a href="{{ url('/questions/'.$question->question_id) }}">
-                    <h2>{{$question->title}}</h2>
-                    <p>{{$question->description}}</p>
-                </a>
-                <p>Pontuacão: {{$question->score}}</p>
-            </div>
-        @endforeach
-    @else
-        <p>No Questions to show.</p>
-    @endif
+<div id="aba_buttons">
+    <button onclick="openTab('topQuestions')">Top</button>
+    <button onclick="openTab('newQuestions')">New</button>
+</div>
 
-    <h1>New Questions</h1>
-    @if(isset($newQuestions) && $newQuestions->count() > 0)
-        @foreach ($newQuestions as $question)
-            <div class="newQuestion">
+<section id="feed">
+
+    <div id="topQuestions" class="tab-content">
+        <h1>Top Questions</h1>
+        @forelse ($topQuestions as $question)
+            <div class="question">
                 <a href="{{ url('/questions/'.$question->question_id) }}">
-                    <h3>{{$question -> title}}</h3>
-                    <p>{{$question->description}}</p>
+                    <h2>{{ $question->title }}</h2>
+                    <p>{{ $question->description }}</p>
+                    <p>Score: {{ $question->score }}</p>
                 </a>
-                <p>Pontuacão: {{$question->score}}</p>
             </div>
-        @endforeach
-    @else
-        <p>No Questions to show.</p>
-    @endif
+        @empty
+            <p>No Questions to show.</p>
+        @endforelse
+    </div>
+
+    <div id="newQuestions" class="tab-content" style="display: none;">
+        <h1>New Questions</h1>
+        @forelse ($newQuestions as $question)
+            <div class="question">
+                <a href="{{ url('/questions/'.$question->question_id) }}">
+                    <h2>{{ $question->title }}</h2>
+                    <p>{{ $question->description }}</p>
+                    <p>Score: {{ $question->score }}</p>
+                </a>
+            </div>
+        @empty
+            <p>No Questions to show.</p>
+        @endforelse
+    </div>
+</section>
+    <script src="{{ asset('js/feed_tab.js') }}"></script>
 </section>
 @endsection

@@ -163,7 +163,7 @@ paths:
                   
   ############# Individual Profile #############                
                   
-  /users/{id}:
+  /user/{id}:
   
     get:
       operationId: R201
@@ -193,18 +193,25 @@ paths:
                  description: 'Failed. No user of given ID found.'
                  value: '/feed'
          
-  /users/edit:
+  /user/{id}/edit:
   
     get:
       operationId: R202
-      summary: 'R202: Edit user profile'
+      summary: 'R202: Edit user profile form'
       description: 'Show the edit user profile page. Access: AUT, MOD, ADM'
       tags:
         - 'M02: Individual Profile'
         
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+        
       responses:
         '200':
-          description: 'Ok. Show Edit Profile form'
+          description: 'Ok. Show Edit Profile form (UI05)'
         '401':
           description: 'Unauthorized. You cannot edit this user profile'
           headers:
@@ -218,10 +225,17 @@ paths:
           
     put:
       operationId: R203
-      summary: 'R203: Edit user profile'
+      summary: 'R203: Edit user profile action'
       description: 'Submits the edited user profile. Access: USR'
       tags:
         - 'M02: Individual Profile'
+        
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
         
       requestBody:
         required: true
@@ -258,12 +272,12 @@ paths:
               examples:
                 302Success:
                   description: 'Success updating details. Redirect to user personal profile page'
-                  value: '/users/{id}'
+                  value: '/user/{id}'
                 302Failure:
                   description: 'Failed updating details. Redirect back to edit user profile page'
-                  value: '/users/edit'
+                  value: '/user/edit'
     
-  /users/deleteaccount:
+  /user/{id}/deleteaccount:
   
     post:
       operationId: R204
@@ -271,6 +285,13 @@ paths:
       description: 'Deletes a user account. Access: AUT, ADM'
       tags:
         - 'M02: Individual Profile'
+        
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
         
       requestBody:
         required: true
@@ -297,7 +318,7 @@ paths:
                   value: '/login'
                 
   
-  /users/{id}/follow:
+  /user/{id}/follow:
     
     post:
       operationId: R205
@@ -338,10 +359,71 @@ paths:
           description: 'Ok. Unfollowed the user'
         '401':
           description: 'Unauthorized. The user must be authenticated to perform this action.'
+          
+  /user/{id}/questions:
+  
+    get:
+      operationId: R207
+      summary: 'R207: View user questions'
+      description: 'Show the individual user questions. Access: PUB'
+      tags:
+        - 'M02: Individual Profile'
+        
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+       '200':
+         description: 'Ok. Show User Questions'
+       '302':
+         description: 'User does not exist'
+         headers:
+           Location:
+             schema:
+               type: string
+             example:
+               302Failure:
+                 description: 'Failed. No user of given ID found.'
+                 value: '/feed'
+                 
+  /user/{id}/answers:
+  
+    get:
+      operationId: R208
+      summary: 'R208: View user answers'
+      description: 'Show the individual user answers. Access: PUB'
+      tags:
+        - 'M02: Individual Profile'
+        
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+       '200':
+         description: 'Ok. Show User Answers'
+       '302':
+         description: 'User does not exist'
+         headers:
+           Location:
+             schema:
+               type: string
+             example:
+               302Failure:
+                 description: 'Failed. No user of given ID found.'
+                 value: '/feed'
+  
                 
   ############# Posts #############
   
-  /question/{id}:
+  /questions/{id}:
     
     get:
       operationId: R301
@@ -359,7 +441,7 @@ paths:
         
       responses:
         '200':
-          description: 'Ok. Show Question Page'
+          description: 'Ok. Show Question Page (UI18)'
         '302':
           description: 'Question does not exist'
           headers:
@@ -371,7 +453,7 @@ paths:
                  description: 'Failed. No question of given ID found.'
   
   
-  /question/create:
+  /questions/create:
   
     get:
       operationId: R302
@@ -382,7 +464,7 @@ paths:
         
       responses:
         '200': 
-          description: 'Ok. Show Question creation form'
+          description: 'Ok. Show Question creation form (UI19)'
         '401':
           description: 'Unauthorized. You do not have permission to perform this action.'
       
@@ -422,13 +504,13 @@ paths:
               examples:
                 302Success:
                   description: 'New question successfully created.'
-                  value: 'question/{id}'
+                  value: 'questions/{id}'
                 302Error:
                   description: 'Error creating question. Redirect to question creation form.'
-                  value: 'question/create'
+                  value: 'questions/create'
                 
           
-  /question/{id}/edit:
+  /questions/{id}/edit:
     
     get:
       operationId: R304
@@ -446,7 +528,7 @@ paths:
         
       responses:
        '200': 
-         description: 'Ok. Show edit question form' 
+         description: 'Ok. Show edit question form (UI19)' 
        '401':
           description: 'Unauthorized. You do not have permission to perform this action.'
         
@@ -494,12 +576,12 @@ paths:
               examples:
                 302Success:
                   description: 'Success editing question. Redirect to question'
-                  value: '/question/{id}'
+                  value: '/questions/{id}'
                 302Failure:
                   description: 'Failed updating details. Redirect back to edit user profile page'
-                  value: '/question/{id}/edit'    
+                  value: '/questions/{id}/edit'    
           
-  /question/{id}/vote:
+  /questions/{id}/vote:
   
     post:
       operationId: R306
@@ -534,9 +616,9 @@ paths:
         '401' : 
           description: 'Unauthorized. The user must be authenticated to vote'
           
-  /question/{id}/delete:
+  /questions/{id}/delete:
     
-    post:
+    delete:
       operationId: R307
       summary: 'R307: Delete a Question'
       description: 'Allows the deletion of a question. Access: AUT, MOD, ADM'
@@ -556,7 +638,7 @@ paths:
         '403':
           description: 'Forbidden. The user does not have permission to delete this question.'
           
-  /question/{id}/follow:
+  /questions/{id}/follow:
     
     post:
       operationId: R308
@@ -578,7 +660,7 @@ paths:
         '401':
           description: 'Unauthorized. The user must be authenticated to perform this action.'
         
-  /question/{id}/unfollow:
+  /questions/{id}/unfollow:
     
     post:
       operationId: R309
@@ -600,7 +682,7 @@ paths:
         '401':
           description: 'Unauthorized. The user must be authenticated to perform this action.'
           
-  /question/{id}/reports:
+  /questions/{id}/reports:
   
     get:
       operationId: R310
@@ -618,36 +700,15 @@ paths:
       
       responses:
         '200':
-          description: 'OK. Show Report Logs'
+          description: 'OK. Show Report Logs (UI13)'
         '403':
           description: 'Forbidden. You do not have permission to access this page.'
 
-  /question/{id}/answers/create:
-  
-    get:
-      operationId: R311
-      summary: 'R311: Show answer creation form'
-      description: 'Shows the form that will be used to create a new answer. Access: USR'
-      tags:
-        - 'M03: Posts (Questions, Answers and Comments)'
-        
-      parameters:
-        - in: path
-          name: id
-          description: 'Question ID'
-          schema:
-            type: integer
-          required: true
-        
-      responses:
-        '200': 
-          description: 'Ok. Show answer creation form'
-        '401':
-          description: 'Unauthorized. You do not have permission to perform this action.'
+  /questions/{id}/answers/create:
           
     post:
-      operationId: R312
-      summary: 'R312: Post an Answer'
+      operationId: R311
+      summary: 'R311: Post an Answer'
       description: 'Processes answer creation form. Access: USR'
       tags:
         - 'M03: Posts (Questions, Answers and Comments)'
@@ -682,17 +743,17 @@ paths:
               examples:
                 302Success:
                   description: 'New answer successfully posted. Redirect back to question.'
-                  value: 'question/{id}'
+                  value: 'questions/{id}'
                 302Error:
                   description: 'Error posting answer. Redirect to answer creation form.'
-                  value: '/question/{id}/answers/create'
+                  value: '/questions/{id}/answers/create'
           
   
   /answers/{id}/edit:
   
     get:
-      operationId: R313
-      summary: 'R313: Show answer edition form.'
+      operationId: R312
+      summary: 'R312: Show answer edition form.'
       description: 'Shows the form that will be used to edit an answer. Access: AUT'
       tags:
         - 'M03: Posts (Questions, Answers and Comments)'
@@ -706,13 +767,13 @@ paths:
           
       responses:
        '200': 
-         description: 'Ok. Show edit answer form' 
+         description: 'Ok. Show edit answer form (UI21)' 
        '401':
           description: 'Unauthorized. You do not have permission to perform this action.'
         
     put:
-      operationId: R314
-      summary: 'R314: Edit an Answer'
+      operationId: R313
+      summary: 'R313: Edit an Answer'
       description: 'Allows a user to edit their own answer. Access: AUT'
       tags:
         - 'M03: Posts (Questions, Answers and Comments)'
@@ -744,8 +805,8 @@ paths:
   /answers/{id}/vote:
   
     post:
-      operationId: R315
-      summary: 'R315: Vote on answer'
+      operationId: R314
+      summary: 'R314: Vote on answer'
       description: 'Submit vote for a answer. Access: USR'
       tags:
         - 'M03: Posts (Questions, Answers and Comments)'
@@ -778,9 +839,9 @@ paths:
           
   /answers/{id}/delete:
     
-    post:
-      operationId: R316
-      summary: 'R316: Delete an Answer'
+    delete:
+      operationId: R315
+      summary: 'R315: Delete an Answer'
       description: 'Allows the deletion of an answer. Access: USR, MOD, ADM'
       tags:
         - 'M03: Posts (Questions, Answers and Comments)'
@@ -802,8 +863,8 @@ paths:
   /answers/{id}/reports:
   
     get:
-      operationId: R317
-      summary: 'R317: Shows Answer Reports'
+      operationId: R316
+      summary: 'R316: Shows Answer Reports'
       description: 'Displays the Report Logs for an answer. Access: MOD, ADM'
       tags:
         - 'M03: Posts (Questions, Answers and Comments)'
@@ -817,7 +878,7 @@ paths:
       
       responses:
         '200':
-          description: 'OK. Show Report Logs'
+          description: 'OK. Show Report Logs (UI13)'
         '403':
           description: 'Forbidden. You do not have permission to access this page.'
           
@@ -825,8 +886,8 @@ paths:
   /questions/{id}/comment/create:
   
     get:
-      operationId: R318
-      summary: 'R318: Show comment creation form'
+      operationId: R317
+      summary: 'R317: Show comment creation form'
       description: 'Shows the form that will be used to create a new comment. Access: USR'
       tags:
         - 'M03: Posts (Questions, Answers and Comments)'
@@ -841,13 +902,13 @@ paths:
         
       responses:
         '200': 
-          description: 'Ok. Show comment creation form'
+          description: 'Ok. Show comment creation form (UI20)'
         '401':
           description: 'Unauthorized. You do not have permission to perform this action.'
           
     post:
-      operationId: R319
-      summary: 'R319: Post a Comment under Question'
+      operationId: R318
+      summary: 'R318: Post a Comment under Question'
       description: 'Allows an a user to post an comment under a specific question. Access: USR'
       tags:
         - 'M03: Posts (Questions, Answers and Comments)'
@@ -891,8 +952,8 @@ paths:
   /questions/{id}/answers/{answerId}/comment/create:
   
     get:
-      operationId: R320
-      summary: 'R320: Show comment creation form'
+      operationId: R319
+      summary: 'R319: Show comment creation form'
       description: 'Shows the form that will be used to create a new comment. Access: USR'
       tags:
         - 'M03: Posts (Questions, Answers and Comments)'
@@ -913,13 +974,13 @@ paths:
           
       responses:
         '200': 
-          description: 'Ok. Show comment creation form'
+          description: 'Ok. Show comment creation form (UI20)'
         '401':
           description: 'Unauthorized. You do not have permission to perform this action.'
           
     post:
-      operationId: R321
-      summary: 'R321: Post a Comment under Answer'
+      operationId: R320
+      summary: 'R320: Post a Comment under Answer'
       description: 'Allows an a user to post an comment under a specific answer. Access: USR'
       tags:
         - 'M03: Posts (Questions, Answers and Comments)'
@@ -968,8 +1029,8 @@ paths:
   /comments/{id}/edit:
   
     get:
-      operationId: R322
-      summary: 'R322: Retrieve comment edition form.'
+      operationId: R321
+      summary: 'R321: Retrieve comment edition form.'
       description: 'Shows the form that will be used to edit a comment. Access: AUT'
       tags:
         - 'M03: Posts (Questions, Answers and Comments)'
@@ -983,13 +1044,13 @@ paths:
           
       responses:
        '200': 
-         description: 'Ok. Show edit comment form' 
+         description: 'Ok. Show edit comment form (UI20)' 
        '401':
           description: 'Unauthorized. You do not have permission to perform this action.'
         
     put:
-      operationId: R323
-      summary: 'R323: Edit a comment'
+      operationId: R322
+      summary: 'R322: Edit a comment'
       description: 'Allows the editing of a comment. Access: AUT'
       tags:
         - 'M03: Posts (Questions, Answers and Comments)'
@@ -1021,8 +1082,8 @@ paths:
   /comments/{id}/vote:
   
     post:
-      operationId: R324
-      summary: 'R324: Vote on comment'
+      operationId: R323
+      summary: 'R323: Vote on comment'
       description: 'Submit vote for a comment. Access: USR'
       tags:
         - 'M03: Posts (Questions, Answers and Comments)'
@@ -1056,8 +1117,8 @@ paths:
   /comments/{id}/delete:
     
     post:
-      operationId: R325
-      summary: 'R325: Delete a Comment'
+      operationId: R324
+      summary: 'R324: Delete a Comment'
       description: 'Allows the deletion of a comment. Access: AUT, MOD, ADM'
       tags:
         - 'M03: Posts (Questions, Answers and Comments)'
@@ -1079,8 +1140,8 @@ paths:
   /comment/{id}/reports:
   
     get:
-      operationId: R326
-      summary: 'R326: Shows Comment Reports'
+      operationId: R325
+      summary: 'R325: Shows Comment Reports'
       description: 'Displays the Report Logs for a comment. Access: MOD, ADM'
       tags:
         - 'M03: Posts (Questions, Answers and Comments)'
@@ -1094,7 +1155,7 @@ paths:
       
       responses:
         '200':
-          description: 'OK. Show Report Logs'
+          description: 'OK. Show Report Logs (UI13)'
         '403':
           description: 'Forbidden. You do not have permission to access this page.'
  
@@ -1120,7 +1181,7 @@ paths:
       
       responses:
         '200':
-          description: 'Ok. Show Tag Feed Page'
+          description: 'Ok. Show Tag Feed Page (UI15)'
         '302':
           description: 'Tag does not exist'
           headers:
@@ -1188,7 +1249,7 @@ paths:
         
       responses:
         '200': 
-          description: 'Ok. Show Tag Creation Form.'
+          description: 'Ok. Show Tag Creation Form (UI16)'
         '401':
           description: 'Unauthorized. You cannot access this page'
           
@@ -1273,9 +1334,9 @@ paths:
         - 'M05: Search'
       responses:
         '200':
-          description: 'Ok. Returns a feed of questions (UI14).'
+          description: 'Ok. Returns a feed of questions (UI17).'
          
-  /search:
+  /searchQuestionForm:
   
     get:
       operationId: R502
@@ -1286,9 +1347,9 @@ paths:
       
       responses:
         '200':
-          description: 'Ok. Show Search Page UI (UI13)'
+          description: 'Ok. Show Search Page UI (UI14)'
           
-  /api/search:
+  /search:
     
     get:
       operationId: R503
@@ -1324,7 +1385,7 @@ paths:
       
       responses:
         '200':
-          description: 'OK. Show Main Features Page'
+          description: 'OK. Show Main Features Page (UI11)'
           
   /aboutus:
     
@@ -1337,7 +1398,7 @@ paths:
       
       responses:
         '200':
-          description: 'OK. Show About Us Page'
+          description: 'OK. Show About Us Page (UI10)'
         
   /contacts:
     
@@ -1350,7 +1411,7 @@ paths:
       
       responses:
         '200':
-          description: 'OK. Show Contacts Page'
+          description: 'OK. Show Contacts Page (UI09)'
           
           
   /analytics:
@@ -1364,7 +1425,7 @@ paths:
         
       responses:
         '200':
-          description: 'OK. Show Analytics Page'
+          description: 'OK. Show Analytics Page (UI07)'
         '403':
           description: 'Forbidden. You do not have permission to access this page.'
             
@@ -1379,7 +1440,7 @@ paths:
           
       responses:
         '200':
-          description: 'OK. Show Manage Users Page'
+          description: 'OK. Show Manage Users Page (UI08)'
         '403':
           description: 'Forbidden. You do not have permission to access this page.'
         
@@ -1545,6 +1606,71 @@ paths:
         '401':
           description: 'Unauthorized. You do not have permission to perform this action.'
           
+  /manageusers/create:
+  
+    get:
+      operationId: R612
+      summary: 'R612: Create User Form'
+      description: 'Provide new user registration form. Access: ADM'
+      tags:
+          - 'M06: Administration and Static Pages'
+          
+      responses:
+        '200':
+          description: 'Ok. Show Create User Form'
+          
+    post:
+      operationId: R613
+      summary: 'R613: Create User Action'
+      description: 'Processes the new user registration form submission. Access: ADM'
+      tags:
+        - 'M06: Administration and Static Pages'
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+                confirm_password:
+                    type: string
+                    format: password
+                picture:
+                  type: string
+                  format: binary
+                role:
+                  type: boolean
+              required:
+                - name
+                - email
+                - password
+                - confirm_password
+                - role
+
+      responses:
+        '302':
+          description: 'Redirect after processing the new user information.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: 'Successful creation. Redirect to back user management page.'
+                  value: '/manageusers'
+                302Failure:
+                  description: 'Failed authentication. Redirect back to register form.'
+                  value: '/manageusers/create'
+          
   ############# Moderator Pages #############        
   
   /users/{id}/activity:
@@ -1565,7 +1691,7 @@ paths:
           
       responses:
         '200':
-          description: 'OK. Show User Activity Log'
+          description: 'OK. Show User Activity Log (UI07)'
         '302':
          description: 'User does not exist'
          headers:
@@ -1578,4 +1704,3 @@ paths:
                  value: '/users/{id}'
         '403':
           description: 'Forbidden. You do not have permission to access this page.'
-  

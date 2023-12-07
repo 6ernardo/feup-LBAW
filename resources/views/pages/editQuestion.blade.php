@@ -12,7 +12,7 @@
             <textarea name="description" id="description" placeholder="{{ $question->description }}" value="{{ old('description') }}"></textarea>
 
             <div class="tag-dropdown">
-                <button onclick="toggleDropdown()">Tag List</button>
+                <button type="button" onclick="toggleDropdown()">Tag List</button> 
                 <div class="dropdown-menu" style="display: none;">
                 <label for="tags">Select Tags:</label><br>
                      @foreach($tags as $tag)
@@ -29,9 +29,10 @@
     </section>
 @endsection
 <script>
-    function toggleDropdown() {
+    function toggleDropdown(event) {
     var dropdownMenu = document.querySelector('.dropdown-menu');
     dropdownMenu.style.display = (dropdownMenu.style.display === 'block') ? 'none' : 'block';
+    event.stopPropagation();
 }
 
 document.querySelectorAll('.dropdown-menu input[type="checkbox"]').forEach(function(checkbox) {

@@ -10,7 +10,6 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\AnswerController;
-use App\Http\Controllers\TagController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,6 +44,7 @@ Route::controller(AdminController::class)->group(function () {
     Route::get('/manageusers', 'showManageUsers');
     Route::get('/manageusers/create', 'showCreateUser');
     Route::post('/manageusers/create', 'createUser');
+    Route::get('/search/users','search');
 });
 
 //Question
@@ -55,8 +55,8 @@ Route::controller(QuestionController::class)->group(function () {
     Route::get('/questions/{id}/edit', 'showEdit');
     Route::put('/questions/{id}/edit', 'editQuestion');
     Route::delete('/questions/{id}/delete', 'deleteQuestion');
-    //Route::get('/{searchQuery?}','searchForm')->name('searchQuestionResults');
-    //Route::get('/searchQuestionForm','searchList')->name('searchQuestionForm');
+    Route::get('/search','searchList')->name('searchQuestionResults');
+    Route::get('/searchQuestionForm','searchForm')->name('searchQuestionForm');
 });
 
 //Answer
@@ -65,6 +65,17 @@ Route::controller(AnswerController::class)->group(function () {
     Route::delete('/answers/{id}/delete', 'delete');
     Route::get('/answers/{id}/edit', 'showEdit');
     Route::put('/answers/{id}/edit', 'edit');
+});
+
+//Tag
+Route::controller(TagController::class)->group(function() {
+    Route::get('/tags', 'list');
+    Route::get('/tags/{id}','show')->name('tags.show');
+    Route::get('/tags/create', 'showCreateTag');
+    Route::post('/tags/create', 'createTag');
+    Route::get('/tags/{id}/edit', 'showEdit');
+    Route::put('/tags/{id}/edit', 'editTag');
+    Route::delete('/tags/{id}/delete', 'deleteTag');
 });
 
 // Authentication
@@ -77,15 +88,4 @@ Route::controller(LoginController::class)->group(function () {
 Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'showRegistrationForm')->name('register');
     Route::post('/register', 'register');
-});
-
-//Tag
-Route::controller(TagController::class)->group(function() {
-    Route::get('/tags', 'list');
-    Route::get('/tags/{id}','show')->name('tags.show');
-    Route::get('/tags/create', 'showCreateTag');
-    Route::post('/tags/create', 'createTag');
-    Route::get('/tags/{id}/edit', 'showEdit');
-    Route::put('/tags/{id}/edit', 'editTag');
-    Route::delete('/tags/{id}/delete', 'deleteTag');
 });

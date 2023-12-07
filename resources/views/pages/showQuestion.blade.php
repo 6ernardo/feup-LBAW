@@ -10,9 +10,7 @@
         </form>
     @endif
     <h2>{{ $question->title }}</h2>
-    @if ($question->tags->isEmpty())
-        <p>No tags available</p>
-    @else
+    @if (!$question->tags->isEmpty())
         <ul class="tag-list">
         <span>Tags:</span>
             @foreach($question->tags as $tag)
