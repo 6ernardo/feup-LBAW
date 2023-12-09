@@ -6,7 +6,7 @@
             @method('PUT')
             @csrf
             <label for="name">Name:</label>
-            <input type="text" name="title" id="title" placeholder="{{ $tag->name }}" value="{{ old('name') }}">
+            <input type="text" name="name" id="name" placeholder="{{ $tag->name }}" value="{{ old('name') }}">
 
             <label for="description">Description:</label>
             <textarea name="description" id="description" placeholder="{{ $tag->description }}" value="{{ old('description') }}"></textarea>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Question;
 use App\Models\User;
+use App\Models\Tag;
 
 use Illuminate\Support\Facades\Auth;
 
@@ -36,7 +37,6 @@ class QuestionController extends Controller{
 
         if ($request->has('tags')) {
             $tagIds = $request->input('tags');
-            Log::info('Tag IDs:', ['tagIds' => $tagIds]);
             $question->tags()->sync($tagIds);
         }
 
@@ -88,7 +88,6 @@ class QuestionController extends Controller{
 
         if ($request->has('tags')) {
             $tagIds = $request->input('tags');
-            Log::info('Tag IDs:', ['tagIds' => $tagIds]);
             $question->tags()->sync($tagIds);
         }
 
