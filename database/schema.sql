@@ -64,15 +64,13 @@ CREATE TABLE users (
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    profilePicture VARCHAR(255),
+    profile_picture VARCHAR(255),
     score INT NOT NULL DEFAULT 0,
     moderator BOOLEAN NOT NULL DEFAULT false
 );
 
 CREATE TABLE admin (
-    admin_id SERIAL PRIMARY KEY,
-    email VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL
+    admin_id SERIAL PRIMARY KEY
 );
 
 CREATE TABLE tag (
@@ -613,4 +611,4 @@ EXECUTE FUNCTION comment_unique_report();
 
 
 -- Populate
-insert into users (name, email, password, profilePicture, score, moderator) values ('client', 'client@client.com', '$2a$12$fu9IyYyjE5YGQmXpgzWPuO5jrGCEbkwSzYfIHZdAXr9FlZdILPD1C', 'http://dummyimage.com/228x100.png/dddddd/000000', 2080, true);
+insert into users (name, email, password, profile_picture, score, moderator) values ('client', 'client@client.com', '$2a$12$fu9IyYyjE5YGQmXpgzWPuO5jrGCEbkwSzYfIHZdAXr9FlZdILPD1C', 'http://dummyimage.com/228x100.png/dddddd/000000', 2080, true);
