@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Question;
 use App\Models\User;
+use App\Models\Tag;
 
 use Illuminate\Support\Facades\Auth;
 
@@ -12,8 +13,9 @@ class QuestionController extends Controller{
 
     public function create(){
         $this->authorize('show_create', Question::class);
+        $tags = Tag::all();
 
-        return view('pages.createQuestion');
+        return view('pages.createQuestion',  ['tags' => $tags]);
     }
 
     public function store(Request $request){
@@ -33,6 +35,11 @@ class QuestionController extends Controller{
 
         $question->save();
 
+        if ($request->has('tags')) {
+            $tagIds = $request->input('tags');
+            $question->tags()->sync($tagIds);
+        }
+
         return redirect('questions/'.$question->question_id);
     }
 
@@ -47,10 +54,14 @@ class QuestionController extends Controller{
     public function showEdit(int $id){
         $question = Question::find($id);
         $user = User::find($question->author_id);
+        $tags = Tag::all();
 
         $this->authorize('edit', $question);
 
-        return view('pages.editQuestion', ['question' => $question]);
+        return view('pages.editQuestion', [
+            'question' => $question,
+            'tags' => $tags
+        ]);
     }
 
     public function editQuestion(int $id, Request $request){
@@ -74,6 +85,12 @@ class QuestionController extends Controller{
         }
 
         $question->save();
+
+        if ($request->has('tags')) {
+            $tagIds = $request->input('tags');
+            $question->tags()->sync($tagIds);
+        }
+
         return redirect('questions/'.$question->question_id);
     }
 

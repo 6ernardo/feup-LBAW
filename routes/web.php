@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\AnswerController;
+use App\Http\Controllers\TagController;
 use App\Http\Controllers\CommentQuestionController;
 use App\Http\Controllers\CommentAnswerController;
 
@@ -67,6 +68,17 @@ Route::controller(AnswerController::class)->group(function () {
     Route::delete('/answers/{id}/delete', 'delete');
     Route::get('/answers/{id}/edit', 'showEdit');
     Route::put('/answers/{id}/edit', 'edit');
+});
+
+//Tag
+Route::controller(TagController::class)->group(function() {
+    Route::get('/tags', 'list');
+    Route::get('/tags/create', 'showCreateTag');
+    Route::post('/tags/create', 'createTag');
+    Route::get('/tags/{id}/edit', 'showEdit');
+    Route::put('/tags/{id}/edit', 'editTag');
+    Route::delete('/tags/{id}/delete', 'deleteTag');
+    Route::get('/tags/{id}','show')->name('tags.show');
 });
 
 //Question Comments

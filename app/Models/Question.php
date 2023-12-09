@@ -30,6 +30,9 @@ class Question extends Model{
         return $this->hasMany(Answer::class, 'question_id');
     }
 
+    public function tags(){
+        return $this->belongsToMany(Tag::class, 'question_tags', 'question_id', 'tag_id');
+
     public function comments() : HasMany {
         return $this->hasMany(CommentQuestion::class, 'question_id');
     }
