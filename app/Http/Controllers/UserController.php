@@ -49,6 +49,17 @@ class UserController extends Controller
             $user->password = Hash::make($request->password);
         }
 
+        if ($request->hasFile('profilePicture')) {
+            $request->validate([
+                'profilePicture' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            ]);
+
+            $file = $request->file('profilePicture');
+            $path = $file->storeAs('profile_pictures', 'profile_' . $user->user_id . '.' . $file->getClientOriginalExtension(), 'public');
+
+            $user->profile_picture = $path;
+        }
+
         $user->save();
         return redirect('user/'.$id);
         

@@ -3,7 +3,7 @@
 @section('content')
     <section id="profile">
         <h1>{{ $user->name }}</h1>
-        <img src="{{ $user->profilePicture }}">
+        <img src="{{ asset('storage/' . $user->profile_picture) }}" alt="Profile Picture">
         <p>{{ $user->email }}</p>
         <p>{{ $user->score }}</p>
         @if(Auth::user()->user_id == $user->user_id)
