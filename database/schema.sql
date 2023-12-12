@@ -70,7 +70,8 @@ CREATE TABLE users (
 );
 
 CREATE TABLE admin (
-    admin_id SERIAL PRIMARY KEY
+    admin_id SERIAL PRIMARY KEY,
+    CONSTRAINT fk_user FOREIGN KEY (admin_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE tag (
@@ -611,4 +612,5 @@ EXECUTE FUNCTION comment_unique_report();
 
 
 -- Populate
-insert into users (name, email, password, profile_picture, score, moderator) values ('client', 'client@client.com', '$2a$12$fu9IyYyjE5YGQmXpgzWPuO5jrGCEbkwSzYfIHZdAXr9FlZdILPD1C', 'http://dummyimage.com/228x100.png/dddddd/000000', 2080, true);
+insert into users (name, email, password, score, moderator) values ('client', 'client@client.com', '$2a$12$fu9IyYyjE5YGQmXpgzWPuO5jrGCEbkwSzYfIHZdAXr9FlZdILPD1C', 2080, true);
+insert into admin (admin_id) VALUES (1);
