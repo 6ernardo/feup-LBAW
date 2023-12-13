@@ -80,26 +80,7 @@ if(searchUsers) {
 
                 ul1.appendChild(link1);
 
-                const ul2 = document.createElement('ul');
-                const viewp = document.createElement('li');
-                viewp.textContent = 'View profile';
-                const editp = document.createElement('li');
-                editp.textContent = 'Edit profile';
-                const block = document.createElement('li');
-                block.textContent = 'Block';
-                const ban = document.createElement('li');
-                ban.textContent = 'Ban';
-                const promote = document.createElement('li');
-                promote.textContent = 'Promote';
-
-                ul2.appendChild(viewp);
-                ul2.appendChild(editp);
-                ul2.appendChild(block);
-                ul2.appendChild(ban);
-                ul2.appendChild(promote);
-
                 section.appendChild(ul1);
-                section.appendChild(ul2);
             }
         }
     } )

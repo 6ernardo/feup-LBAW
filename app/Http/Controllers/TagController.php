@@ -47,8 +47,8 @@ class TagController extends Controller
             $tag->description = $request->input('description');
         }
     
-            $tag->save();
-            return redirect('tags/'.$tag->tag_id)->with('success', 'Tag updated successfully.');
+        $tag->save();
+        return redirect('tags/'.$tag->tag_id)->with('success', 'Tag updated successfully.');
     }
 
     public function showCreateTag(){
@@ -69,7 +69,7 @@ class TagController extends Controller
             'description' => $request->description
         ]);
 
-        return redirect('tags/'.$tag->tag_id);
+        return redirect('admindashboard');
     }
 
     public function deleteTag(int $id){
@@ -77,6 +77,6 @@ class TagController extends Controller
         $tag = Tag::find($id);
         $tag->delete();
 
-        return redirect('/tags');
+        return redirect('admindashboard');
     }
 }

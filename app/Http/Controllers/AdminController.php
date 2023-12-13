@@ -7,9 +7,20 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 use App\Models\User;
+use App\Models\Tag;
 
 class AdminController extends Controller
 {
+    public function showDashboard(){
+        //policy
+
+        $users = User::all();
+        $tags = Tag::all();
+
+        return view('pages.adminDashboard', ['users' => $users,
+                                              'tags' => $tags]);
+    }
+
     public function showManageUsers(){
         //policy
 
