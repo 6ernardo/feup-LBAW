@@ -66,7 +66,8 @@ CREATE TABLE users (
     password VARCHAR(255) NOT NULL,
     profile_picture VARCHAR(255),
     score INT NOT NULL DEFAULT 0,
-    moderator BOOLEAN NOT NULL DEFAULT false
+    is_moderator BOOLEAN NOT NULL DEFAULT false,
+    is_blocked BOOLEAN NOT NULL DEFAULT false
 );
 
 CREATE TABLE admin (
@@ -612,5 +613,5 @@ EXECUTE FUNCTION comment_unique_report();
 
 
 -- Populate
-insert into users (name, email, password, score, moderator) values ('client', 'client@client.com', '$2a$12$fu9IyYyjE5YGQmXpgzWPuO5jrGCEbkwSzYfIHZdAXr9FlZdILPD1C', 2080, true);
+insert into users (name, email, password, score, is_moderator) values ('client', 'client@client.com', '$2a$12$fu9IyYyjE5YGQmXpgzWPuO5jrGCEbkwSzYfIHZdAXr9FlZdILPD1C', 2080, true);
 insert into admin (admin_id) VALUES (1);

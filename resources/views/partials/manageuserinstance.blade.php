@@ -6,7 +6,7 @@
             <li>{{ $user->email }}</li>
             @if ($user->isAdmin())
                 <li>Administrator</li>
-            @elseif ($user->moderator)
+            @elseif ($user->is_moderator)
                 <li>Moderator</li>
             @else
                 <li>User</li>

@@ -40,6 +40,7 @@ Route::controller(UserController::class)->group(function () {
     Route::put('/user/{id}/edit', 'editProfile');
     Route::get('/user/{id}/questions', 'showQuestions');
     Route::get('/user/{id}/answers', 'showAnswers');
+    Route::delete('/user/{id}/delete', 'delete');
 });
 
 // Admin
@@ -48,7 +49,11 @@ Route::controller(AdminController::class)->group(function () {
     Route::get('/manageusers', 'showManageUsers');
     Route::get('/manageusers/create', 'showCreateUser');
     Route::post('/manageusers/create', 'createUser');
+    Route::delete('/manageusers/delete/{id}', 'deleteUser');
     Route::get('/search/users','search');
+    Route::post('/manageusers/block/{id}', 'blockUser');
+    Route::post('/manageusers/unblock/{id}', 'unblockUser');
+    Route::put('/manageusers/changerole/{id}', 'changeRole');
 });
 
 //Question

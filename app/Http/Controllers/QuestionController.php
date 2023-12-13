@@ -101,8 +101,6 @@ class QuestionController extends Controller{
 
         $this->authorize('delete', $question);
 
-        //delete answers and comments under question
-
         $question->delete();
 
         return redirect('/feed');

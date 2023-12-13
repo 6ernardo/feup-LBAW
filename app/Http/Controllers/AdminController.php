@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 
 use App\Models\User;
 use App\Models\Tag;
+use App\Models\Admin;
 
 class AdminController extends Controller
 {
@@ -47,7 +48,7 @@ class AdminController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'moderator' => $request->role
+            'is_moderator' => $request->role
         ]);
 
         return redirect('user/'.$user->user_id);
@@ -64,4 +65,70 @@ class AdminController extends Controller
 
         return response()->json($users);
     }
+
+    public function deleteUser(int $id){
+        $user = User::find($id);
+
+        //policy
+
+        $user->delete();
+
+        return redirect('/admindashboard');
+    }
+
+    public function blockUser(int $id){
+        $user = User::find($id);
+
+        //policy
+
+        $user->is_blocked = true;
+        $user->save();
+
+        return redirect('user/'.$id);
+    }
+
+    public function unblockUser(int $id){
+        $user = User::find($id);
+
+        //policy
+
+        $user->is_blocked = false;
+        $user->save();
+
+        return redirect('user/'.$id);
+    }
+
+    public function changeRole(int $id, Request $request){
+        $user = User::find($id);
+
+        //policy
+
+        if($request->role === 'user'){
+            $user->is_moderator = false;
+            if($user->isAdmin()){
+                $admin = Admin::find($id);
+                $admin->delete();
+            }
+        }
+        else if($request->role === 'mod'){
+            $user->is_moderator = true;
+            if($user->isAdmin()){
+                $admin = Admin::find($id);
+                $admin->delete();
+            }
+        }
+        else if($request->role === 'admin'){
+            $user->is_moderator = true;
+            if(!$user->isAdmin()){
+                $admin = New Admin();
+                $admin->admin_id = $id;
+                $admin->save();
+            }
+        }
+
+        $user->save();
+
+        return redirect('user/'.$id);
+    }
+
 }

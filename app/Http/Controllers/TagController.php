@@ -32,15 +32,15 @@ class TagController extends Controller
 
     public function editTag(int $id, Request $request){
         $tag = Tag::find($id);
-    
-        if($request->has('name')){
+
+        if($request->name){
             $request->validate([
                 'name' => 'string|max:255',
             ]);
             $tag->name = $request->input('name');
         }
-    
-        if($request->has('description')){
+
+        if($request->description){
             $request->validate([
                 'description' => 'string',
             ]);
@@ -48,7 +48,7 @@ class TagController extends Controller
         }
     
         $tag->save();
-        return redirect('tags/'.$tag->tag_id)->with('success', 'Tag updated successfully.');
+        return redirect('admindashboard');
     }
 
     public function showCreateTag(){

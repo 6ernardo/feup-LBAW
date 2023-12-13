@@ -74,4 +74,14 @@ class UserController extends Controller
         $user = User::find($id);
         return view('pages.userAnswers', ['data' => $user->answers]);
     }
+
+    public function delete(int $id){
+        $user = User::find($id);
+
+        //policy
+
+        $user->delete();
+
+        return redirect('/');
+    }
 }

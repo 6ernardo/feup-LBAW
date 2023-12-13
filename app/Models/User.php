@@ -24,7 +24,8 @@ class User extends Authenticatable
         'password',
         'profile_picture',
         'score',
-        'moderator'
+        'is_moderator',
+        'is_blocked'
     ];
 
     protected $primaryKey = 'user_id';
