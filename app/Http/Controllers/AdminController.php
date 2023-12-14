@@ -23,15 +23,6 @@ class AdminController extends Controller
                                               'tags' => $tags]);
     }
 
-    public function showManageUsers(){
-        //policy
-
-        $users = User::all();
-
-        return view('pages.manageusers', ['users' => $users]);
-    }
-
-
     public function showCreateUser(){
         $this->authorize('admin', Admin::class);
 
@@ -51,8 +42,23 @@ class AdminController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'is_moderator' => $request->role
         ]);
+
+        if($request->role === 'user'){
+            $user->is_moderator = false;
+        }
+        else if($request->role === 'mod'){
+            $user->is_moderator = true;
+        }
+        else {
+            $user->is_moderator = true;
+
+            $admin = new Admin();
+            $admin->admin_id = $user->user_id;
+            $admin->save();
+        }
+
+        $user->save();
 
         return redirect('user/'.$user->user_id);
         
