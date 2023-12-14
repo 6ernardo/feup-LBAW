@@ -88,7 +88,6 @@ CREATE TABLE question (
     score INT NOT NULL DEFAULT 0,
     CONSTRAINT fk_author FOREIGN KEY (author_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
-
 CREATE TABLE question_tags (
     question_id INT,
     tag_id INT,
@@ -104,6 +103,7 @@ CREATE TABLE answer (
     description TEXT NOT NULL,
     timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     score INT NOT NULL DEFAULT 0,
+    correct BOOLEAN NOT NULL DEFAULT FALSE,
     CONSTRAINT fk_author FOREIGN KEY (author_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT fk_question FOREIGN KEY (question_id) REFERENCES question(question_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
