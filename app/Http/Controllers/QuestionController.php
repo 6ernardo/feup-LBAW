@@ -45,10 +45,10 @@ class QuestionController extends Controller{
 
     public function show($id){
         $question = Question::find($id);
-        
-        return view('pages.showQuestion', [
-            'question' => $question
-        ]);
+
+            return view('pages.showQuestion', [
+                'question' => $question
+            ]);
     }
 
     public function showEdit(int $id){
@@ -123,8 +123,18 @@ class QuestionController extends Controller{
                     ->get();
  
         return response()->json($questions);
-        
     }
 
+    public function markCorrect(Request $request)
+    {
+        $selectedAnswerId = $request->input('selected_answer_id');
+        $answer=Answer::find($selectedAnswerId);
+
+        $answer->correct = true;
+
+        $answer->save();
+
+        return redirect()->back()->with('success', 'Answer marked as correct!');
+    }
 }
 
