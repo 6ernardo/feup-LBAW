@@ -36,4 +36,9 @@ class Answer extends Model
     public function comments() : HasMany {
         return $this->hasMany(CommentAnswer::class, 'answer_id');
     }
+
+    public function getVoteCount() {
+        return $this->votes->sum('vote'); 
+    }
+
 }

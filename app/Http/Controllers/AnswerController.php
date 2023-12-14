@@ -73,4 +73,36 @@ class AnswerController extends Controller
 
         return redirect('questions/'.$answer->question_id);
     }
+
+    public function vote(Request $request) {
+
+        $validatedData = $request->validate([
+            'answer_id' => 'required|exists:answers,id',
+            'vote' => 'required|in:up,down'
+        ]);
+
+        $answerId = $validatedData['answer_id'];
+        $voteType = $validatedData['vote'] === 'up' ? 1 : -1;
+        $userId = Auth::id();
+
+        // Verificar se o usuário já votou na resposta
+        $existingVote = UserVoteAnswer::where('user_id', $userId)->where('answer_id', $answerId)->first();
+        if ($existingVote && $existingVote->vote === $voteType) {
+            return response()->json(['message' => 'Você já votou dessa maneira nesta resposta.'], 409); // Código de status 409 - Conflito
+        }
+
+        // Atualizar ou criar o voto
+        UserVoteAnswer::updateOrCreate(
+            ['user_id' => $userId, 'answer_id' => $answerId],
+            ['vote' => $voteType]
+        );
+
+        $answer = Answer::find($answerId);
+        $newVoteCount = $answer->getVoteCount();
+
+        //  nova contagem
+        return response()->json(['newVoteCount' => $newVoteCount]);
+    }
 }
+
+    

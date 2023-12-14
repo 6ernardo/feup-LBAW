@@ -35,8 +35,15 @@
     </section>
 
     <section id="answers">
-        <h3>Answers</h3>
-        @each('partials.answer', $question->answers, 'answer')
+    <h3>Answers</h3>
+    @foreach ($question->answers as $answer)
+    <div class="answer" id="answer{{ $answer->id }}">
+        <p>{{ $answer->description }}</p>
+        <button class="vote-button" data-answer-id="{{ $answer->id }}" data-vote-type="up">Upvote</button>
+        <span id="vote-count-{{ $answer->id }}">{{ $answer->votes_count ?? 0 }}</span>
+        <button class="vote-button" data-answer-id="{{ $answer->id }}" data-vote-type="down">Downvote</button>
+    </div>
+    @endforeach
     </section>
 
     <section id="post_answer">
@@ -58,4 +65,5 @@
             margin-right: 5px; 
         }
     </style>
+    <script src="{{ asset('js/vote.js') }}"></script>
 @endsection
