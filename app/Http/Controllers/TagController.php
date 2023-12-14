@@ -26,12 +26,15 @@ class TagController extends Controller
     public function showEdit(int $id){
         $tag = Tag::find($id);
 
+        $this->authorize('edit', $tag);
 
         return view('pages.editTag', ['tag' => $tag]);
     }
 
     public function editTag(int $id, Request $request){
         $tag = Tag::find($id);
+
+        $this->authorize('edit', $tag);
 
         if($request->name){
             $request->validate([
@@ -52,13 +55,13 @@ class TagController extends Controller
     }
 
     public function showCreateTag(){
-        //policy
+        $this->authorize('create', Tag::class);
 
         return view('pages.createTag');
     }
 
     public function createTag(Request $request){
-        //policy
+        $this->authorize('create', Tag::class);
 
         $request->validate([
             'name' => 'required|string|max:255',
@@ -73,8 +76,10 @@ class TagController extends Controller
     }
 
     public function deleteTag(int $id){
-
         $tag = Tag::find($id);
+
+        $this->authorize('delete', $tag);
+
         $tag->delete();
 
         return redirect('admindashboard');
