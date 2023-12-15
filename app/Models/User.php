@@ -24,7 +24,8 @@ class User extends Authenticatable
         'password',
         'profile_picture',
         'score',
-        'moderator'
+        'is_moderator',
+        'is_blocked'
     ];
 
     protected $primaryKey = 'user_id';
@@ -54,5 +55,9 @@ class User extends Authenticatable
 
     public function answers() {
         return $this->hasMany(Answer::class, 'author_id');
+    }
+
+    public function isAdmin() {
+        return count($this->hasOne(Admin::class, 'admin_id')->get());
     }
 }

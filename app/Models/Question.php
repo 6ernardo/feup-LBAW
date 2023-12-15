@@ -37,4 +37,5 @@ class Question extends Model{
     public function comments() : HasMany {
         return $this->hasMany(CommentQuestion::class, 'question_id');
     }
+
 }
