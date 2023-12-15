@@ -30,7 +30,7 @@
         <section id="tag_listing">
             <ul>
                 @foreach($tags as $tag)
-                    <li><a href="{{ url('/tags/'.$tag->tag_id.'/edit') }}">{{ $tag->name }}</a></li>
+                    <li><a href="{{ url('/tags/'.$tag->tag_id) }}">{{ $tag->name }}</a></li>
                 @endforeach
             </ul>
         </section>

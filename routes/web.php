@@ -46,7 +46,6 @@ Route::controller(UserController::class)->group(function () {
 // Admin
 Route::controller(AdminController::class)->group(function () {
     Route::get('/admindashboard', 'showDashboard');
-    Route::get('/manageusers', 'showManageUsers');
     Route::get('/manageusers/create', 'showCreateUser');
     Route::post('/manageusers/create', 'createUser');
     Route::delete('/manageusers/delete/{id}', 'deleteUser');
