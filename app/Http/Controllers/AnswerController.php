@@ -33,7 +33,6 @@ class AnswerController extends Controller
     public function delete(int $id){
 
         $answer = Answer::find($id);
-        $user = User::find($answer->author_id);
 
         $this->authorize('delete', $answer);
 
@@ -49,7 +48,6 @@ class AnswerController extends Controller
     public function showEdit(int $id){
 
         $answer = Answer::find($id);
-        $user = User::find($answer->author_id);
 
         $this->authorize('edit', $answer);
 
@@ -59,7 +57,6 @@ class AnswerController extends Controller
     public function edit(int $id, Request $request){
 
         $answer = Answer::find($id);
-        $user = User::find($answer->author_id);
 
         $this->authorize('edit', $answer);
 

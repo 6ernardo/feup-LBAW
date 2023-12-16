@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Auth;
 
 class AnswerPolicy
 {
-
     public function create(User $user)
     {
         return Auth::check();
@@ -22,6 +21,8 @@ class AnswerPolicy
 
     public function delete(User $user, Answer $answer)
     {
-        return $user->user_id === $answer->author_id;
+        return $user->user_id === $answer->author_id ||
+                $user->is_moderator ||
+                $user->isAdmin();
     }
 }
