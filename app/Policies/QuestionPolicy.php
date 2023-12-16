@@ -16,7 +16,9 @@ class QuestionPolicy
 
     public function edit(User $user, Question $question)
     {
-        return $user->user_id === $question->author_id;
+        return $user->user_id === $question->author_id ||
+                $user->is_moderator ||
+                $user->isAdmin();
     }
 
     public function delete(User $user, Question $question)
