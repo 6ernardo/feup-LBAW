@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 class QuestionController extends Controller{
 
     public function create(){
-        $this->authorize('show_create', Question::class);
+        $this->authorize('create', Question::class);
         $tags = Tag::all();
 
         return view('pages.createQuestion',  ['tags' => $tags]);

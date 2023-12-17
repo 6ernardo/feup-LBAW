@@ -14,6 +14,8 @@ class CommentQuestionController extends Controller
     public function create(int $id, Request $request){
         $comment = new CommentQuestion();
 
+        $this->authorize('create', $comment);
+
         $request->validate([
             'content' => 'required'
         ]);
@@ -31,7 +33,8 @@ class CommentQuestionController extends Controller
     public function delete(int $id){
 
         $comment = CommentQuestion::find($id);
-        $user = User::find($comment->author_id);
+        
+        $this->authorize('delete', $comment);;
 
         $question_id = $comment->question_id;
 
@@ -43,7 +46,8 @@ class CommentQuestionController extends Controller
     public function showEdit(int $id){
 
         $comment = CommentQuestion::find($id);
-        $user = User::find($comment->author_id);
+        
+        $this->authorize('edit', $comment);
 
         return view('pages.editComment', ['comment' => $comment, 'type' => 'question']);
     }
@@ -51,7 +55,8 @@ class CommentQuestionController extends Controller
     public function edit(int $id, Request $request){
 
         $comment = CommentQuestion::find($id);
-        $user = User::find($comment->author_id);
+
+        $this->authorize('edit', $comment);
 
         $request->validate([
             'content' => 'string'
