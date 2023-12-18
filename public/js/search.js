@@ -85,3 +85,11 @@ if(searchUsers) {
         }
     } )
 }
+
+function openFilters(){
+    document.getElementById("filters_popup").style.display = "block";
+}
+
+function closeFilters(){
+    document.getElementById("filters_popup").style.display = "none";
+}

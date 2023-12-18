@@ -108,7 +108,9 @@ class QuestionController extends Controller{
 
     public function searchForm()
     {
-        return view('pages.searchQuestionForm');
+        $tags = Tag::all();
+
+        return view('pages.searchQuestionForm', ['tags' => $tags]);
     }
 
     public function searchList(Request $request)
