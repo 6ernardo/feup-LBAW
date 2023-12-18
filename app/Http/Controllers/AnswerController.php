@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Auth;
+use App\Models\UserVoteAnswer;
 
 class AnswerController extends Controller
 {
@@ -75,34 +76,25 @@ class AnswerController extends Controller
     }
 
     public function vote(Request $request) {
-
         $validatedData = $request->validate([
-            'answer_id' => 'required|exists:answers,id',
-            'vote' => 'required|in:up,down'
+            'answer_id' => 'required|exists:answer,answer_id',
+            'vote' => 'required|integer'
         ]);
-
-        $answerId = $validatedData['answer_id'];
-        $voteType = $validatedData['vote'] === 'up' ? 1 : -1;
+    
         $userId = Auth::id();
+        $answerId = $validatedData['answer_id'];
+        $voteValue = (int) $validatedData['vote'];
 
-        // Verificar se o usuário já votou na resposta
-        $existingVote = UserVoteAnswer::where('user_id', $userId)->where('answer_id', $answerId)->first();
-        if ($existingVote && $existingVote->vote === $voteType) {
-            return response()->json(['message' => 'Você já votou dessa maneira nesta resposta.'], 409); // Código de status 409 - Conflito
-        }
-
-        // Atualizar ou criar o voto
+        
+        $voteValue = $voteValue === 1 ? 1 : -1;
+        
         UserVoteAnswer::updateOrCreate(
             ['user_id' => $userId, 'answer_id' => $answerId],
-            ['vote' => $voteType]
+            ['vote' => $voteValue]
         );
-
-        $answer = Answer::find($answerId);
-        $newVoteCount = $answer->getVoteCount();
-
-        //  nova contagem
-        return response()->json(['newVoteCount' => $newVoteCount]);
-    }
+        
+        return response('Voto registrado com sucesso', 200);
+}
 }
 
     

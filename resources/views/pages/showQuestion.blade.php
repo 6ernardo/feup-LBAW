@@ -37,11 +37,11 @@
     <section id="answers">
     <h3>Answers</h3>
     @foreach ($question->answers as $answer)
-    <div class="answer" id="answer{{ $answer->id }}">
+    <div class="answer" id="answer{{ $answer->answer_id }}">
         <p>{{ $answer->description }}</p>
-        <button class="vote-button" data-answer-id="{{ $answer->id }}" data-vote-type="up">Upvote</button>
-        <span id="vote-count-{{ $answer->id }}">{{ $answer->votes_count ?? 0 }}</span>
-        <button class="vote-button" data-answer-id="{{ $answer->id }}" data-vote-type="down">Downvote</button>
+        <button class="button-vote upvote-button" onclick="vote({{ $answer->answer_id }} , 1)">Upvote</button>
+        <span class="score">{{ $answer->score }}</span>
+        <button class="button-vote downvote-button" onclick="vote({{ $answer->answer_id }} , -1)">Downvote</button>
     </div>
     @endforeach
     </section>
