@@ -38,6 +38,7 @@ function addEventListeners() {
     window.location.href = '/search=' + searchQuery;
   });
   */
+
   function encodeForAjax(data) {
     if (data == null) return null;
     return Object.keys(data).map(function(k){
@@ -192,4 +193,35 @@ function addEventListeners() {
   }
   
   addEventListeners();
+
+
+  // Follow functions
+
+  function follow_tag(tagId){
+    let section = document.querySelector('#content');
+    let button = section.querySelector('.follow_tag_button');
+
+    if(button.innerHTML == 'Follow'){
+      button.innerText = 'Unfollow';
+      sendAjaxRequest('post', '../tag/' + tagId + '/follow');
+    }
+    else {
+      button.innerHTML = 'Follow';
+      sendAjaxRequest('post', '../tag/' + tagId + '/unfollow');
+    }
+  }
+
+  function follow_question(questionId){
+    let section = document.querySelector('#content');
+    let button = section.querySelector('.follow_question_button');
+
+    if(button.innerHTML == 'Follow'){
+      button.innerText = 'Unfollow';
+      sendAjaxRequest('post', '../questions/' + questionId + '/follow');
+    }
+    else {
+      button.innerHTML = 'Follow';
+      sendAjaxRequest('post', '../questions/' + questionId + '/unfollow');
+    }
+  }
   

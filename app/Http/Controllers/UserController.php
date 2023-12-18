@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -83,5 +84,29 @@ class UserController extends Controller
         $user->delete();
 
         return redirect('/');
+    }
+
+    public function follow_tag(int $id){
+        //policy
+
+        Auth::user()->followed_tags()->attach($id);
+    }
+
+    public function unfollow_tag(int $id){
+        //policy
+
+        Auth::user()->followed_tags()->detach($id);
+    }
+
+    public function follow_question(int $id){
+        //policy
+
+        Auth::user()->followed_questions()->attach($id);
+    }
+
+    public function unfollow_question(int $id){
+        //policy
+
+        Auth::user()->followed_questions()->detach($id);
     }
 }

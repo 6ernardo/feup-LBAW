@@ -23,4 +23,8 @@ class Tag extends Model
     public function questions(){
         return $this->belongsToMany(Question::class, 'question_tags', 'tag_id', 'question_id');
     }
+
+    public function followed_by() {
+        return $this->belongsToMany(User::class, 'follow_tag', 'tag_id', 'user_id');
+    }
 }

@@ -9,6 +9,13 @@
             <button type="submit">Delete Question</button>
         </form>
     @endif
+    @if(Auth::check() && Auth::user()->user_id != $question->author_id)
+        @if(Auth::user()->follows_question($question->question_id))
+            <button class="follow_question_button" onclick="follow_question({{$question->question_id}})">Unfollow</button>
+        @else
+            <button class="follow_question_button" onclick="follow_question({{$question->question_id}})">Follow</button>
+        @endif
+    @endif
     <h2>{{ $question->title }}</h2>
     @if (!$question->tags->isEmpty())
         <ul class="tag-list">
