@@ -82,6 +82,7 @@ CREATE TABLE tag (
 CREATE TABLE question (
     question_id SERIAL PRIMARY KEY,
     author_id INT NOT NULL,
+    correct_answer_id INT,
     title TEXT NOT NULL,
     description TEXT,
     timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -103,10 +104,12 @@ CREATE TABLE answer (
     description TEXT NOT NULL,
     timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     score INT NOT NULL DEFAULT 0,
-    correct BOOLEAN NOT NULL DEFAULT FALSE,
     CONSTRAINT fk_author FOREIGN KEY (author_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT fk_question FOREIGN KEY (question_id) REFERENCES question(question_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+ALTER TABLE Question
+ADD FOREIGN KEY (correct_answer_id) REFERENCES Answer(answer_id);
 
 CREATE TABLE comment_question (
     comment_id SERIAL PRIMARY KEY,

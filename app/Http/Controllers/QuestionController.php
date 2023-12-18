@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Question;
 use App\Models\User;
 use App\Models\Tag;
-
+use App\Models\Answer;
 use Illuminate\Support\Facades\Auth;
 
 class QuestionController extends Controller{
@@ -46,8 +46,8 @@ class QuestionController extends Controller{
     public function show($id){
         $question = Question::find($id);
 
-            return view('pages.showQuestion', [
-                'question' => $question
+        return view('pages.showQuestion', [
+            'question' => $question
             ]);
     }
 
@@ -125,16 +125,16 @@ class QuestionController extends Controller{
         return response()->json($questions);
     }
 
-    public function markCorrect(Request $request)
+    public function markCorrect(int $id, Request $request)
     {
+        $question = Question::find($id);
         $selectedAnswerId = $request->input('selected_answer_id');
-        $answer=Answer::find($selectedAnswerId);
 
-        $answer->correct = true;
+        $question->correct_answer_id = $selectedAnswerId;
 
-        $answer->save();
+        $question->save();
 
-        return redirect()->back()->with('success', 'Answer marked as correct!');
+        return redirect('questions/'.$question->question_id);
     }
 }
 

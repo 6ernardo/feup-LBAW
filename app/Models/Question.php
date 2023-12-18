@@ -37,4 +37,9 @@ class Question extends Model{
     public function comments() : HasMany {
         return $this->hasMany(CommentQuestion::class, 'question_id');
     }
+
+    public function correct_answer() : BelongsTo 
+    {
+        return $this->belongsTo(Answer::class, 'correct_answer_id');
+    }
 }

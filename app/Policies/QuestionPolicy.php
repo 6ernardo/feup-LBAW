@@ -28,4 +28,9 @@ class QuestionPolicy
     {
         return $user->user_id === $question->author_id;
     }
+
+    public function select(User $user, Question $question)
+    {
+        return $user->user_id === $question->author_id;
+    }
 }
