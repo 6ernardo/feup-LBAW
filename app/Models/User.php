@@ -60,4 +60,21 @@ class User extends Authenticatable
     public function isAdmin() {
         return count($this->hasOne(Admin::class, 'admin_id')->get());
     }
+
+    public function followed_questions() {
+        return $this->belongsToMany(Question::class, 'follow_question', 'user_id', 'question_id');
+    }
+
+    public function followed_tags() {
+        return $this->belongsToMany(Tag::class, 'follow_tag', 'user_id', 'tag_id');
+    }
+
+    public function follows_question(int $id) {
+        return $this->followed_questions()->wherePivot('question_id', $id)->exists();
+    }
+
+    public function follows_tag(int $id) {
+        return $this->followed_tags()->wherePivot('tag_id', $id)->exists();
+    }
+    
 }

@@ -41,6 +41,10 @@ Route::controller(UserController::class)->group(function () {
     Route::get('/user/{id}/questions', 'showQuestions');
     Route::get('/user/{id}/answers', 'showAnswers');
     Route::delete('/user/{id}/delete', 'delete');
+    Route::post('/tag/{id}/follow', 'follow_tag');
+    Route::post('/tag/{id}/unfollow', 'unfollow_tag');
+    Route::post('/questions/{id}/follow', 'follow_question');
+    Route::post('/questions/{id}/unfollow', 'unfollow_question');
 });
 
 // Admin

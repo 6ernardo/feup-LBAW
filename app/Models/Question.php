@@ -38,4 +38,7 @@ class Question extends Model{
         return $this->hasMany(CommentQuestion::class, 'question_id');
     }
 
+    public function followed_by() {
+        return $this->belongsToMany(User::class, 'follow_question', 'question_id', 'user_id');
+    }
 }
