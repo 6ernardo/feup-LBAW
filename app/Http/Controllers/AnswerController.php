@@ -94,7 +94,23 @@ class AnswerController extends Controller
         );
         
         return response('Voto registrado com sucesso', 200);
-}
+    }
+
+    public function RemoveVote(Request $request){
+        $validatedData = $request->validate([
+            'answer_id' => 'required|exists:answer,answer_id',
+        ]);
+    
+        $userId = Auth::id();
+        $answerId = $validatedData['answer_id'];
+    
+        // Encontrar e remover o voto
+        UserVoteAnswer::where('user_id', $userId)->where('answer_id', $answerId)->delete();
+    
+        return response('Voto removido com sucesso', 200);
+    }
+
+
 }
 
     

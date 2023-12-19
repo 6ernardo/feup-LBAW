@@ -69,6 +69,7 @@ Route::controller(AnswerController::class)->group(function () {
     Route::get('/answers/{id}/edit', 'showEdit');
     Route::put('/answers/{id}/edit', 'edit');
     Route::post('/answer/vote','vote')->name('answer.vote');
+    Route::post('/answer/vote/remove','RemoveVote')->name('answer.removeVote');
 });
 
 //Tag

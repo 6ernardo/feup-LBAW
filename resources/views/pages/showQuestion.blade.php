@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+    <link rel="stylesheet" href="{{ asset('css/vote.css') }}">
     @if (Auth::user()->user_id == $question->author_id)
         <a class="button" href="{{ url('/questions/'.$question->question_id.'/edit') }}"> Edit Question </a>
         <form method="POST" action="{{ url('/questions/'.$question->question_id.'/delete') }}">
@@ -42,6 +43,7 @@
         <button class="button-vote upvote-button" onclick="vote({{ $answer->answer_id }} , 1)">Upvote</button>
         <span class="score">{{ $answer->score }}</span>
         <button class="button-vote downvote-button" onclick="vote({{ $answer->answer_id }} , -1)">Downvote</button>
+        <button class="button-vote remove-vote-button" onclick="removeVote({{ $answer->answer_id }})">Remove Vote</button>
     </div>
     @endforeach
     </section>
