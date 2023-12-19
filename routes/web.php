@@ -60,6 +60,8 @@ Route::controller(QuestionController::class)->group(function () {
     Route::delete('/questions/{id}/delete', 'deleteQuestion');
     Route::get('/search','searchList')->name('searchQuestionResults');
     Route::get('/searchQuestionForm','searchForm')->name('searchQuestionForm');
+    Route::post('questions/{id}/vote', 'vote')->name('question.vote');
+    Route::post('questions/{id}/vote/remove','RemoveVote')->name('question.removeVote');
 });
 
 //Answer
