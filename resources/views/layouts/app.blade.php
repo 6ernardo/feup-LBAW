@@ -30,9 +30,12 @@
                     <a class="button" href="{{ url('/logout') }}"> Logout </a> 
                     <a href="{{ url('/user/'.Auth::user()->user_id) }}"> <span>{{ Auth::user()->name }}</span> </a>
                 @elseif(request()->route()->getName() != 'login' &&
-                request()->route()->getName() != 'register')
+                        request()->route()->getName() != 'register')
                 	<a class="button" href="{{ url('/login') }}"> Login </a>
                 	<a class="button" href="{{ url('/register') }}"> Register </a>
+                @endif
+                @if (Auth::check() && Auth::user()->isAdmin())
+                    <a class="button" href="{{ url('/admindashboard') }}">Admin Dashboard</a>
                 @endif
                 <a class="button" href="{{ url('/searchQuestionForm') }}"> Search </a>
             </header>

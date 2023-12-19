@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 class QuestionController extends Controller{
 
     public function create(){
-        $this->authorize('show_create', Question::class);
+        $this->authorize('create', Question::class);
         $tags = Tag::all();
 
         return view('pages.createQuestion',  ['tags' => $tags]);
@@ -100,8 +100,6 @@ class QuestionController extends Controller{
         $user = User::find($question->author_id);
 
         $this->authorize('delete', $question);
-
-        //delete answers and comments under question
 
         $question->delete();
 

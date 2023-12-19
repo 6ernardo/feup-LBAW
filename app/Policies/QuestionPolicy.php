@@ -9,11 +9,6 @@ use Illuminate\Support\Facades\Auth;
 
 class QuestionPolicy
 {
-    public function show_create(User $user)
-    {
-        return Auth::check();
-    }
-
     public function create(User $user)
     {
         return Auth::check();
@@ -21,12 +16,16 @@ class QuestionPolicy
 
     public function edit(User $user, Question $question)
     {
-        return $user->user_id === $question->author_id;
+        return $user->user_id === $question->author_id ||
+                $user->is_moderator ||
+                $user->isAdmin();
     }
 
     public function delete(User $user, Question $question)
     {
-        return $user->user_id === $question->author_id;
+        return $user->user_id === $question->author_id ||
+                $user->is_moderator ||
+                $user->isAdmin();
     }
 
     public function select(User $user, Question $question)

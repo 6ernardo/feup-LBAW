@@ -42,4 +42,8 @@ class Question extends Model{
     {
         return $this->belongsTo(Answer::class, 'correct_answer_id');
     }
+
+    public function followed_by() {
+        return $this->belongsToMany(User::class, 'follow_question', 'question_id', 'user_id');
+    }
 }

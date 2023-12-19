@@ -22,8 +22,9 @@
 
         <label for="role">User Role</label>
         <select id="role" name="role" required>
-            <option value="false" selected>User</option>
-            <option value="true">Moderator</option>
+            <option value="user" selected>User</option>
+            <option value="mod">Moderator</option>
+            <option value="admin">Administrator</option>
         </select>
 
         <label for="password">Password</label>

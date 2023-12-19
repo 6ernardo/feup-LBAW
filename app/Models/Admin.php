@@ -5,17 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
 class Admin extends Model
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasFactory;
 
     public $timestamps  = false;
     protected $table = 'admin';
-
-    protected $fillable = [
-        'email',
-        'password'
-    ];
 
     protected $primaryKey = 'admin_id';
 
@@ -37,4 +34,8 @@ class Admin extends Model
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
 }
