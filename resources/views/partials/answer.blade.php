@@ -10,7 +10,7 @@
         <a class="button" href="{{ url('/answers/'.$answer->answer_id.'/edit') }}"> Edit </a>
     @endif
     @if (Auth::check() && $answer->question->author_id == Auth::user()->user_id)
-        <form method="Post" action="{{ url('questions/'.$answer->question->question_id.'/closed') }}">
+        <form method="Post" action="{{ url('questions/'.$answer->question->question_id.'/mark_correct') }}">
             @csrf
             @method('PUT')
             <input type="hidden" name="selected_answer_id" value="{{ $answer->answer_id }}">
