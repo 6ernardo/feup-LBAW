@@ -27,4 +27,9 @@ class QuestionPolicy
                 $user->is_moderator ||
                 $user->isAdmin();
     }
+
+    public function select(User $user, Question $question)
+    {
+        return $user->user_id === $question->author_id;
+    }
 }

@@ -68,6 +68,7 @@ Route::controller(QuestionController::class)->group(function () {
     Route::get('/questions/{id}/edit', 'showEdit');
     Route::put('/questions/{id}/edit', 'editQuestion');
     Route::delete('/questions/{id}/delete', 'deleteQuestion');
+    Route::put('/questions/{id}/mark_correct', 'markCorrect');
     Route::get('/search','searchList')->name('searchQuestionResults');
     Route::get('/searchQuestionForm','searchForm')->name('searchQuestionForm');
 });
