@@ -1,5 +1,4 @@
 function vote(answerId, voteType) {
-    
     //console.log("answerId:", answerId, "voteValue:", voteType);
     //sendAjaxRequest('post', '/answer/vote', { answer_id: answerId, vote: voteType });
     //sendAjaxRequest('post', '/answer/vote', { answer_id: 1, vote: 1 });
