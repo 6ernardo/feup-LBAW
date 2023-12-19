@@ -115,12 +115,43 @@ class QuestionController extends Controller{
 
     public function searchList(Request $request)
     {
-        
         $input = $request->input('search_query');
-        $questions = Question::select('question.question_id', 'question.title', 'question.description')
+        $order = $request->input('orderby');
+
+        switch($order) {
+            case 'scoreasc':
+                $questions = Question::select('question.question_id', 'question.title', 'question.description')
+                    ->whereRaw("tsvectors @@ to_tsquery(?)", [$input])
+                    ->orderBy('score', 'ASC')
+                    ->get();
+                break;
+            case 'scoredesc':
+                $questions = Question::select('question.question_id', 'question.title', 'question.description')
+                    ->whereRaw("tsvectors @@ to_tsquery(?)", [$input])
+                    ->orderBy('score', 'DESC')
+                    ->get();
+                break;
+            case 'oldest':
+                $questions = Question::select('question.question_id', 'question.title', 'question.description')
+                    ->whereRaw("tsvectors @@ to_tsquery(?)", [$input])
+                    ->orderBy('question_id', 'ASC')
+                    ->get();
+                break;
+            case 'newest':
+                $questions = Question::select('question.question_id', 'question.title', 'question.description')
+                    ->whereRaw("tsvectors @@ to_tsquery(?)", [$input])
+                    ->orderBy('question_id', 'DESC')
+                    ->get();
+                break;
+            case 'relevance':
+                $questions = Question::select('question.question_id', 'question.title', 'question.description')
                     ->whereRaw("tsvectors @@ to_tsquery(?)", [$input])
                     ->orderByRaw("ts_rank(tsvectors, to_tsquery(?)) ASC", [$input])
                     ->get();
+                break;
+            default:
+                break;
+        }
  
         return response()->json($questions);
         

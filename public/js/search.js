@@ -3,8 +3,9 @@ if (searchQuestions) {
     searchQuestions.addEventListener('click', async function(event) {
         event.preventDefault();
         const search_query = document.getElementById('search_query').value;
+        const orderby = document.getElementById('orderby').value;
 
-        const response = await fetch('../search?search_query=' +  search_query);
+        const response = await fetch('../search?search_query=' +  search_query + '&orderby=' + orderby);
         const questions = await response.json();
 
         const section = document.querySelector('#results');
