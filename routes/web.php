@@ -91,6 +91,8 @@ Route::controller(CommentQuestionController::class)->group(function() {
     Route::delete('/commentquestion/{id}/delete', 'delete');
     Route::get('/commentquestion/{id}/edit', 'showEdit');
     Route::put('/commentquestion/{id}/edit', 'edit');
+    Route::post('/comment_question/{commentId}/vote','vote')->name('comment_question.vote');
+    Route::post('/comment_question/{commentId}/vote/remove','removeVote')->name('comment_question.remove_vote');
 });
 
 //Answer Comments
