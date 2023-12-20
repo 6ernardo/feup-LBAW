@@ -27,29 +27,16 @@ function encodeForAjax(data) {
     }).join('&');
 }
 
-function voteCommentQuestion(commentId, voteType) {
-    sendAjaxRequest('post', `/comment_question/${commentId}/vote`, { comment_id: commentId, vote: voteType });
-    updateVoteButtonStyles(commentId, voteType, 2); // 2 para comentários de perguntas
-}
-
-function removeVoteCommentQuestion(commentId) {
-    sendAjaxRequest('post', `/comment_question/${commentId}/vote/remove`, { comment_id: commentId });
-    document.querySelector(`#comment_question${commentId} .upvote-button`).classList.remove('active-vote');
-    document.querySelector(`#comment_question${commentId} .downvote-button`).classList.remove('active-vote');
-}
-
 
 function updateVoteButtonStyles(entityId, voteType ,entityType) {
     //entityId é question id ou answer id
-    //entityType     0->question  1->answer  2-> comment question
+    //entityType     0->question  1->answer  
     let prefix = '';
 
     if(entityType === 0){
         prefix = '#question';
     }else if(entityType === 1){
         prefix = '#answer';
-    }else if(entityType === 2){
-        prefix = '#comment_question';
     }
 
     const upvoteButton = document.querySelector(prefix + entityId + ' .upvote-button');
