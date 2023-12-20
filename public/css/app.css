@@ -72,12 +72,6 @@ body {
     
   }
 
-  /* Footer */
-  footer {
-    background-color: #ff9a00;
-    margin-bottom: -50px;
-  }
-
   /**
    * Override milligram colors
    * Some styles might be missing
@@ -101,6 +95,36 @@ body {
   input[type=password]:focus {
     border-color: #ff4d00;
   }
+
+/* Footer */
+footer {
+  background-color: #ff9a00;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  padding: 1em;
+}
+
+footer nav {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+/* Feed */
+
+#topQuestions .question , #newQuestions .question{
+  background-color: gainsboro;
+  margin: 2rem;
+  border-radius: 1rem;
+  width: 40%;
+}
+
+#topQuestions .question a *, #newQuestions .question a *{
+  margin: 2rem;
+
+  padding: 0.5rem;
+}
   
 /** Admin Dashboard **/
 
@@ -130,7 +154,7 @@ body {
   font-weight: bold;
 }
 
-#user_listing article.user ul a{
+#user_listing article.user a ul{
   display: flex;
   list-style: none;
   justify-content: space-evenly;
@@ -138,7 +162,7 @@ body {
   border-radius: 1rem;
 }
 
-#user_listing article.user ul a li {
+#user_listing article.user a ul li {
   margin-top: 1%;
 }
 
