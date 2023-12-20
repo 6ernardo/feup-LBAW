@@ -12,7 +12,9 @@ class AnswerController extends Controller
 {
     public function create(int $id, Request $request){
 
-        $this->authorize('create', Answer::class);
+        $answer = new Answer();
+
+        $this->authorize('create', $answer);
         
         $request->validate([
             'description' => 'required'
@@ -69,3 +71,4 @@ class AnswerController extends Controller
         return redirect('questions/'.$answer->question_id);
     }
 }
+

@@ -46,6 +46,8 @@ class QuestionController extends Controller{
     public function show($id){
         $question = Question::find($id);
 
+        $this->authorize('show_question', $question);
+
         return view('pages.showQuestion', [
             'question' => $question
             ]);

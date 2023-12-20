@@ -16,14 +16,14 @@ class AnswerPolicy
 
     public function edit(User $user, Answer $answer)
     {
-        return Auth::check() && ($user->user_id === $answer->author_id ||
+        return !is_null($answer) && Auth::check() && ($user->user_id === $answer->author_id ||
                 $user->is_moderator ||
                 $user->isAdmin());
     }
 
     public function delete(User $user, Answer $answer)
     {
-        return Auth::check() && ($user->user_id === $answer->author_id ||
+        return  !is_null($answer) && Auth::check() && ($user->user_id === $answer->author_id ||
                 $user->is_moderator ||
                 $user->isAdmin());
     }
