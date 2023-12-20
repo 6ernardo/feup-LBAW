@@ -1,4 +1,4 @@
-<?php
+    <?php
 
 namespace App\Policies;
 
@@ -9,7 +9,7 @@ use Illuminate\Auth\Access\Response;
 class AdminPolicy
 {
     public function admin(User $user){
-        return $user->isAdmin();
+        return Auth::check() && $user->isAdmin();
     }
 
 }
