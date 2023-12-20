@@ -9,16 +9,16 @@ use Illuminate\Support\Facades\Auth;
 class UserPolicy
 {  
     public function show(User $user){
-        return $user;
+        return !is_null($user);
     }
 
     public function edit_profile(User $user, User $user_model)
     {
-        return Auth::check() && ($user->user_id === $user_model->user_id || $user->isAdmin());
+        return !is_null($user) && Auth::check() && ($user->user_id === $user_model->user_id || $user->isAdmin());
     }
 
     public function delete(User $user,  User $user_model) {
-        return Auth::check() && ($user->user_id === $user_model->user_id || $user->isAdmin());
+        return !is_null($user) && Auth::check() && ($user->user_id === $user_model->user_id || $user->isAdmin());
     }
 
     public function follow_tag(){

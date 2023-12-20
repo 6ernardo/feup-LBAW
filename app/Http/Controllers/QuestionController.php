@@ -55,6 +55,9 @@ class QuestionController extends Controller{
 
     public function showEdit(int $id){
         $question = Question::find($id);
+
+        $this->authorize('create', $question);
+
         $user = User::find($question->author_id);
         $tags = Tag::all();
 
@@ -99,6 +102,9 @@ class QuestionController extends Controller{
     public function deleteQuestion(int $id){
 
         $question = Question::find($id);
+
+        $this->authorize('create', $question);
+
         $user = User::find($question->author_id);
 
         $this->authorize('delete', $question);
@@ -128,6 +134,7 @@ class QuestionController extends Controller{
     public function markCorrect(int $id, Request $request)
     {
         $question = Question::find($id);
+        $this->authorize('create', $question);
         $user = User::find($question->author_id);
 
         $this->authorize('select', $user, $question);
