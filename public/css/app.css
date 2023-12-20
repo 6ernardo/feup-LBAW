@@ -1,12 +1,12 @@
 body {
     background-color: #ffffff;
-    color: #9b4dca;
+    color: #ff4d00;
   }
   main > header {
     display: grid;
     grid-template-columns: 1fr auto auto;
     align-items: center;
-    background-color: #d2afe7;
+    background-color: #ff9a00;
     padding: 1em;
     margin: 1em;
   }
@@ -29,7 +29,7 @@ body {
     margin: 0 auto;
     padding: 1em;
     max-width: 20em;
-    border: 1px solid #d2afe7;
+    border: 1px solid #ff9a00;
   }
   #content > form .error {
     font-weight: bold;
@@ -43,9 +43,6 @@ body {
     background-color: white;
   }
   @media (max-width: 70em) {
-    #cards {
-      grid-template-columns: repeat(2, 1fr);
-    }
     main > header {
       display: grid;
       grid-template-columns: 1fr auto;
@@ -55,9 +52,7 @@ body {
     }
   }
   @media (max-width: 40em) {
-    #cards {
-      grid-template-columns: 1fr;
-    }
+
   }
   @media (max-width: 25em) {
     body {
@@ -74,10 +69,7 @@ body {
       margin: 0;
       max-width: 25em;
     }
-    article.card {
-      margin: 0;
-      border-bottom: 1px solid rgba(96, 108, 118, 0.4);
-    }
+    
   }
 
   /**
@@ -85,24 +77,54 @@ body {
    * Some styles might be missing
    **/
   button {
-    background-color: #9b4dca;
-    border-color: #9b4dca;
+    background-color: #ff4d00;
+    border-color: #ff4d00;
   }
   a.button {
-    background-color: #9b4dca;
-    border-color: #9b4dca;
+    background-color: #ff4d00;
+    border-color: #ff4d00;
   }
   a.button.button-outline {
-    color: #9b4dca;
+    color: #ff4d00;
   }
   a {
-    color: #9b4dca;
+    color: #ff4d00;
   }
   input[type=text]:focus,
   input[type=email]:focus,
   input[type=password]:focus {
-    border-color: #9b4dca;
+    border-color: #ff4d00;
   }
+
+/* Footer */
+footer {
+  background-color: #ff9a00;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  padding: 1em;
+}
+
+footer nav {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+/* Feed */
+
+#topQuestions .question , #newQuestions .question{
+  background-color: gainsboro;
+  margin: 2rem;
+  border-radius: 1rem;
+  width: 40%;
+}
+
+#topQuestions .question a *, #newQuestions .question a *{
+  margin: 2rem;
+
+  padding: 0.5rem;
+}
   
 /** Admin Dashboard **/
 
@@ -132,7 +154,7 @@ body {
   font-weight: bold;
 }
 
-#user_listing article.user ul a{
+#user_listing article.user a ul{
   display: flex;
   list-style: none;
   justify-content: space-evenly;
@@ -140,7 +162,7 @@ body {
   border-radius: 1rem;
 }
 
-#user_listing article.user ul a li {
+#user_listing article.user a ul li {
   margin-top: 1%;
 }
 

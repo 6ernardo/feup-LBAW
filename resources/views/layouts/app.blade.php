@@ -37,7 +37,7 @@
                 @if (Auth::check() && Auth::user()->isAdmin())
                     <a class="button" href="{{ url('/admindashboard') }}">Admin Dashboard</a>
                 @endif
-                <a class="button" href="{{ url('/searchQuestionForm') }}"> Search </a>
+                <a class="button" id="search_button" href="{{ url('/searchQuestionForm') }}"> Search </a>
             </header>
             <section id="content">
                 @yield('content')
