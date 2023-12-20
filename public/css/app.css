@@ -113,20 +113,21 @@ footer nav {
 
 /* Feed */
 
-#topQuestions .question , #newQuestions .question{
+#topQuestions .question , #newQuestions .question, #followedQuestions .question, #tag_questions .question {
   background-color: gainsboro;
   margin: 2rem;
   border-radius: 1rem;
   width: 40%;
 }
 
-#topQuestions .question a *, #newQuestions .question a *{
+#topQuestions .question a *, #newQuestions .question a *, #followedQuestions .question a *, #tag_questions .question a *{
   margin: 2rem;
 
   padding: 0.5rem;
 }
+
   
-  /* Search Popup  não apagar*/
+  /* Search Popup */
   #filters_popup {
     display: none;
     position: fixed;

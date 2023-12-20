@@ -15,15 +15,17 @@
     @endif
     <h2>Questions with Tag: {{ $tag->name }}</h2>
     <p>{{ $tag->description }}</p>
+    <section id="tag_questions">
     @forelse($tag->questions as $question)  
         <div class="question">
             <a href="{{ url('/questions/'.$question->question_id) }}">
                 <h2>{{ $question->title }}</h2>
-                <p>{{ $question->description }}</p>
-                <p>Score: {{ $question->score }}</p>
+                <p>Score:{{ $question->score }} | posted by {{ $question->author->name }} on {{ $question->timestamp }} </p>
             </a>
         </div>
     @empty
         <p>No Questions to show.</p>
     @endforelse
+    </section>
+    
 @endsection
