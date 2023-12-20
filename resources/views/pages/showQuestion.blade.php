@@ -1,11 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<<<<<<< 0b9db1db833d928796327de9546417279b46a3a4
-    @if (Auth::check() && Auth::user()->user_id == $question->author_id)
-=======
     @if (Auth::check() && (Auth::user()->user_id == $question->author_id || Auth::user()->is_moderator || Auth::user()->isAdmin()))
->>>>>>> 6dc2c54649f4263ea7a137054af70bd28ef1f2d6
         <a class="button" href="{{ url('/questions/'.$question->question_id.'/edit') }}"> Edit Question </a>
         <form method="POST" action="{{ url('/questions/'.$question->question_id.'/delete') }}">
             @method('DELETE')
