@@ -363,8 +363,9 @@ EXECUTE FUNCTION check_own_follow_user();
 
 --v2
 -- A post’s rating is equal to the number of upvotes minus the number of downvotes, as stated in BR03
-CREATE OR REPLACE FUNCTION update_post_rating() RETURNS TRIGGER AS $$
+CREATE FUNCTION update_post_rating() RETURNS TRIGGER AS $$
 BEGIN
+
     IF TG_TABLE_NAME = 'user_vote_question' THEN
         IF TG_OP = 'INSERT' THEN
             UPDATE question
@@ -374,6 +375,17 @@ BEGIN
             UPDATE question
             SET score = score - OLD.vote
             WHERE question_id = OLD.question_id;
+        END IF;
+
+    ELSIF TG_TABLE_NAME = 'user_vote_answer' THEN
+        IF TG_OP = 'INSERT' THEN
+            UPDATE answer
+            SET score = score + NEW.vote
+            WHERE answer_id = NEW.answer_id;
+        ELSIF TG_OP = 'DELETE' THEN
+            UPDATE answer
+            SET score = score - OLD.vote
+            WHERE answer_id = OLD.answer_id;
         END IF;
     END IF;
 
@@ -385,8 +397,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-
--- Trigger for handling insertion of votes on questions
+-- questions e answers
 CREATE TRIGGER TRIGGER05
 AFTER INSERT ON user_vote_question
 FOR EACH ROW
@@ -410,12 +421,20 @@ EXECUTE FUNCTION update_post_rating();
 
 CREATE FUNCTION update_vote_change() RETURNS TRIGGER AS $$
 BEGIN
-    -- ve se voto foi alterado
+    -- ve se foi alterado
     IF OLD.vote != NEW.vote THEN
-        -- Atualiza o score subtraindo o voto antigo e adicionando o novo
-        UPDATE question
-        SET score = score - OLD.vote + NEW.vote
-        WHERE question_id = NEW.question_id;
+        
+        IF TG_TABLE_NAME = 'user_vote_question' THEN
+            UPDATE question
+            SET score = score - OLD.vote + NEW.vote
+            WHERE question_id = NEW.question_id;
+
+        
+        ELSIF TG_TABLE_NAME = 'user_vote_answer' THEN
+            UPDATE answer
+            SET score = score - OLD.vote + NEW.vote
+            WHERE answer_id = NEW.answer_id;
+        END IF;
     END IF;
     RETURN NEW;
 END;

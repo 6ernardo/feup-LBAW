@@ -30,8 +30,6 @@
     <p>{{ $question->description }}</p>
 
     <div class="question" id="question{{ $question->question_id }}">
-        <p>{{ $question->description }}</p>
-        <p>posted by {{ $question->author->name }}</p>
             <button class="button-vote upvote-button" id="button-vote upvote-button" onclick="voteQuestion({{ $question->question_id }}, 1)">Upvote</button>
             <span id="score">{{ $question->score }}</span>
             <button class="button-vote downvote-button" id="button-vote downvote-button" onclick="voteQuestion({{ $question->question_id }}, -1)">Downvote</button>
