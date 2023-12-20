@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\Auth;
 class UserPolicy
 {
 
+    public function show(User $user){
+        return $user;
+    }
+
     public function edit_profile(User $user, User $user_model)
     {
         return $user->user_id === $user_model->user_id || $user->isAdmin();
