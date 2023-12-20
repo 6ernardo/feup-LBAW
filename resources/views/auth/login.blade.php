@@ -21,8 +21,9 @@
     @endif
 
     <label>
-        <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}> Remember Me
+        <a href="{{ url('/forgotpassword') }}">Forgot Password</a>
     </label>
+    
 
     <button type="submit">
         Login
