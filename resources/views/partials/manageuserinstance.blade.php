@@ -1,4 +1,4 @@
-<article class="user" data-id="{{ $user->user_id }}">
+<article class="user">
     <ul>
         <a href="{{ url('/user/'.$user->user_id) }}">
             <li>{{ $user->name }}</li>
