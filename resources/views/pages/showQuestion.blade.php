@@ -21,7 +21,7 @@
         <ul class="tag-list">
         <span>Tags:</span>
             @foreach($question->tags as $tag)
-                <li>{{ $tag->name }}</li>
+              <a class="button" href="{{ url('/tags/'.$tag->tag_id) }}"> {{$tag->name}} </a>
             @endforeach
         </ul>
     @endif
