@@ -10,8 +10,8 @@ use App\Models\Tag;
 
 class FeedController extends Controller{
     public function index(){
-    	$topQuestions = Question::orderBy('score','desc')->take(2)->get();
-        $newQuestions = Question::orderBy('timestamp', 'desc')->take(2)->get();
+    	$topQuestions = Question::orderBy('score','desc')->get();
+        $newQuestions = Question::orderBy('timestamp', 'desc')->get();
 
         /*$questionId = 1; 
         $newScore = 7; 
