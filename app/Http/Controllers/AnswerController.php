@@ -12,9 +12,7 @@ class AnswerController extends Controller
 {
     public function create(int $id, Request $request){
 
-        $answer = new Answer();
-
-        $this->authorize('create', $answer);
+        $this->authorize('create', Answer::class);
         
         $request->validate([
             'description' => 'required'

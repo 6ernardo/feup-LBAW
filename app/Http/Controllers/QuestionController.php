@@ -126,6 +126,10 @@ class QuestionController extends Controller{
     public function markCorrect(int $id, Request $request)
     {
         $question = Question::find($id);
+        $user = User::find($question->author_id);
+
+        $this->authorize('select', $user, $question);
+
         $selectedAnswerId = $request->input('selected_answer_id');
 
         $question->correct_answer_id = $selectedAnswerId;

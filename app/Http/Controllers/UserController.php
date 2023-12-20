@@ -15,8 +15,6 @@ class UserController extends Controller
         
         $this->authorize('show', $user);
 
-        $this->authorize('show', $user);
-
         return view('pages.user', ['user' => $user]);
     }
 
@@ -84,6 +82,7 @@ class UserController extends Controller
         $user = User::find($id);
 
         //policy
+        $this->authorize('delete', $user, Auth::user());
 
         $user->delete();
 
@@ -92,24 +91,28 @@ class UserController extends Controller
 
     public function follow_tag(int $id){
         //policy
+        $this->authorize('follow_tag', User::class);
 
         Auth::user()->followed_tags()->attach($id);
     }
 
     public function unfollow_tag(int $id){
         //policy
+        $this->authorize('unfollow_tag', User::class);
 
         Auth::user()->followed_tags()->detach($id);
     }
 
     public function follow_question(int $id){
         //policy
+        $this->authorize('follow_question', User::class);
 
         Auth::user()->followed_questions()->attach($id);
     }
 
     public function unfollow_question(int $id){
         //policy
+        $this->authorize('unfollow_question', User::class);
 
         Auth::user()->followed_questions()->detach($id);
     }

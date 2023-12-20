@@ -12,14 +12,29 @@ class UserPolicy
         return $user;
     }
 
-    public function show(User $user){
-        return $user;
-    }
-
     public function edit_profile(User $user, User $user_model)
     {
-        return $user->user_id === $user_model->user_id || $user->isAdmin();
+        return Auth::check() && ($user->user_id === $user_model->user_id || $user->isAdmin());
     }
 
+    public function delete(User $user,  User $user_model) {
+        return Auth::check() && ($user->user_id === $user_model->user_id || $user->isAdmin());
+    }
+
+    public function follow_tag(){
+        return Auth::check();
+    }
+
+    public function unfollow_tag(){
+        return Auth::check();
+    }
+
+    public function follow_question(){
+        return Auth::check();
+    }
+
+    public function unfollow_question(){
+        return Auth::check();
+    }
     
 }
