@@ -14,6 +14,7 @@ use App\Http\Controllers\TagController;
 use App\Http\Controllers\CommentQuestionController;
 use App\Http\Controllers\CommentAnswerController;
 use App\Http\Controllers\StaticPageController;
+use App\Http\Controllers\MailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -75,6 +76,7 @@ Route::controller(QuestionController::class)->group(function () {
     Route::get('/questions/{id}/edit', 'showEdit');
     Route::put('/questions/{id}/edit', 'editQuestion');
     Route::delete('/questions/{id}/delete', 'deleteQuestion');
+    Route::put('/questions/{id}/mark_correct', 'markCorrect');
     Route::get('/search','searchList')->name('searchQuestionResults');
     Route::get('/searchQuestionForm','searchForm')->name('searchQuestionForm');
 });
@@ -114,14 +116,22 @@ Route::controller(CommentAnswerController::class)->group(function() {
     Route::put('/commentanswer/{id}/edit', 'edit');
 });
 
-// Authentication
+// Authentication and Password Recovery
 Route::controller(LoginController::class)->group(function () {
     Route::get('/login', 'showLoginForm')->name('login');
     Route::post('/login', 'authenticate');
     Route::get('/logout', 'logout')->name('logout');
+    Route::get('/forgotpassword', 'showForgotPassword');
+    Route::get('/resetpassword/{token}', 'showResetPassword');
+    Route::post('/resetpassword', 'handleResetPassword');
+
 });
 
 Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'showRegistrationForm')->name('register');
     Route::post('/register', 'register');
+});
+
+Route::controller(MailController::class)->group(function () {
+    Route::post('/forgotpassword', 'send');
 });
