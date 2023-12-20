@@ -6,7 +6,10 @@ use Illuminate\Http\Request;
 use App\Models\Question;
 use App\Models\User;
 use App\Models\Tag;
+use App\Models\UserVoteQuestion;
+
 use App\Models\Answer;
+
 use Illuminate\Support\Facades\Auth;
 
 class QuestionController extends Controller{
@@ -121,6 +124,39 @@ class QuestionController extends Controller{
                     ->get();
  
         return response()->json($questions);
+    }
+
+    public function vote(Request $request){
+        $validatedData = $request->validate([
+            'question_id' => 'required|exists:question,question_id',
+            'vote' => 'required|integer'
+        ]);
+
+        $userId = Auth::id();
+        $questionId = $validatedData['question_id'];
+        $voteValue = (int) $validatedData['vote'];
+
+        $voteValue = $voteValue === 1 ? 1 : -1;
+
+        UserVoteQuestion::updateOrCreate(
+            ['user_id' => $userId ,'question_id' => $questionId],
+            ['vote' => $voteValue]
+        );
+
+        return response('Voto registrado com sucesso', 200);
+    }
+
+    public function RemoveVote(Request $request){
+        $validatedData = $request->validate([
+            'question_id' => 'required|exists:question,question_id',
+        ]);
+    
+        $userId = Auth::id();
+        $questionId = $validatedData['question_id'];
+    
+        UserVoteQuestion::where('user_id', $userId)->where('question_id', $questionId)->delete();
+    
+        return response('Voto removido com sucesso', 200);
     }
 
     public function markCorrect(int $id, Request $request)

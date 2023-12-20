@@ -79,6 +79,8 @@ Route::controller(QuestionController::class)->group(function () {
     Route::put('/questions/{id}/mark_correct', 'markCorrect');
     Route::get('/search','searchList')->name('searchQuestionResults');
     Route::get('/searchQuestionForm','searchForm')->name('searchQuestionForm');
+    Route::post('questions/{id}/vote', 'vote')->name('question.vote');
+    Route::post('questions/{id}/vote/remove','RemoveVote')->name('question.removeVote');
 });
 
 //Answer
@@ -87,6 +89,8 @@ Route::controller(AnswerController::class)->group(function () {
     Route::delete('/answers/{id}/delete', 'delete');
     Route::get('/answers/{id}/edit', 'showEdit');
     Route::put('/answers/{id}/edit', 'edit');
+    Route::post('/answer/vote','vote')->name('answer.vote');
+    Route::post('/answer/vote/remove','RemoveVote')->name('answer.removeVote');
 });
 
 //Tag
