@@ -58,6 +58,8 @@ if(searchUsers) {
         }
         else {
             for(const user of users){
+                const article = document.createElement('article');
+                article.className = 'user';
                 const ul1 = document.createElement('ul');
                 const link1 = document.createElement('a');
                 link1.href = '/user/' + user.user_id;
@@ -68,7 +70,7 @@ if(searchUsers) {
                 const email = document.createElement('li');
                 email.textContent = user.email;
                 const role = document.createElement('li');
-                if(user.moderator == false){
+                if(user.is_moderator == false){
                     role.textContent = 'User';
                 }
                 else role.textContent = 'Moderator';
@@ -80,7 +82,9 @@ if(searchUsers) {
 
                 ul1.appendChild(link1);
 
-                section.appendChild(ul1);
+                article.appendChild(ul1);
+
+                section.appendChild(article);
             }
         }
     } )
