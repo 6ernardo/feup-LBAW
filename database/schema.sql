@@ -64,13 +64,11 @@ CREATE TABLE users (
     password VARCHAR(255) NOT NULL,
     profile_picture VARCHAR(255),
     score INT NOT NULL DEFAULT 0,
-    is_moderator BOOLEAN NOT NULL DEFAULT false,
-    is_blocked BOOLEAN NOT NULL DEFAULT false
+    moderator BOOLEAN NOT NULL DEFAULT false
 );
 
 CREATE TABLE admin (
-    admin_id SERIAL PRIMARY KEY,
-    CONSTRAINT fk_user FOREIGN KEY (admin_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE
+    admin_id SERIAL PRIMARY KEY
 );
 
 CREATE TABLE tag (
@@ -82,13 +80,13 @@ CREATE TABLE tag (
 CREATE TABLE question (
     question_id SERIAL PRIMARY KEY,
     author_id INT NOT NULL,
-    correct_answer_id INT,
     title TEXT NOT NULL,
     description TEXT,
     timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     score INT NOT NULL DEFAULT 0,
     CONSTRAINT fk_author FOREIGN KEY (author_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
 CREATE TABLE question_tags (
     question_id INT,
     tag_id INT,
@@ -107,9 +105,6 @@ CREATE TABLE answer (
     CONSTRAINT fk_author FOREIGN KEY (author_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT fk_question FOREIGN KEY (question_id) REFERENCES question(question_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
-
-ALTER TABLE Question
-ADD FOREIGN KEY (correct_answer_id) REFERENCES Answer(answer_id);
 
 CREATE TABLE comment_question (
     comment_id SERIAL PRIMARY KEY,
@@ -363,8 +358,9 @@ EXECUTE FUNCTION check_own_follow_user();
 
 --v2
 -- A post’s rating is equal to the number of upvotes minus the number of downvotes, as stated in BR03
-CREATE OR REPLACE FUNCTION update_post_rating() RETURNS TRIGGER AS $$
+CREATE FUNCTION update_post_rating() RETURNS TRIGGER AS $$
 BEGIN
+
     IF TG_TABLE_NAME = 'user_vote_question' THEN
         IF TG_OP = 'INSERT' THEN
             UPDATE question
@@ -374,6 +370,17 @@ BEGIN
             UPDATE question
             SET score = score - OLD.vote
             WHERE question_id = OLD.question_id;
+        END IF;
+
+    ELSIF TG_TABLE_NAME = 'user_vote_answer' THEN
+        IF TG_OP = 'INSERT' THEN
+            UPDATE answer
+            SET score = score + NEW.vote
+            WHERE answer_id = NEW.answer_id;
+        ELSIF TG_OP = 'DELETE' THEN
+            UPDATE answer
+            SET score = score - OLD.vote
+            WHERE answer_id = OLD.answer_id;
         END IF;
     END IF;
 
@@ -385,8 +392,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-
--- Trigger for handling insertion of votes on questions
+-- questions e answers
 CREATE TRIGGER TRIGGER05
 AFTER INSERT ON user_vote_question
 FOR EACH ROW
@@ -410,12 +416,20 @@ EXECUTE FUNCTION update_post_rating();
 
 CREATE FUNCTION update_vote_change() RETURNS TRIGGER AS $$
 BEGIN
-    -- ve se voto foi alterado
+    -- ve se foi alterado
     IF OLD.vote != NEW.vote THEN
-        -- Atualiza o score subtraindo o voto antigo e adicionando o novo
-        UPDATE question
-        SET score = score - OLD.vote + NEW.vote
-        WHERE question_id = NEW.question_id;
+        
+        IF TG_TABLE_NAME = 'user_vote_question' THEN
+            UPDATE question
+            SET score = score - OLD.vote + NEW.vote
+            WHERE question_id = NEW.question_id;
+
+        
+        ELSIF TG_TABLE_NAME = 'user_vote_answer' THEN
+            UPDATE answer
+            SET score = score - OLD.vote + NEW.vote
+            WHERE answer_id = NEW.answer_id;
+        END IF;
     END IF;
     RETURN NEW;
 END;
@@ -609,5 +623,4 @@ EXECUTE FUNCTION comment_unique_report();
 
 
 -- Populate
-insert into users (name, email, password, score, is_moderator) values ('client', 'client@client.com', '$2a$12$fu9IyYyjE5YGQmXpgzWPuO5jrGCEbkwSzYfIHZdAXr9FlZdILPD1C', 2080, true);
-insert into admin (admin_id) VALUES (1);
+insert into users (name, email, password, profile_picture, score, moderator) values ('client', 'client@client.com', '$2a$12$fu9IyYyjE5YGQmXpgzWPuO5jrGCEbkwSzYfIHZdAXr9FlZdILPD1C', 'http://dummyimage.com/228x100.png/dddddd/000000', 2080, true);
