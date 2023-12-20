@@ -103,7 +103,30 @@ body {
   input[type=password]:focus {
     border-color: #9b4dca;
   }
-  
+
+  /* Search Popup  não apagar*/
+  #filters_popup {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+
+  #filters_popup_content{
+    background-color: white;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #888888;
+    border-radius: 1rem;
+    width: 30%;
+    font-weight: bolder;
+  }
+
 /** Admin Dashboard **/
 
 #admin_dash {
