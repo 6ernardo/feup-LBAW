@@ -50,6 +50,11 @@
     </section>
 
     <section id="answers">
+        @if (isset($question->correct_answer_id))
+        <h3>Correct Answer</h3>
+            @include('partials.answer', ['answer' => $question->correct_answer])
+        @endif
+
         <h3>Answers</h3>
         @foreach ($question->answers as $answer)
         <div class="answer" id="answer{{ $answer->answer_id }}">
