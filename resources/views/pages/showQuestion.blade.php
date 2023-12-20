@@ -28,6 +28,14 @@
     <p>posted by {{ $question->author->name }} </p>
     <p>{{ $question->description }}</p>
 
+    <div class="question" id="question{{ $question->question_id }}">
+            <button class="button-vote upvote-button" id="button-vote upvote-button" onclick="voteQuestion({{ $question->question_id }}, 1)">Upvote</button>
+            <span id="score">{{ $question->score }}</span>
+            <button class="button-vote downvote-button" id="button-vote downvote-button" onclick="voteQuestion({{ $question->question_id }}, -1)">Downvote</button>
+            <button class="button-vote remove-vote-button" onclick="removeVoteQuestion({{ $question->question_id }})">Remove Vote</button>
+    </div>
+
+
     <section id="question_comments">
         <h4>Question Comments</h4>
         @each('partials.commentquestion', $question->comments, 'comment')
@@ -43,6 +51,15 @@
 
     <section id="answers">
         <h3>Answers</h3>
+        @foreach ($question->answers as $answer)
+        <div class="answer" id="answer{{ $answer->answer_id }}">
+            <button class="button-vote upvote-button" onclick="vote({{ $answer->answer_id }} , 1)">Upvote</button>
+            <span class="score">{{ $answer->score }}</span>
+            <button class="button-vote downvote-button" onclick="vote({{ $answer->answer_id }} , -1)">Downvote</button>
+            <button class="button-vote remove-vote-button" onclick="removeVote({{ $answer->answer_id }})">Remove Vote</button>
+        </div>
+        @endforeach
+
         @each('partials.answer', $question->answers, 'answer')
     </section>
 
@@ -65,4 +82,5 @@
             margin-right: 5px; 
         }
     </style>
+    <link rel="stylesheet" href="{{ asset('css/vote.css') }}">
 @endsection
