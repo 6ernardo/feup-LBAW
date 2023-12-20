@@ -13,6 +13,7 @@ use App\Http\Controllers\AnswerController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\CommentQuestionController;
 use App\Http\Controllers\CommentAnswerController;
+use App\Http\Controllers\StaticPageController;
 use App\Http\Controllers\MailController;
 
 /*
@@ -27,11 +28,18 @@ use App\Http\Controllers\MailController;
 */
 
 // Home
-Route::redirect('/', '/login');
+Route::redirect('/', '/feed');
 
-// Feed
+// Static Pages
 Route::controller(FeedController::class)->group(function () {
     Route::get('/feed', 'index')->name('feed');
+});
+
+// Feed
+Route::controller(StaticPageController::class)->group(function () {
+    Route::get('/aboutus', 'aboutus');
+    Route::get('/mainfeatures', 'mainfeatures');
+    Route::get('/contacts', 'contacts');
 });
 
 // User
