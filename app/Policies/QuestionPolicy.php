@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 class QuestionPolicy
 {   
-    public function show_question(User $user, Question $question){
+    public function show_question(?User $user, Question $question){
         return !is_null($question);
     }
 
