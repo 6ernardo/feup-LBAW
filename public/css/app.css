@@ -193,3 +193,9 @@ footer nav {
 #tag_listing li a {
   font-weight: bold;
 }
+
+/* Question */
+
+#correct_answer {
+  background-color: gainsboro;
+}
