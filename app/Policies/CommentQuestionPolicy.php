@@ -2,26 +2,26 @@
 
 namespace App\Policies;
 
-use App\Models\Answer;
+use App\Models\CommentQuestion;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Support\Facades\Auth;
 
-class AnswerPolicy
+class CommentQuestionPolicy
 {
     public function create(User $user)
     {
         return Auth::check();
     }
 
-    public function edit(User $user, Answer $answer)
+    public function edit(User $user, CommentQuestion $comment)
     {
-        return $user->user_id === $answer->author_id;
+        return $user->user_id === $comment->author_id;
     }
 
-    public function delete(User $user, Answer $answer)
+    public function delete(User $user, CommentQuestion $comment)
     {
-        return $user->user_id === $answer->author_id ||
+        return $user->user_id === $comment->author_id ||
                 $user->is_moderator ||
                 $user->isAdmin();
     }

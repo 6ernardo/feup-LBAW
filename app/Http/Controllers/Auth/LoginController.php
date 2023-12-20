@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+
+use App\Models\User;
 
 use Illuminate\View\View;
 
@@ -57,4 +60,34 @@ class LoginController extends Controller
         return redirect()->route('login')
             ->withSuccess('You have logged out successfully!');
     } 
+
+    public function showForgotPassword(){
+        return view('auth.forgotPassword');
+    }
+
+    public function showResetPassword(string $token){
+        return view('auth.resetPassword', ['token' => $token]);
+    }
+
+    public function handleResetPassword(Request $request){
+
+        $user = User::where('email', $request->email)->first();
+
+        if(Hash::check($request->token, $user->password)){
+            $request->validate([
+                'password' => 'required|min:8|max:255|confirmed'
+            ]);
+
+            $user->password = Hash::make($request->password);
+
+            $user->save();
+
+            return redirect()->route('feed')
+            ->withSuccess('You have successfully recovered your password!');
+        }
+
+        return redirect()->route('login')->with('invalid_token', "Invalid token.");
+    }
+
+
 }

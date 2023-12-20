@@ -5,11 +5,19 @@
         <form method="POST" action="{{ '/questions/'.$question->question_id.'/edit' }}">
             @method('PUT')
             @csrf
-            <label for="title">Title:</label>
-            <input type="text" name="title" id="title" placeholder="{{ $question->title }}" value="{{ old('title') }}">
+            @if(Auth::user()->user_id == $question->author_id)
+                <label for="title">Title:</label>
+                <input type="text" name="title" id="title" placeholder="{{ $question->title }}" value="{{ old('title') }}">
 
-            <label for="description">Description:</label>
-            <textarea name="description" id="description" placeholder="{{ $question->description }}" value="{{ old('description') }}"></textarea>
+                <label for="description">Description:</label>
+                <textarea name="description" id="description" placeholder="{{ $question->description }}" value="{{ old('description') }}"></textarea>
+            @else
+                <label for="title">Title:</label>
+                <input type="text" name="title" id="title" placeholder="{{ $question->title }}" value="{{ old('title') }}" readonly>
+
+                <label for="description">Description:</label>
+                <textarea name="description" id="description" placeholder="{{ $question->description }}" value="{{ old('description') }}" readonly></textarea>
+            @endif
 
             <div class="tag-dropdown">
                 <button type="button" onclick="toggleDropdown()">Tag List</button> 

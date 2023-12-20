@@ -1,21 +1,16 @@
-<article class="user" data-id="{{ $user->user_id }}">
+<article class="user">
     <ul>
         <a href="{{ url('/user/'.$user->user_id) }}">
             <li>{{ $user->name }}</li>
             <li>#{{ $user->user_id }}</li>
             <li>{{ $user->email }}</li>
-            @if ($user->moderator == FALSE)
-                <li>User</li>
-            @else
+            @if ($user->isAdmin())
+                <li>Administrator</li>
+            @elseif ($user->is_moderator)
                 <li>Moderator</li>
+            @else
+                <li>User</li>
             @endif
         </a>
-    </ul>
-    <ul>
-        <li><a href="{{ url('/user/'.$user->user_id) }}">View profile</a></li>
-        <li><a href="{{ url('/user/'.$user->user_id.'/edit') }}">Edit profile</a></li>
-        <li>Block</li>
-        <li>Ban</li>
-        <li>Promote</li>
     </ul>
 </article>

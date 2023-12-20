@@ -11,6 +11,6 @@ class UserPolicy
 
     public function edit_profile(User $user, User $user_model)
     {
-        return $user->user_id === $user_model->user_id;
+        return $user->user_id === $user_model->user_id || $user->isAdmin();
     }
 }

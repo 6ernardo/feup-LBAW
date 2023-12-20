@@ -13,6 +13,8 @@ use App\Http\Controllers\AnswerController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\CommentQuestionController;
 use App\Http\Controllers\CommentAnswerController;
+use App\Http\Controllers\StaticPageController;
+use App\Http\Controllers\MailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,11 +28,18 @@ use App\Http\Controllers\CommentAnswerController;
 */
 
 // Home
-Route::redirect('/', '/login');
+Route::redirect('/', '/feed');
 
-// Feed
+// Static Pages
 Route::controller(FeedController::class)->group(function () {
     Route::get('/feed', 'index')->name('feed');
+});
+
+// Feed
+Route::controller(StaticPageController::class)->group(function () {
+    Route::get('/aboutus', 'aboutus');
+    Route::get('/mainfeatures', 'mainfeatures');
+    Route::get('/contacts', 'contacts');
 });
 
 // User
@@ -40,14 +49,23 @@ Route::controller(UserController::class)->group(function () {
     Route::put('/user/{id}/edit', 'editProfile');
     Route::get('/user/{id}/questions', 'showQuestions');
     Route::get('/user/{id}/answers', 'showAnswers');
+    Route::delete('/user/{id}/delete', 'delete');
+    Route::post('/tag/{id}/follow', 'follow_tag');
+    Route::post('/tag/{id}/unfollow', 'unfollow_tag');
+    Route::post('/questions/{id}/follow', 'follow_question');
+    Route::post('/questions/{id}/unfollow', 'unfollow_question');
 });
 
 // Admin
 Route::controller(AdminController::class)->group(function () {
-    Route::get('/manageusers', 'showManageUsers');
+    Route::get('/admindashboard', 'showDashboard');
     Route::get('/manageusers/create', 'showCreateUser');
     Route::post('/manageusers/create', 'createUser');
+    Route::delete('/manageusers/delete/{id}', 'deleteUser');
     Route::get('/search/users','search');
+    Route::post('/manageusers/block/{id}', 'blockUser');
+    Route::post('/manageusers/unblock/{id}', 'unblockUser');
+    Route::put('/manageusers/changerole/{id}', 'changeRole');
 });
 
 //Question
@@ -58,6 +76,7 @@ Route::controller(QuestionController::class)->group(function () {
     Route::get('/questions/{id}/edit', 'showEdit');
     Route::put('/questions/{id}/edit', 'editQuestion');
     Route::delete('/questions/{id}/delete', 'deleteQuestion');
+    Route::put('/questions/{id}/mark_correct', 'markCorrect');
     Route::get('/search','searchList')->name('searchQuestionResults');
     Route::get('/searchQuestionForm','searchForm')->name('searchQuestionForm');
     Route::post('questions/{id}/vote', 'vote')->name('question.vote');
@@ -101,14 +120,22 @@ Route::controller(CommentAnswerController::class)->group(function() {
     Route::put('/commentanswer/{id}/edit', 'edit');
 });
 
-// Authentication
+// Authentication and Password Recovery
 Route::controller(LoginController::class)->group(function () {
     Route::get('/login', 'showLoginForm')->name('login');
     Route::post('/login', 'authenticate');
     Route::get('/logout', 'logout')->name('logout');
+    Route::get('/forgotpassword', 'showForgotPassword');
+    Route::get('/resetpassword/{token}', 'showResetPassword');
+    Route::post('/resetpassword', 'handleResetPassword');
+
 });
 
 Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'showRegistrationForm')->name('register');
     Route::post('/register', 'register');
+});
+
+Route::controller(MailController::class)->group(function () {
+    Route::post('/forgotpassword', 'send');
 });

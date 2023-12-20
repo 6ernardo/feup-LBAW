@@ -26,39 +26,42 @@ class TagController extends Controller
     public function showEdit(int $id){
         $tag = Tag::find($id);
 
+        $this->authorize('edit', $tag);
 
         return view('pages.editTag', ['tag' => $tag]);
     }
 
     public function editTag(int $id, Request $request){
         $tag = Tag::find($id);
-    
-        if($request->has('name')){
+
+        $this->authorize('edit', $tag);
+
+        if($request->name){
             $request->validate([
                 'name' => 'string|max:255',
             ]);
             $tag->name = $request->input('name');
         }
-    
-        if($request->has('description')){
+
+        if($request->description){
             $request->validate([
                 'description' => 'string',
             ]);
             $tag->description = $request->input('description');
         }
     
-            $tag->save();
-            return redirect('tags/'.$tag->tag_id)->with('success', 'Tag updated successfully.');
+        $tag->save();
+        return redirect('admindashboard');
     }
 
     public function showCreateTag(){
-        //policy
+        $this->authorize('create', Tag::class);
 
         return view('pages.createTag');
     }
 
     public function createTag(Request $request){
-        //policy
+        $this->authorize('create', Tag::class);
 
         $request->validate([
             'name' => 'required|string|max:255',
@@ -69,14 +72,16 @@ class TagController extends Controller
             'description' => $request->description
         ]);
 
-        return redirect('tags/'.$tag->tag_id);
+        return redirect('admindashboard');
     }
 
     public function deleteTag(int $id){
-
         $tag = Tag::find($id);
+
+        $this->authorize('delete', $tag);
+
         $tag->delete();
 
-        return redirect('/tags');
+        return redirect('admindashboard');
     }
 }

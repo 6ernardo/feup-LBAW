@@ -8,12 +8,14 @@ use App\Models\User;
 use App\Models\Tag;
 use App\Models\UserVoteQuestion;
 
+use App\Models\Answer;
+
 use Illuminate\Support\Facades\Auth;
 
 class QuestionController extends Controller{
 
     public function create(){
-        $this->authorize('show_create', Question::class);
+        $this->authorize('create', Question::class);
         $tags = Tag::all();
 
         return view('pages.createQuestion',  ['tags' => $tags]);
@@ -46,10 +48,10 @@ class QuestionController extends Controller{
 
     public function show($id){
         $question = Question::find($id);
-        
+
         return view('pages.showQuestion', [
             'question' => $question
-        ]);
+            ]);
     }
 
     public function showEdit(int $id){
@@ -102,8 +104,6 @@ class QuestionController extends Controller{
 
         $this->authorize('delete', $question);
 
-        //delete answers and comments under question
-
         $question->delete();
 
         return redirect('/feed');
@@ -124,7 +124,6 @@ class QuestionController extends Controller{
                     ->get();
  
         return response()->json($questions);
-        
     }
 
     public function vote(Request $request){
@@ -160,5 +159,16 @@ class QuestionController extends Controller{
         return response('Voto removido com sucesso', 200);
     }
 
+    public function markCorrect(int $id, Request $request)
+    {
+        $question = Question::find($id);
+        $selectedAnswerId = $request->input('selected_answer_id');
+
+        $question->correct_answer_id = $selectedAnswerId;
+
+        $question->save();
+
+        return redirect('questions/'.$question->question_id);
+    }
 }
 

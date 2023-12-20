@@ -64,11 +64,13 @@ CREATE TABLE users (
     password VARCHAR(255) NOT NULL,
     profile_picture VARCHAR(255),
     score INT NOT NULL DEFAULT 0,
-    moderator BOOLEAN NOT NULL DEFAULT false
+    is_moderator BOOLEAN NOT NULL DEFAULT false,
+    is_blocked BOOLEAN NOT NULL DEFAULT false
 );
 
 CREATE TABLE admin (
-    admin_id SERIAL PRIMARY KEY
+    admin_id SERIAL PRIMARY KEY,
+    CONSTRAINT fk_user FOREIGN KEY (admin_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE tag (
@@ -80,13 +82,13 @@ CREATE TABLE tag (
 CREATE TABLE question (
     question_id SERIAL PRIMARY KEY,
     author_id INT NOT NULL,
+    correct_answer_id INT,
     title TEXT NOT NULL,
     description TEXT,
     timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     score INT NOT NULL DEFAULT 0,
     CONSTRAINT fk_author FOREIGN KEY (author_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
-
 CREATE TABLE question_tags (
     question_id INT,
     tag_id INT,
@@ -105,6 +107,9 @@ CREATE TABLE answer (
     CONSTRAINT fk_author FOREIGN KEY (author_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT fk_question FOREIGN KEY (question_id) REFERENCES question(question_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+ALTER TABLE Question
+ADD FOREIGN KEY (correct_answer_id) REFERENCES Answer(answer_id);
 
 CREATE TABLE comment_question (
     comment_id SERIAL PRIMARY KEY,
@@ -604,4 +609,5 @@ EXECUTE FUNCTION comment_unique_report();
 
 
 -- Populate
-insert into users (name, email, password, profile_picture, score, moderator) values ('client', 'client@client.com', '$2a$12$fu9IyYyjE5YGQmXpgzWPuO5jrGCEbkwSzYfIHZdAXr9FlZdILPD1C', 'http://dummyimage.com/228x100.png/dddddd/000000', 2080, true);
+insert into users (name, email, password, score, is_moderator) values ('client', 'client@client.com', '$2a$12$fu9IyYyjE5YGQmXpgzWPuO5jrGCEbkwSzYfIHZdAXr9FlZdILPD1C', 2080, true);
+insert into admin (admin_id) VALUES (1);
