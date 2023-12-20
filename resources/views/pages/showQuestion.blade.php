@@ -16,7 +16,10 @@
             <button class="follow_question_button" onclick="follow_question({{$question->question_id}})">Follow</button>
         @endif
     @endif
-    <h2>{{ $question->title }}</h2>
+        <div>
+            <h2>{{ $question->title }}</h2>
+            <span class="tooltip">(?)<span class="tooltiptext">Questions can have answers, comments, and the answers can have comments</span></span>
+        </div>
     @if (!$question->tags->isEmpty())
         <ul class="tag-list">
         <span>Tags:</span>
