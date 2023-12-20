@@ -13,4 +13,8 @@ class StaticPageController extends Controller
     public function mainfeatures(){
         return view('pages.staticpages.mainfeatures');
     }
+
+    public function contacts(){
+        return view('pages.staticpages.contacts');
+    }
 }
