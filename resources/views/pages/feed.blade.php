@@ -41,13 +41,12 @@
     </div>
     @if(Auth::check())
         <div id="followedQuestions" class = "tab-content" style="display: none;">
-        <h1>Followed Questions</h1>
+        <h2>Followed Questions</h2>
         @forelse ($followedQuestions as $question)
             <div class="question">
                 <a href="{{ url('/questions/'.$question->question_id) }}">
                     <h2>{{ $question->title }}</h2>
-                    <p>{{ $question->description }}</p>
-                    <p>Score: {{ $question->score }}</p>
+                    <p>Score:{{ $question->score }} | posted by {{ $question->author->name }} on {{ $question->timestamp }} </p>
                 </a>
             </div>
         @empty
