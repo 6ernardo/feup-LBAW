@@ -630,5 +630,78 @@ EXECUTE FUNCTION comment_unique_report();
 
 
 -- Populate
-insert into users (name, email, password, score, is_moderator) values ('client', 'client@client.com', '$2a$12$fu9IyYyjE5YGQmXpgzWPuO5jrGCEbkwSzYfIHZdAXr9FlZdILPD1C', 2080, true);
+insert into users (name, email, password, score, is_moderator) values ('admin', 'admin@admin.com', '$2a$12$fu9IyYyjE5YGQmXpgzWPuO5jrGCEbkwSzYfIHZdAXr9FlZdILPD1C', 2080, true);
 insert into admin (admin_id) VALUES (1);
+
+insert into users (name, email, password, score, is_moderator) values ('mod', 'mod@mod.com', '$2a$12$KZW8RtmQzbhqX209fchxC.M9qjyu.kvmbpGm2FOsbj6Atuxccamhq', 1, true);
+insert into users (name, email, password, score, is_moderator) values ('client', 'client@client.com', '$2a$12$MjYIDoy9w46hTFBof8y.8OSdbL3TKkImfvCgzk8ONsdidw0w22CkC', 1, false);
+
+INSERT INTO tag (name, description)
+VALUES
+    ('Technology', 'Discussions related to technological advancements'),
+    ('Science', 'Topics covering various scientific fields'),
+    ('Programming', 'Dealing with programming languages and software development');
+
+INSERT INTO users (name, email, password, profile_picture, score, is_moderator, is_blocked)
+VALUES
+    ('John Doe', 'john@example.com', 'password123', 'profile1.jpg', 1500, false, false),
+    ('Jane Smith', 'jane@example.com', 'password456', 'profile2.jpg', 2000, false, false),
+    ('Alice Johnson', 'alice@example.com', 'password789', 'profile3.jpg', 1800, true, false);
+
+INSERT INTO question (author_id, title, description, timestamp, score)
+VALUES
+    (1, 'Is the building open?', 'Last time I passed by the building was closed, is it open now?', NOW() - INTERVAL '2 day', 10),
+    (2, 'What are some questions science actually still cant answer?', 'I have always been curious about this and would like to hear your thoughts on the matter', NOW() - INTERVAL '2 day', 5),
+    (3, 'What are your favourite programming languages?', 'Mine is C tell me yours!', NOW() - INTERVAL '2 day', 8);
+
+INSERT INTO answer (author_id, question_id, description, timestamp, score)
+VALUES
+    (2, 1, 'Yes it is', NOW() - INTERVAL '1 day', 5),
+    (1, 2, 'Science still has no clue why we humans love music so much. It is just specific sound waves in a specific order that we love. This gets even crazier if you think about how these sound waves can invoke deep emotions in you', NOW() - INTERVAL '1 day', 7);
+
+INSERT INTO comment_question (author_id, question_id, content, timestamp, score)
+VALUES
+    (3, 1, 'Why ask if the building is open instead of just going there and see', NOW(), 3),
+    (2, 2, 'What is the point of that question', NOW(), 4),
+    (1, 3, 'So you reccomend C if I want to start coding?', NOW(), 2);
+
+INSERT INTO comment_answer (author_id, answer_id, content, timestamp, score)
+VALUES
+    (1, 1, 'Thanks for the answer', NOW(), 3),
+    (3, 2, 'Never tought about it in that way', NOW(), 2);
+
+INSERT INTO question_tags (question_id, tag_id)
+VALUES
+    (1, 1),
+    (2, 2),
+    (3, 3);
+
+INSERT INTO follow_question (user_id, question_id)
+VALUES
+    (1, 2),
+    (2, 3),
+    (3, 1);
+
+INSERT INTO follow_tag (user_id, tag_id)
+VALUES
+    (1, 3),
+    (2, 1),
+    (3, 2);
+
+INSERT INTO follow_user (follower_id, following_id)
+VALUES
+    (1, 2),
+    (2, 3),
+    (3, 1);
+
+INSERT INTO user_vote_question (user_id, question_id, vote)
+VALUES
+    (1, 2, 1),
+    (2, 3, -1),
+    (3, 1, 1);
+
+INSERT INTO user_vote_answer (user_id, answer_id, vote)
+VALUES
+    (1, 1, -1),
+    (2, 2, 1),
+    (3, 2, 1);
