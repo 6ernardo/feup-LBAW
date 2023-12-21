@@ -16,13 +16,13 @@ class CommentAnswerPolicy
 
     public function edit(User $user, CommentAnswer $comment)
     {
-        return $user->user_id === $comment->author_id;
+        return Auth::check() && !is_null($comment) && $user->user_id === $comment->author_id;
     }
 
     public function delete(User $user, CommentAnswer $comment)
     {
-        return $user->user_id === $comment->author_id ||
+        return  Auth::check() && !is_null($comment) && ($user->user_id === $comment->author_id ||
                 $user->is_moderator ||
-                $user->isAdmin();
+                $user->isAdmin());
     }
 }
