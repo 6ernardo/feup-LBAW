@@ -83,4 +83,5 @@
         }
     </style>
     <link rel="stylesheet" href="{{ asset('css/vote.css') }}">
+    <script src="{{ asset('js/vote.js') }}"></script>
 @endsection

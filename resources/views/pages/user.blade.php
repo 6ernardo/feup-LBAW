@@ -2,12 +2,12 @@
 
 @section('content')
     <section id="profile">
-        <h1>{{ $user->name }}</h1>
+        <h1>Username: {{ $user->name }}</h1>
         @if($user->profile_picture)
             <img src="{{ asset('storage/' . $user->profile_picture) }}" width="200" height="200">
         @endif
-        <p>{{ $user->email }}</p>
-        <p>{{ $user->score }}</p>
+        <p>Email: {{ $user->email }}</p>
+        <p>Score: {{ $user->score }}</p>
         @if(Auth::check() && Auth::user()->user_id == $user->user_id)
             <a class="button" href="{{ url('/user/'.$user->user_id.'/edit') }}">Edit Profile</a>
             <a class="button" href="{{ url('/user/'.$user->user_id.'/questions') }}">View My Questions</a>
