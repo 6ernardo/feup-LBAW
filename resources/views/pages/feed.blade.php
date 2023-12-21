@@ -2,12 +2,16 @@
 
 @section('content')
 <section id="feed">
+
 <a class="button" href="{{ url('/questions/create') }}"> Post Question </a>
+
+<span class="tooltip">(?)<span class="tooltiptext">This is your main feed! Click the button to post a new question (you will need to have an account) or just keep browsing!</span></span> 
 
 <div id="aba_buttons">
     <button onclick="openTab('topQuestions')">Top</button>
     <button onclick="openTab('newQuestions')">New</button>
     <button onclick="openTab('followedQuestions')">Followed</button>
+    <span class="tooltip">(?)<span class="tooltiptext">Choose a feed of Questions to see! Most upvoted, newest, or from accounts/ tags that you follow!</span></span>
 </div>
 
 

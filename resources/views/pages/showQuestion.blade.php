@@ -16,6 +16,10 @@
             <button class="follow_question_button" onclick="follow_question({{$question->question_id}})">Follow</button>
         @endif
     @endif
+        <div>
+            <h2>{{ $question->title }}</h2>
+            <span class="tooltip">(?)<span class="tooltiptext">Questions can have answers, comments, and the answers can have comments</span></span>
+        </div>
     <div class="question" id="question{{ $question->question_id }}">
             <button class="button-vote upvote-button" id="button-vote upvote-button" onclick="voteQuestion({{ $question->question_id }}, 1)">Upvote</button>
             <span id="score">{{ $question->score }}</span>

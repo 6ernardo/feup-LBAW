@@ -25,19 +25,28 @@
     <body>
         <main>
             <header>
-                <h1><a href="{{ url('/feed') }}">UPConnect</a></h1>
+                <div>
+                    <h1><a href="{{ url('/feed') }}">UPConnect</a></h1>
+                    <span class="tooltip">(?)<span class="tooltiptext">Return to the Main Page at any time by clicking UPConnect</span></span>
+                </div>
                 @if (Auth::check())
-                    <a class="button" href="{{ url('/logout') }}"> Logout </a> 
-                    <a href="{{ url('/user/'.Auth::user()->user_id) }}"> <span>{{ Auth::user()->name }}</span> </a>
+                    <div>
+                        <a class="button" href="{{ url('/logout') }}"> Logout </a> 
+                        <a href="{{ url('/user/'.Auth::user()->user_id) }}"> <span>{{ Auth::user()->name }}</span> </a>
+                        <span class="tooltip">(?)<span class="tooltiptext">You are logged in! Logout or click on your username to see your profile!</span></span>
+                    </div>
                 @elseif(request()->route()->getName() != 'login' &&
                         request()->route()->getName() != 'register')
-                	<a class="button" href="{{ url('/login') }}"> Login </a>
-                	<a class="button" href="{{ url('/register') }}"> Register </a>
+                	<div> 
+                        <a class="button" href="{{ url('/login') }}"> Login </a>
+                	    <a class="button" href="{{ url('/register') }}"> Register </a>
+                        <span class="tooltip">(?)<span class="tooltiptext">You are not logged in! Login or Register to make posts and follow accounts!</span></span>
+                    </div>
                 @endif
                 @if (Auth::check() && Auth::user()->isAdmin())
                     <a class="button" href="{{ url('/admindashboard') }}">Admin Dashboard</a>
                 @endif
-                <a class="button" id="search_button" href="{{ url('/searchQuestionForm') }}"> Search </a>
+                    <a class="button" id="search_button" href="{{ url('/searchQuestionForm') }}"> Search </a>
             </header>
             <section id="content">
                 @yield('content')
