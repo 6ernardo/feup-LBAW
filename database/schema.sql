@@ -647,25 +647,25 @@ VALUES
 
 INSERT INTO question (author_id, title, description, timestamp, score)
 VALUES
-    (1, 'Sample Question 1', 'Description for sample question 1', NOW() - INTERVAL '2 day', 10),
-    (2, 'Sample Question 2', 'Description for sample question 2', NOW() - INTERVAL '2 day', 5),
-    (3, 'Sample Question 3', 'Description for sample question 3', NOW() - INTERVAL '2 day', 8);
+    (1, 'Is the building open?', 'Last time I passed by the building was closed, is it open now?', NOW() - INTERVAL '2 day', 10),
+    (2, 'What are some questions science actually still cant answer?', 'I have always been curious about this and would like to hear your thoughts on the matter', NOW() - INTERVAL '2 day', 5),
+    (3, 'What are your favourite programming languages?', 'Mine is C tell me yours!', NOW() - INTERVAL '2 day', 8);
 
 INSERT INTO answer (author_id, question_id, description, timestamp, score)
 VALUES
-    (2, 1, 'Answer for sample question 1', NOW() - INTERVAL '1 day', 5),
-    (1, 3, 'Answer for sample question 3', NOW() - INTERVAL '1 day', 7);
+    (2, 1, 'Yes it is', NOW() - INTERVAL '1 day', 5),
+    (1, 2, 'Science still has no clue why we humans love music so much. It is just specific sound waves in a specific order that we love. This gets even crazier if you think about how these sound waves can invoke deep emotions in you', NOW() - INTERVAL '1 day', 7);
 
 INSERT INTO comment_question (author_id, question_id, content, timestamp, score)
 VALUES
-    (3, 1, 'Comment on sample question 1', NOW(), 3),
-    (2, 2, 'Comment on sample question 2', NOW(), 4),
-    (1, 3, 'Comment on sample question 3', NOW(), 2);
+    (3, 1, 'Why ask if the building is open instead of just going there and see', NOW(), 3),
+    (2, 2, 'What is the point of that question', NOW(), 4),
+    (1, 3, 'So you reccomend C if I want to start coding?', NOW(), 2);
 
 INSERT INTO comment_answer (author_id, answer_id, content, timestamp, score)
 VALUES
-    (1, 1, 'Comment on answer 1', NOW(), 3),
-    (3, 2, 'Comment on answer 2', NOW(), 2);
+    (1, 1, 'Thanks for the answer', NOW(), 3),
+    (3, 2, 'Never tought about it in that way', NOW(), 2);
 
 INSERT INTO question_tags (question_id, tag_id)
 VALUES
