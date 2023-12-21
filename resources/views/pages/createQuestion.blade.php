@@ -4,10 +4,10 @@
     <form method="POST" action="{{ route('questions.store') }}">
         @csrf
         <label for="title">Title:</label>
-        <input type="text" name="title" id="title" required>
+        <input type="text" placeholder="eg. How do I get my student card?" name="title" id="title" required>
 
         <label for="description">Description:</label>
-        <textarea name="description" id="description" required></textarea>
+        <textarea name="description" placeholder="Elaborate on your question as needed! (required field)" id="description" required></textarea>
 
         <div class="tag-dropdown">
         <button type="button" onclick="toggleDropdown()">Tag List</button> 
