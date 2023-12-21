@@ -5,7 +5,7 @@
         {{ csrf_field() }}
 
         <label for="name">Name</label>
-        <input id="name" type="text" name="name" value="{{ old('name') }}" required autofocus>
+        <input id="name" type="text" placeholder="eg. Marta99" name="name" value="{{ old('name') }}" required autofocus>
         @if ($errors->has('name'))
         <span class="error">
             {{ $errors->first('name') }}
@@ -13,7 +13,7 @@
         @endif
 
         <label for="email">E-Mail Address</label>
-        <input id="email" type="email" name="email" value="{{ old('email') }}" required>
+        <input id="email" placeholder="eg. martabferreira1999@gmail.com" type="email" name="email" value="{{ old('email') }}" required>
         @if ($errors->has('email'))
         <span class="error">
             {{ $errors->first('email') }}
