@@ -632,3 +632,73 @@ EXECUTE FUNCTION comment_unique_report();
 -- Populate
 insert into users (name, email, password, score, is_moderator) values ('client', 'client@client.com', '$2a$12$fu9IyYyjE5YGQmXpgzWPuO5jrGCEbkwSzYfIHZdAXr9FlZdILPD1C', 2080, true);
 insert into admin (admin_id) VALUES (1);
+
+INSERT INTO tag (name, description)
+VALUES
+    ('Technology', 'Discussions related to technological advancements'),
+    ('Science', 'Topics covering various scientific fields'),
+    ('Programming', 'Dealing with programming languages and software development');
+
+INSERT INTO users (name, email, password, profile_picture, score, is_moderator, is_blocked)
+VALUES
+    ('John Doe', 'john@example.com', 'password123', 'profile1.jpg', 1500, false, false),
+    ('Jane Smith', 'jane@example.com', 'password456', 'profile2.jpg', 2000, false, false),
+    ('Alice Johnson', 'alice@example.com', 'password789', 'profile3.jpg', 1800, true, false);
+
+INSERT INTO question (author_id, title, description, timestamp, score)
+VALUES
+    (1, 'Sample Question 1', 'Description for sample question 1', NOW() - INTERVAL '2 day', 10),
+    (2, 'Sample Question 2', 'Description for sample question 2', NOW() - INTERVAL '2 day', 5),
+    (3, 'Sample Question 3', 'Description for sample question 3', NOW() - INTERVAL '2 day', 8);
+
+INSERT INTO answer (author_id, question_id, description, timestamp, score)
+VALUES
+    (2, 1, 'Answer for sample question 1', NOW() - INTERVAL '1 day', 5),
+    (1, 3, 'Answer for sample question 3', NOW() - INTERVAL '1 day', 7);
+
+INSERT INTO comment_question (author_id, question_id, content, timestamp, score)
+VALUES
+    (3, 1, 'Comment on sample question 1', NOW(), 3),
+    (2, 2, 'Comment on sample question 2', NOW(), 4),
+    (1, 3, 'Comment on sample question 3', NOW(), 2);
+
+INSERT INTO comment_answer (author_id, answer_id, content, timestamp, score)
+VALUES
+    (1, 1, 'Comment on answer 1', NOW(), 3),
+    (3, 2, 'Comment on answer 2', NOW(), 2);
+
+INSERT INTO question_tags (question_id, tag_id)
+VALUES
+    (1, 1),
+    (2, 2),
+    (3, 3);
+
+INSERT INTO follow_question (user_id, question_id)
+VALUES
+    (1, 2),
+    (2, 3),
+    (3, 1);
+
+INSERT INTO follow_tag (user_id, tag_id)
+VALUES
+    (1, 3),
+    (2, 1),
+    (3, 2);
+
+INSERT INTO follow_user (follower_id, following_id)
+VALUES
+    (1, 2),
+    (2, 3),
+    (3, 1);
+
+INSERT INTO user_vote_question (user_id, question_id, vote)
+VALUES
+    (1, 2, 1),
+    (2, 3, -1),
+    (3, 1, 1);
+
+INSERT INTO user_vote_answer (user_id, answer_id, vote)
+VALUES
+    (1, 1, -1),
+    (2, 2, 1),
+    (3, 2, 1);
