@@ -3,8 +3,9 @@ if (searchQuestions) {
     searchQuestions.addEventListener('click', async function(event) {
         event.preventDefault();
         const search_query = document.getElementById('search_query').value;
+        const orderby = document.getElementById('orderby').value;
 
-        const response = await fetch('../search?search_query=' +  search_query);
+        const response = await fetch('../search?search_query=' +  search_query + '&orderby=' + orderby);
         const questions = await response.json();
 
         const section = document.querySelector('#results');
@@ -58,6 +59,8 @@ if(searchUsers) {
         }
         else {
             for(const user of users){
+                const article = document.createElement('article');
+                article.className = 'user';
                 const ul1 = document.createElement('ul');
                 const link1 = document.createElement('a');
                 link1.href = '/user/' + user.user_id;
@@ -68,7 +71,7 @@ if(searchUsers) {
                 const email = document.createElement('li');
                 email.textContent = user.email;
                 const role = document.createElement('li');
-                if(user.moderator == false){
+                if(user.is_moderator == false){
                     role.textContent = 'User';
                 }
                 else role.textContent = 'Moderator';
@@ -80,8 +83,18 @@ if(searchUsers) {
 
                 ul1.appendChild(link1);
 
-                section.appendChild(ul1);
+                article.appendChild(ul1);
+
+                section.appendChild(article);
             }
         }
     } )
+}
+
+function openFilters(){
+    document.getElementById("filters_popup").style.display = "block";
+}
+
+function closeFilters(){
+    document.getElementById("filters_popup").style.display = "none";
 }

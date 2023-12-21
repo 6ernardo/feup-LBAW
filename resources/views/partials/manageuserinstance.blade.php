@@ -1,6 +1,6 @@
-<article class="user" data-id="{{ $user->user_id }}">
-    <ul>
-        <a href="{{ url('/user/'.$user->user_id) }}">
+<article class="user">
+    <a href="{{ url('/user/'.$user->user_id) }}">
+        <ul>
             <li>{{ $user->name }}</li>
             <li>#{{ $user->user_id }}</li>
             <li>{{ $user->email }}</li>
@@ -11,6 +11,6 @@
             @else
                 <li>User</li>
             @endif
-        </a>
-    </ul>
+        </ul>
+    </a>
 </article>

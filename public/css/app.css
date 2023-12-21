@@ -1,12 +1,12 @@
 body {
     background-color: #ffffff;
-    color: #9b4dca;
+    color: #ff4d00;
   }
   main > header {
     display: grid;
     grid-template-columns: 1fr auto auto;
     align-items: center;
-    background-color: #d2afe7;
+    background-color: #ff9a00;
     padding: 1em;
     margin: 1em;
   }
@@ -21,64 +21,7 @@ body {
     margin: 1em;
     justify-self: center;
   }
-  #cards {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-  }
-  #cards article.card {
-    display: flex;
-    flex-direction: column;
-    background-color: #d3edc3;
-    padding: 1em;
-    margin: 1em;
-  }
-  #cards article.card header {
-    display: flex;
-    align-items: center;
-  }
-  #cards article.card header h2 {
-    flex-grow: 1;
-  }
-  #cards article.card header a.delete {
-    display: none;
-    font-size: 2.6rem;
-    margin-top: .5rem;
-    margin-bottom: 2.5rem;
-    line-height: 1.25;
-  }
-  #cards article.card header:hover a.delete {
-    display: inline;
-  }
-  #cards article.card li {
-    list-style-type: none;
-  }
-  #cards article.card li label {
-    display: flex;
-    align-items: baseline;
-  }
-  #cards article.card li label span {
-    margin-left: .5em;
-    flex-grow: 1;
-  }
-  #cards article.card li label a {
-    display: none;
-  }
-  #cards article.card li label:hover a {
-    display: inline;
-  }
-  #cards article.card input:checked + span {
-    text-decoration: var(--primary-color) solid line-through;
-  }
-  #cards article.card ul {
-    margin: 0;
-  }
-  #cards article.card form {
-    margin: 0;
-  }
-  #cards article.card input[type=text] {
-    background-color: white;
-    margin: 0;
-  }
+  
   #content label {
     font-weight: normal;
   }
@@ -86,7 +29,7 @@ body {
     margin: 0 auto;
     padding: 1em;
     max-width: 20em;
-    border: 1px solid #d2afe7;
+    border: 1px solid #ff9a00;
   }
   #content > form .error {
     font-weight: bold;
@@ -100,9 +43,6 @@ body {
     background-color: white;
   }
   @media (max-width: 70em) {
-    #cards {
-      grid-template-columns: repeat(2, 1fr);
-    }
     main > header {
       display: grid;
       grid-template-columns: 1fr auto;
@@ -112,9 +52,7 @@ body {
     }
   }
   @media (max-width: 40em) {
-    #cards {
-      grid-template-columns: 1fr;
-    }
+
   }
   @media (max-width: 25em) {
     body {
@@ -131,32 +69,215 @@ body {
       margin: 0;
       max-width: 25em;
     }
-    article.card {
-      margin: 0;
-      border-bottom: 1px solid rgba(96, 108, 118, 0.4);
-    }
+    
   }
+
   /**
    * Override milligram colors
    * Some styles might be missing
    **/
   button {
-    background-color: #9b4dca;
-    border-color: #9b4dca;
+    background-color: #ff4d00;
+    border-color: #ff4d00;
   }
   a.button {
-    background-color: #9b4dca;
-    border-color: #9b4dca;
+    background-color: #ff4d00;
+    border-color: #ff4d00;
   }
   a.button.button-outline {
-    color: #9b4dca;
+    color: #ff4d00;
   }
   a {
-    color: #9b4dca;
+    color: #ff4d00;
   }
   input[type=text]:focus,
   input[type=email]:focus,
   input[type=password]:focus {
-    border-color: #9b4dca;
+    border-color: #ff4d00;
   }
+
+/* Footer */
+footer {
+  background-color: #ff9a00;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  padding: 1em;
+}
+
+footer nav {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+/* Feed */
+
+#topQuestions .question , #newQuestions .question, #followedQuestions .question, #tag_questions .question {
+  background-color: gainsboro;
+  margin: 2rem;
+  border-radius: 1rem;
+  width: 40%;
+}
+
+#topQuestions .question a *, #newQuestions .question a *, #followedQuestions .question a *, #tag_questions .question a *{
+  margin: 2rem;
+
+  padding: 0.5rem;
+}
+
   
+  /* Search Popup */
+  #filters_popup {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+
+  #filters_popup_content{
+    background-color: white;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #888888;
+    border-radius: 1rem;
+    width: 30%;
+    font-weight: bolder;
+  }
+
+/** Admin Dashboard **/
+
+#admin_dash {
+  display: flex;
+}
+
+#manageusers {
+  width: 40%;
+  margin-right: 10%;
+  margin-left: 1%;
+}
+
+#search_container {
+  display: flex;
+  width: 100%;
+}
+
+#search_container button {
+  margin-left: 1rem;
+} 
+
+.users_table ul {
+  display: flex;
+  list-style: none;
+  justify-content: space-evenly;
+  font-weight: bold;
+}
+
+#user_listing article.user a ul{
+  display: flex;
+  list-style: none;
+  justify-content: space-evenly;
+  background-color: gainsboro;
+  border-radius: 1rem;
+}
+
+#user_listing article.user a ul li {
+  margin-top: 1%;
+}
+
+#tag_listing li a {
+  font-weight: bold;
+}
+
+/* Question */
+
+#correct_answer {
+  background-color: gainsboro;
+}
+
+/*.........................................*/  
+
+#profile {
+  max-width: 600px;
+  margin: 20px auto; 
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 20px;
+  border: 10px solid #000; 
+  text-align: center;
+  font-family: 'Arial', sans-serif; 
+}
+
+#profile h1 {
+  color: rgb(91, 91, 93); 
+  font-size: 30px; 
+  text-align: left;
+}
+
+#profile p {
+  color: rgb(91, 91, 93); 
+  font-size: 16px; 
+  text-align: left;
+}
+
+#profile .button {
+  margin-bottom: 30px;
+  margin-top: 5px; 
+  display: inline-block; 
+}
+
+/*---------------------------------------------*/
+
+#edit_profile {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 20px;
+  border: 3px solid #000;
+  text-align: center;
+  font-family: 'Arial', sans-serif;
+}
+
+#edit_profile input[type="text"],
+#edit_profile input[type="email"],
+#edit_profile input[type="password"],
+#edit_profile input[type="file"] {
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: 1px solid #000;
+  width: 100%;
+  box-sizing: border-box; 
+}
+
+/*-------------------------------------------*/
+
+#my-answers {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+#my-answers th, #my-answers td {
+  padding: 8px;
+  text-align: left;
+}
+
+#my-answers th {
+  background-color: #f2f2f2;
+}
+
+/*------------------------------------*/
+
+#user-questions li {
+  margin-bottom: 40px; 
+}
+
+
+

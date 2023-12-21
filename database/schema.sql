@@ -5,8 +5,6 @@ DROP SCHEMA IF EXISTS lbaw2381 CASCADE;
 CREATE SCHEMA IF NOT EXISTS lbaw2381;
 SET search_path TO lbaw2381;
 
-DROP TABLE IF EXISTS user_vote_comment_answer;
-DROP TABLE IF EXISTS user_vote_comment_question;
 DROP TABLE IF EXISTS user_vote_answer;
 DROP TABLE IF EXISTS user_vote_question;
 DROP TABLE IF EXISTS report_comment_answer;
@@ -68,6 +66,7 @@ CREATE TABLE users (
     score INT NOT NULL DEFAULT 0,
     is_moderator BOOLEAN NOT NULL DEFAULT false,
     is_blocked BOOLEAN NOT NULL DEFAULT false
+
 );
 
 CREATE TABLE admin (
@@ -91,6 +90,7 @@ CREATE TABLE question (
     score INT NOT NULL DEFAULT 0,
     CONSTRAINT fk_author FOREIGN KEY (author_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
 CREATE TABLE question_tags (
     question_id INT,
     tag_id INT,
@@ -231,23 +231,6 @@ CREATE TABLE user_vote_answer (
     CONSTRAINT fk_answer FOREIGN KEY (answer_id) REFERENCES answer(answer_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE user_vote_comment_question (
-    user_id INT NOT NULL,
-    comment_id INT NOT NULL,
-    vote INT NOT NULL CHECK (vote=1 OR vote=-1),
-    PRIMARY KEY (user_id, comment_id),
-    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT fk_comment FOREIGN KEY (comment_id) REFERENCES comment_question(comment_id) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
-CREATE TABLE user_vote_comment_answer (
-    user_id INT NOT NULL,
-    comment_id INT NOT NULL,
-    vote INT NOT NULL CHECK (vote=1 OR vote=-1),
-    PRIMARY KEY (user_id, comment_id),
-    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT fk_comment FOREIGN KEY (comment_id) REFERENCES comment_answer(comment_id) ON DELETE CASCADE ON UPDATE CASCADE
-);
 
 CREATE TABLE notification (
     notificationID SERIAL PRIMARY KEY,
@@ -384,42 +367,46 @@ EXECUTE FUNCTION check_own_follow_user();
 -- A post’s rating is equal to the number of upvotes minus the number of downvotes, as stated in BR03
 CREATE FUNCTION update_post_rating() RETURNS TRIGGER AS $$
 BEGIN
+
     IF TG_TABLE_NAME = 'user_vote_question' THEN
         IF TG_OP = 'INSERT' THEN
             UPDATE question
             SET score = score + NEW.vote
             WHERE question_id = NEW.question_id;
+        ELSIF TG_OP = 'DELETE' THEN
+            UPDATE question
+            SET score = score - OLD.vote
+            WHERE question_id = OLD.question_id;
         END IF;
+
     ELSIF TG_TABLE_NAME = 'user_vote_answer' THEN
         IF TG_OP = 'INSERT' THEN
             UPDATE answer
             SET score = score + NEW.vote
             WHERE answer_id = NEW.answer_id;
-            RETURN NEW;
-        END IF;
-    ELSIF TG_TABLE_NAME = 'user_vote_comment_question' THEN
-        IF TG_OP = 'INSERT' THEN
-            UPDATE comment_question
-            SET score = score + NEW.vote
-            WHERE comment_id = NEW.comment_id;
-            RETURN NEW;
-        END IF;
-    ELSIF TG_TABLE_NAME = 'user_vote_comment_answer' THEN
-        IF TG_OP = 'INSERT' THEN
-            UPDATE comment_answer
-            SET score = score + NEW.vote
-            WHERE comment_id = NEW.comment_id;
-            RETURN NEW;
+        ELSIF TG_OP = 'DELETE' THEN
+            UPDATE answer
+            SET score = score - OLD.vote
+            WHERE answer_id = OLD.answer_id;
         END IF;
     END IF;
 
-    RETURN NEW;
-
-END
+    IF TG_OP = 'INSERT' THEN
+        RETURN NEW;
+    ELSE
+        RETURN OLD;
+    END IF;
+END;
 $$ LANGUAGE plpgsql;
 
+-- questions e answers
 CREATE TRIGGER TRIGGER05
 AFTER INSERT ON user_vote_question
+FOR EACH ROW
+EXECUTE FUNCTION update_post_rating();
+
+CREATE TRIGGER TRIGGER20
+AFTER DELETE ON user_vote_question
 FOR EACH ROW
 EXECUTE FUNCTION update_post_rating();
 
@@ -429,14 +416,41 @@ FOR EACH ROW
 EXECUTE FUNCTION update_post_rating();
 
 CREATE TRIGGER TRIGGER18
-AFTER INSERT ON user_vote_comment_question
+AFTER DELETE ON user_vote_answer
 FOR EACH ROW
 EXECUTE FUNCTION update_post_rating();
 
-CREATE TRIGGER TRIGGER19
-AFTER INSERT ON user_vote_comment_answer
+
+CREATE FUNCTION update_vote_change() RETURNS TRIGGER AS $$
+BEGIN
+    -- ve se foi alterado
+    IF OLD.vote != NEW.vote THEN
+        
+        IF TG_TABLE_NAME = 'user_vote_question' THEN
+            UPDATE question
+            SET score = score - OLD.vote + NEW.vote
+            WHERE question_id = NEW.question_id;
+
+        
+        ELSIF TG_TABLE_NAME = 'user_vote_answer' THEN
+            UPDATE answer
+            SET score = score - OLD.vote + NEW.vote
+            WHERE answer_id = NEW.answer_id;
+        END IF;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER TRIGGER21
+AFTER UPDATE ON user_vote_question
 FOR EACH ROW
-EXECUTE FUNCTION update_post_rating();
+EXECUTE FUNCTION update_vote_change();
+
+CREATE TRIGGER TRIGGER22
+AFTER UPDATE ON user_vote_answer
+FOR EACH ROW
+EXECUTE FUNCTION update_vote_change();
 
 
 -- By default, the user will have his own question upvoted, as stated in BR04

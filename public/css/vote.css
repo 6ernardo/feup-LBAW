@@ -1,0 +1,9 @@
+.button-vote.active-vote {
+    background-color: black; 
+    color: white;
+}
+
+.button-vote.remove-vote-button {
+    background-color: black; 
+    color: white;
+}

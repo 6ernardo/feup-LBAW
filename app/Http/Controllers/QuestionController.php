@@ -6,7 +6,10 @@ use Illuminate\Http\Request;
 use App\Models\Question;
 use App\Models\User;
 use App\Models\Tag;
+use App\Models\UserVoteQuestion;
+
 use App\Models\Answer;
+
 use Illuminate\Support\Facades\Auth;
 
 class QuestionController extends Controller{
@@ -116,19 +119,85 @@ class QuestionController extends Controller{
 
     public function searchForm()
     {
-        return view('pages.searchQuestionForm');
+        $tags = Tag::all();
+
+        return view('pages.searchQuestionForm', ['tags' => $tags]);
     }
 
     public function searchList(Request $request)
     {
-        
         $input = $request->input('search_query');
-        $questions = Question::select('question.question_id', 'question.title', 'question.description')
+        $order = $request->input('orderby');
+
+        switch($order) {
+            case 'scoreasc':
+                $questions = Question::select('question.question_id', 'question.title', 'question.description')
+                    ->whereRaw("tsvectors @@ to_tsquery(?)", [$input])
+                    ->orderBy('score', 'ASC')
+                    ->get();
+                break;
+            case 'scoredesc':
+                $questions = Question::select('question.question_id', 'question.title', 'question.description')
+                    ->whereRaw("tsvectors @@ to_tsquery(?)", [$input])
+                    ->orderBy('score', 'DESC')
+                    ->get();
+                break;
+            case 'oldest':
+                $questions = Question::select('question.question_id', 'question.title', 'question.description')
+                    ->whereRaw("tsvectors @@ to_tsquery(?)", [$input])
+                    ->orderBy('question_id', 'ASC')
+                    ->get();
+                break;
+            case 'newest':
+                $questions = Question::select('question.question_id', 'question.title', 'question.description')
+                    ->whereRaw("tsvectors @@ to_tsquery(?)", [$input])
+                    ->orderBy('question_id', 'DESC')
+                    ->get();
+                break;
+            case 'relevance':
+                $questions = Question::select('question.question_id', 'question.title', 'question.description')
                     ->whereRaw("tsvectors @@ to_tsquery(?)", [$input])
                     ->orderByRaw("ts_rank(tsvectors, to_tsquery(?)) ASC", [$input])
                     ->get();
+                break;
+            default:
+                break;
+        }
  
         return response()->json($questions);
+    }
+
+    public function vote(Request $request){
+        $validatedData = $request->validate([
+            'question_id' => 'required|exists:question,question_id',
+            'vote' => 'required|integer'
+        ]);
+
+        $userId = Auth::id();
+        $questionId = $validatedData['question_id'];
+        $voteValue = (int) $validatedData['vote'];
+
+        $voteValue = $voteValue === 1 ? 1 : -1;
+
+        UserVoteQuestion::updateOrCreate(
+            ['user_id' => $userId ,'question_id' => $questionId],
+            ['vote' => $voteValue]
+        );
+
+        return response('Voto registrado com sucesso', 200);
+    }
+
+    public function RemoveVote(Request $request){
+        $validatedData = $request->validate([
+            'question_id' => 'required|exists:question,question_id',
+        ]);
+    
+        $userId = Auth::id();
+        $questionId = $validatedData['question_id'];
+    
+        UserVoteQuestion::where('user_id', $userId)->where('question_id', $questionId)->delete();
+    
+        return response('Voto removido com sucesso', 200);
     }
 
     public function markCorrect(int $id, Request $request)
