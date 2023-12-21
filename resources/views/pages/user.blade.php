@@ -4,7 +4,7 @@
     <section id="profile">
         <h1>Username: {{ $user->name }}</h1>
         @if($user->profile_picture)
-            <img src="{{ asset('storage/' . $user->profile_picture) }}" width="200" height="200">
+            <img src="{{ asset('storage/' . $user->profile_picture) }}" width="200" height="200" alt="User's profile picture">
         @endif
         <p>Email: {{ $user->email }}</p>
         <p>Score: {{ $user->score }}</p>

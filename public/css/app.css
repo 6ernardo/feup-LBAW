@@ -1,8 +1,8 @@
 body {
     background-color: #ffffff;
     color: #ff4d00;
-    min-height: 400px;
-    margin-bottom: 100px;
+    min-height: 20rem;
+    margin-bottom: 10rem;
     clear: both;
   }
   main > header {
