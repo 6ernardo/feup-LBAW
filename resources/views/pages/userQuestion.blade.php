@@ -2,7 +2,7 @@
 
 @section('content')
     <h1>My Questions</h1>
-    <ul>
+    <ul id="user-questions">
         @foreach($userQuestions as $question)
             <li>
             <a class="button" href="{{ url('/questions/'.$question->question_id) }}">{{ $question->title }}</a>
