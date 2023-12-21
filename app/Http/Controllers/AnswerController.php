@@ -107,7 +107,5 @@ class AnswerController extends Controller
         return response('Voto removido com sucesso', 200);
     }
 
-
 }
 
-    

@@ -3,7 +3,7 @@
 @section('content')
     @if (Auth::check() && (Auth::user()->user_id == $question->author_id || Auth::user()->is_moderator || Auth::user()->isAdmin()))
         <a class="button" href="{{ url('/questions/'.$question->question_id.'/edit') }}"> Edit Question </a>
-        <form method="POST" action="{{ url('/questions/'.$question->question_id.'/delete') }}">
+        <form id="deletequestion" method="POST" action="{{ url('/questions/'.$question->question_id.'/delete') }}">
             @method('DELETE')
             @csrf
             <button type="submit">Delete Question</button>
@@ -20,6 +20,13 @@
             <h2>{{ $question->title }}</h2>
             <span class="tooltip">(?)<span class="tooltiptext">Questions can have answers, comments, and the answers can have comments</span></span>
         </div>
+    <div class="question" id="question{{ $question->question_id }}">
+            <button class="button-vote upvote-button" id="button-vote upvote-button" onclick="voteQuestion({{ $question->question_id }}, 1)">Upvote</button>
+            <span id="score">{{ $question->score }}</span>
+            <button class="button-vote downvote-button" id="button-vote downvote-button" onclick="voteQuestion({{ $question->question_id }}, -1)">Downvote</button>
+            <button class="button-vote remove-vote-button" onclick="removeVoteQuestion({{ $question->question_id }})">Remove Vote</button>
+    </div>
+    <h2>{{ $question->title }}</h2>
     @if (!$question->tags->isEmpty())
         <ul class="tag-list">
         <span>Tags:</span>
@@ -31,19 +38,9 @@
     <p>posted by {{ $question->author->name }} </p>
     <p>{{ $question->description }}</p>
 
-    <div class="question" id="question{{ $question->question_id }}">
-            <button class="button-vote upvote-button" id="button-vote upvote-button" onclick="voteQuestion({{ $question->question_id }}, 1)">Upvote</button>
-            <span id="score">{{ $question->score }}</span>
-            <button class="button-vote downvote-button" id="button-vote downvote-button" onclick="voteQuestion({{ $question->question_id }}, -1)">Downvote</button>
-            <button class="button-vote remove-vote-button" onclick="removeVoteQuestion({{ $question->question_id }})">Remove Vote</button>
-    </div>
-
 
     <section id="question_comments">
-        <h4>Question Comments</h4>
-        @each('partials.commentquestion', $question->comments, 'comment')
-    </section>
-
+    <h4>Question Comments</h4>
     <section id="post_question_comment">
         <form method="POST" action="{{ url('questions/'.$question->question_id.'/comment/create') }}">
             @csrf
@@ -51,33 +48,32 @@
             <button type="submit">Submit</button>
         </form>
     </section>
+        @each('partials.commentquestion', $question->comments, 'comment')
+    </section>
+
+    
 
     <section id="answers">
         @if (isset($question->correct_answer_id))
-        <h3>Correct Answer</h3>
-            @include('partials.answer', ['answer' => $question->correct_answer])
+        <div id="correct_answer">
+            <h3>Correct Answer</h3>
+                @include('partials.answer', ['answer' => $question->correct_answer])
+        </div>
         @endif
 
         <h3>Answers</h3>
-        @foreach ($question->answers as $answer)
-        <div class="answer" id="answer{{ $answer->answer_id }}">
-            <button class="button-vote upvote-button" onclick="vote({{ $answer->answer_id }} , 1)">Upvote</button>
-            <span class="score">{{ $answer->score }}</span>
-            <button class="button-vote downvote-button" onclick="vote({{ $answer->answer_id }} , -1)">Downvote</button>
-            <button class="button-vote remove-vote-button" onclick="removeVote({{ $answer->answer_id }})">Remove Vote</button>
-        </div>
-        @endforeach
-
-        @each('partials.answer', $question->answers, 'answer')
-    </section>
-
-    <section id="post_answer">
+        <section id="post_answer">
         <form method="POST" action="{{ url('questions/'.$question->question_id.'/answer/create') }}">
             @csrf
             <textarea name="description" id="description" placeholder="Type your answer here..." value="{{ old('description') }}" required></textarea>
             <button type="submit">Submit</button>
         </form>
+        </section>
+
+        @each('partials.answer', $question->answers, 'answer')
+        
     </section>
+
     <style>
         .tag-list {
             list-style: none;
@@ -91,4 +87,5 @@
         }
     </style>
     <link rel="stylesheet" href="{{ asset('css/vote.css') }}">
+    <script src="{{ asset('js/vote.js') }}"></script>
 @endsection

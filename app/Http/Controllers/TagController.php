@@ -9,6 +9,8 @@ class TagController extends Controller
 {
     public function show($id){
         $tag = Tag::find($id);
+
+        $this->authorize('show', $tag);
         
         return view('pages.showTag', [
             'tag' => $tag

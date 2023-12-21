@@ -9,20 +9,20 @@ use Illuminate\Support\Facades\Auth;
 
 class CommentQuestionPolicy
 {
-    public function create(User $user)
+    public function create()
     {
         return Auth::check();
     }
 
     public function edit(User $user, CommentQuestion $comment)
     {
-        return $user->user_id === $comment->author_id;
+        return Auth::check() && !is_null($comment) && $user->user_id === $comment->author_id;
     }
 
     public function delete(User $user, CommentQuestion $comment)
     {
-        return $user->user_id === $comment->author_id ||
+        return Auth::check() && !is_null($comment) && ($user->user_id === $comment->author_id ||
                 $user->is_moderator ||
-                $user->isAdmin();
+                $user->isAdmin());
     }
 }
