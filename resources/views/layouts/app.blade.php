@@ -25,7 +25,10 @@
     <body>
         <main>
             <header>
-                <h1><a href="{{ url('/feed') }}">UPConnect</a></h1>
+                <div>
+                    <h1><a href="{{ url('/feed') }}">UPConnect</a></h1>
+                    <span class="tooltip">(?)<span class="tooltiptext">Return to the Main Page at any time by clicking UPConnect</span></span>
+                </div>
                 @if (Auth::check())
                     <div>
                         <a class="button" href="{{ url('/logout') }}"> Logout </a> 
