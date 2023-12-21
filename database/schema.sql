@@ -630,8 +630,11 @@ EXECUTE FUNCTION comment_unique_report();
 
 
 -- Populate
-insert into users (name, email, password, score, is_moderator) values ('client', 'client@client.com', '$2a$12$fu9IyYyjE5YGQmXpgzWPuO5jrGCEbkwSzYfIHZdAXr9FlZdILPD1C', 2080, true);
+insert into users (name, email, password, score, is_moderator) values ('admin', 'admin@admin.com', '$2a$12$fu9IyYyjE5YGQmXpgzWPuO5jrGCEbkwSzYfIHZdAXr9FlZdILPD1C', 2080, true);
 insert into admin (admin_id) VALUES (1);
+
+insert into users (name, email, password, score, is_moderator) values ('mod', 'mod@mod.com', '$2a$12$KZW8RtmQzbhqX209fchxC.M9qjyu.kvmbpGm2FOsbj6Atuxccamhq', 1, true);
+insert into users (name, email, password, score, is_moderator) values ('client', 'client@client.com', '$2a$12$MjYIDoy9w46hTFBof8y.8OSdbL3TKkImfvCgzk8ONsdidw0w22CkC', 1, false);
 
 INSERT INTO tag (name, description)
 VALUES
