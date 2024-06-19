@@ -1,4 +1,10 @@
-# UP Connect
+# FEUP-LBAW
+
+Project of the Database and Web Applications Laboratory course unit at FEUP.
+
+[**LBAW Unit Info**](https://sigarra.up.pt/feup/en/UCURR_GERAL.FICHA_UC_VIEW?pv_ocorrencia_id=520328)
+
+## UP Connect
 
 The *UP Connect* web application is being developed by a small team of Computer Engineering students as a product targeted at fellow university students that want a way to learn and share knowledge related to their academic lifestyle in University of Porto.
 
